@@ -224,15 +224,16 @@ export default function Stack() {
                     style={{ transform: 'translateX(-50%)' }}
                   >
                     <div
-                      className="font-mono text-xs rounded px-3 py-2 whitespace-nowrap"
+                      className="font-mono rounded px-2 py-1 whitespace-nowrap"
                       style={{
                         background: '#12121a',
                         border: `1px solid ${colors.node}`,
                         color: '#e0e0e0',
-                        boxShadow: `0 0 10px ${colors.glow}`,
-                        maxWidth: '200px',
+                        boxShadow: `0 0 8px ${colors.glow}`,
+                        maxWidth: '160px',
                         whiteSpace: 'normal',
                         textAlign: 'center',
+                        fontSize: '10px',
                       }}
                     >
                       {node.description}

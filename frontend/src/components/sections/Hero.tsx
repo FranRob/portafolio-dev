@@ -154,8 +154,8 @@ export default function Hero() {
 
       {/* Synthwave grid floor */}
       <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden"
-        style={{ zIndex: 2, height: '260px' }}
+        className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden h-36 sm:h-[260px]"
+        style={{ zIndex: 2 }}
         aria-hidden="true"
       >
         <div
