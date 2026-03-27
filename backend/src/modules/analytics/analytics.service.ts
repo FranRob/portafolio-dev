@@ -1,10 +1,12 @@
 import prisma from '../../lib/prisma.js';
 
 export interface StatsResult {
-  totalViews: number;
-  viewsToday: number;
-  sections: Array<{ section: string; count: number }>;
-  timeline: Array<{ date: string; count: number }>;
+  totalVisits: number;
+  todayVisits: number;
+  mostViewedSection: string;
+  unreadMessages: number;
+  sectionViews: Record<string, number>;
+  dailyVisits: Array<{ date: string; count: number }>;
 }
 
 export async function trackView(
@@ -27,11 +29,11 @@ export async function getStats(): Promise<StatsResult> {
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  // Total views
-  const totalViews = await prisma.pageView.count();
+  // Total visits
+  const totalVisits = await prisma.pageView.count();
 
-  // Views today
-  const viewsToday = await prisma.pageView.count({
+  // Visits today
+  const todayVisits = await prisma.pageView.count({
     where: { createdAt: { gte: todayStart } },
   });
 
@@ -42,12 +44,18 @@ export async function getStats(): Promise<StatsResult> {
     orderBy: { _count: { section: 'desc' } },
   });
 
-  const sections = sectionGroups.map((g) => ({
-    section: g.section,
-    count: g._count.section,
-  }));
+  const sectionViews = Object.fromEntries(
+    sectionGroups.map((g) => [g.section, g._count.section]),
+  );
 
-  // Timeline: last 7 days
+  const mostViewedSection = sectionGroups[0]?.section ?? '';
+
+  // Unread contact messages
+  const unreadMessages = await prisma.contactMessage.count({
+    where: { read: false },
+  });
+
+  // Daily visits: last 7 days
   const sevenDaysAgo = new Date(todayStart);
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
 
@@ -73,7 +81,7 @@ export async function getStats(): Promise<StatsResult> {
     }
   }
 
-  const timeline = Array.from(dayMap.entries()).map(([date, count]) => ({ date, count }));
+  const dailyVisits = Array.from(dayMap.entries()).map(([date, count]) => ({ date, count }));
 
-  return { totalViews, viewsToday, sections, timeline };
+  return { totalVisits, todayVisits, mostViewedSection, unreadMessages, sectionViews, dailyVisits };
 }
