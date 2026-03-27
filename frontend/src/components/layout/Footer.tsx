@@ -19,12 +19,12 @@ export default function Footer() {
               divMalCentrado
             </span>
             <span className="font-mono text-xs text-gray-600">
-              © 2025 Franco Robles
+              © 2026 Franco Robles
             </span>
           </div>
 
           <span className="font-mono text-xs text-gray-600 text-center">
-            Hecho con React y demasiado café ☕
+            Full Stack Developer · 2 years exp · Available for hire
           </span>
 
           <button
