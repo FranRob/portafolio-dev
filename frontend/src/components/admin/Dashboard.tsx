@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { getStats, getMessages, markMessageRead } from '../../services/api'
 import type { AnalyticsStats, ContactMessage } from '../../services/api'
+import AdminProjects from './AdminProjects'
 
 interface StatCardProps {
   label: string
@@ -58,6 +59,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null)
   const [error, setError] = useState('')
+  const [activeTab, setActiveTab] = useState<'metrics' | 'projects'>('metrics')
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -156,7 +158,31 @@ export default function Dashboard() {
         </div>
       </header>
 
+      {/* Tab bar */}
+      <div
+        className="sticky top-16 z-30 flex border-b"
+        style={{ background: 'rgba(10,10,15,0.95)', borderColor: '#1e1e2e' }}
+      >
+        {(['metrics', 'projects'] as const).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className="font-mono text-xs px-6 py-3 transition-colors"
+            style={{
+              color: activeTab === tab ? '#b026ff' : '#666',
+              borderBottom: activeTab === tab ? '2px solid #b026ff' : '2px solid transparent',
+            }}
+          >
+            {tab === 'metrics' ? 'Métricas' : 'Proyectos'}
+          </button>
+        ))}
+      </div>
+
       <main className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+        {activeTab === 'projects' && <AdminProjects />}
+
+        {activeTab === 'metrics' && (
+        <>
         {error && (
           <div
             className="rounded-lg px-4 py-3 font-mono text-sm"
@@ -405,6 +431,8 @@ export default function Dashboard() {
               </div>
             </motion.div>
           </>
+        )}
+        </>
         )}
       </main>
     </div>
