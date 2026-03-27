@@ -30,3 +30,31 @@ model ContactMessage {
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+enum ProjectStatus {
+  in_progress
+  completed
+  private
+}
+
+enum ProjectCategory {
+  freelance
+  personal
+  collaborative
+}
+
+model Project {
+  id          String          @id @default(uuid())
+  title       String
+  description String
+  stack       String[]
+  status      ProjectStatus   @default(in_progress)
+  category    ProjectCategory @default(personal)
+  featured    Boolean         @default(false)
+  order       Int             @default(0)
+  repoUrl     String?
+  demoUrl     String?
+  imageUrl    String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
