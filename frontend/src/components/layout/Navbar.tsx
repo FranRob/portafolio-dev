@@ -10,6 +10,7 @@ const navLinks: NavLink[] = [
   { label: 'Inicio', href: '#hero' },
   { label: 'Stack', href: '#stack' },
   { label: 'Sobre mí', href: '#about' },
+  { label: 'Proyectos', href: '#projects' },
   { label: 'Contacto', href: '#contact' },
 ]
 
