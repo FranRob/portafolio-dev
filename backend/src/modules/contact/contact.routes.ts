@@ -29,7 +29,7 @@ router.get('/messages', requireAuth, async (_req: Request, res: Response) => {
 });
 
 router.patch('/:id/read', requireAuth, async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params['id'] as string;
 
   try {
     const updated = await markAsRead(id);

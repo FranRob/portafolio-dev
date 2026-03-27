@@ -88,7 +88,7 @@ export async function getMessages(): Promise<ContactMessage[]> {
 }
 
 export async function markMessageRead(id: string): Promise<void> {
-  await api.patch(`/contact/messages/${id}/read`)
+  await api.patch(`/contact/${id}/read`)
 }
 
 export default api
