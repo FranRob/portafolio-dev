@@ -16,14 +16,14 @@ const socialLinks: SocialLink[] = [
   {
     label: 'LinkedIn',
     handle: 'Franco Robles',
-    url: '#linkedin',
+    url: 'https://www.linkedin.com/in/francorob',
     icon: <Linkedin size={28} />,
     color: 'cyan',
   },
   {
     label: 'GitHub',
     handle: 'divMalCentrado',
-    url: '#github',
+    url: 'https://github.com/FranRob',
     icon: <Github size={28} />,
     color: 'purple',
   },
