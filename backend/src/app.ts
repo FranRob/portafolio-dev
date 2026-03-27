@@ -4,6 +4,7 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import analyticsRoutes from './modules/analytics/analytics.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import contactRoutes from './modules/contact/contact.routes.js';
+import projectRoutes from './modules/projects/projects.routes.js';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/projects', projectRoutes);
 
 // Health check
 app.get('/health', (_req: Request, res: Response) => {
