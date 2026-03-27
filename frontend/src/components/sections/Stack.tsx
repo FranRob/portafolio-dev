@@ -129,7 +129,7 @@ export default function Stack() {
 
         {/* Constellation */}
         <motion.div
-          className="relative w-full rounded-xl overflow-hidden mb-16 min-h-64 sm:min-h-96 md:min-h-[520px]"
+          className="relative w-full rounded-xl mb-16 min-h-64 sm:min-h-96 md:min-h-[520px]"
           style={{
             background: 'rgba(10,10,20,0.8)',
             border: '1px solid #1e1e2e',
