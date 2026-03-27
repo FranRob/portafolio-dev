@@ -29,6 +29,61 @@ async function main() {
   });
 
   console.log(`Admin user seeded: ${admin.email} (id: ${admin.id})`);
+
+  // Seed projects
+  const projectsToSeed = [
+    {
+      id: 'proj-constructora-001',
+      title: 'Constructora Web',
+      description:
+        'Landing page y dashboard de gestión para empresa constructora. Panel de control con seguimiento de obras, clientes y presupuestos.',
+      stack: ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+      status: 'in_progress' as const,
+      category: 'freelance' as const,
+      featured: true,
+      order: 1,
+      repoUrl: null,
+      demoUrl: null,
+      imageUrl: null,
+    },
+    {
+      id: 'proj-pasteleria-002',
+      title: 'Pastelería Online',
+      description:
+        'Plataforma completa para pastelería artesanal. Landing page, gestión de stock e inventario, y administración de clientes.',
+      stack: ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+      status: 'in_progress' as const,
+      category: 'freelance' as const,
+      featured: true,
+      order: 2,
+      repoUrl: null,
+      demoUrl: null,
+      imageUrl: null,
+    },
+    {
+      id: 'proj-barber-saas-003',
+      title: 'Barber SaaS',
+      description:
+        'SaaS multi-tenant para barberías. Gestión de servicios, barberos, horarios y turnos. Desarrollado junto a mi compañera de trabajo.',
+      stack: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Prisma', 'Docker'],
+      status: 'in_progress' as const,
+      category: 'collaborative' as const,
+      featured: true,
+      order: 3,
+      repoUrl: null,
+      demoUrl: null,
+      imageUrl: null,
+    },
+  ];
+
+  for (const proj of projectsToSeed) {
+    await prisma.project.upsert({
+      where: { id: proj.id },
+      update: {},
+      create: proj,
+    });
+    console.log(`Project seeded: ${proj.title}`);
+  }
 }
 
 main()
