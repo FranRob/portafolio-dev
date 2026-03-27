@@ -181,7 +181,7 @@ export default function Stack() {
                   zIndex: 2,
                 }}
                 animate={{
-                  y: [0, -6, 0],
+                  y: [0, -3, 0],
                   transition: {
                     duration: 3 + node.floatDelay,
                     delay: node.floatDelay,
@@ -197,18 +197,19 @@ export default function Stack() {
                   whileHover={{ scale: 1.2 }}
                 >
                   <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center font-mono text-xs font-bold transition-all duration-200"
+                    className="w-6 h-6 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-mono font-bold transition-all duration-200"
                     style={{
                       background: `radial-gradient(circle, ${colors.glow} 0%, rgba(10,10,20,0.9) 70%)`,
                       border: `1.5px solid ${colors.node}`,
-                      boxShadow: `0 0 10px ${colors.glow}, 0 0 20px ${colors.glow}`,
+                      boxShadow: `0 0 8px ${colors.glow}, 0 0 16px ${colors.glow}`,
                       color: colors.node,
+                      fontSize: 'clamp(8px, 1.5vw, 12px)',
                     }}
                   >
                     {node.abbr}
                   </div>
                   <span
-                    className="font-mono text-xs mt-1 whitespace-nowrap"
+                    className="hidden sm:inline font-mono mt-1 whitespace-nowrap"
                     style={{ color: colors.node, opacity: 0.8, fontSize: '10px' }}
                   >
                     {node.name}
