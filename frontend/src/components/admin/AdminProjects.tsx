@@ -254,7 +254,7 @@ export default function AdminProjects() {
           </div>
 
           {/* Status + Category row */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label style={labelStyle}>Estado</label>
               <select
@@ -449,7 +449,7 @@ export default function AdminProjects() {
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className="flex items-center gap-3 px-4 py-3"
+              className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3"
               style={{ borderBottom: index < projects.length - 1 ? '1px solid #1e1e2e' : 'none' }}
             >
               {/* Reorder buttons */}

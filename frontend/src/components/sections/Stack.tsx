@@ -129,9 +129,8 @@ export default function Stack() {
 
         {/* Constellation */}
         <motion.div
-          className="relative w-full rounded-xl overflow-hidden mb-16"
+          className="relative w-full rounded-xl overflow-hidden mb-16 min-h-64 sm:min-h-96 md:min-h-[520px]"
           style={{
-            minHeight: '520px',
             background: 'rgba(10,10,20,0.8)',
             border: '1px solid #1e1e2e',
             boxShadow: 'inset 0 0 60px rgba(176,38,255,0.05)',
@@ -245,7 +244,7 @@ export default function Stack() {
           })}
 
           {/* Legend */}
-          <div className="absolute bottom-4 right-4 flex gap-4 z-10">
+          <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 flex gap-4 z-10">
             {(Object.entries(categoryColors) as [Category, typeof categoryColors[Category]][]).map(([cat, colors]) => (
               <div key={cat} className="flex items-center gap-1.5">
                 <div
@@ -259,7 +258,7 @@ export default function Stack() {
         </motion.div>
 
         {/* Category cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
           {categoryInfo.map((cat, i) => {
             const colors = categoryColors[cat.key]
             return (
@@ -269,7 +268,7 @@ export default function Stack() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-lg p-6"
+                className="rounded-lg p-3 sm:p-6"
                 style={{
                   background: '#12121a',
                   border: `1px solid ${colors.node}`,

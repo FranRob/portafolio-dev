@@ -29,7 +29,7 @@ function StatCard({ label, value, icon, color, glow }: StatCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-lg p-5"
+      className="rounded-lg p-3 sm:p-5"
       style={{
         background: '#12121a',
         border: `1px solid ${color}`,
@@ -40,7 +40,7 @@ function StatCard({ label, value, icon, color, glow }: StatCardProps) {
         <div>
           <p className="font-mono text-xs text-gray-500 mb-2 uppercase tracking-wider">{label}</p>
           <p
-            className="font-orbitron font-bold text-2xl"
+            className="font-orbitron font-bold text-xl sm:text-2xl"
             style={{ color, textShadow: `0 0 10px ${glow}` }}
           >
             {value}
@@ -209,7 +209,7 @@ export default function Dashboard() {
         ) : (
           <>
             {/* Stats cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatCard
                 label="Total Visitas"
                 value={stats?.totalVisits ?? 0}
@@ -241,13 +241,13 @@ export default function Dashboard() {
             </div>
 
             {/* Charts row */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-6">
               {/* Section views bar chart */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="rounded-lg p-6"
+                className="rounded-lg p-3 sm:p-6"
                 style={{ background: '#12121a', border: '1px solid #1e1e2e' }}
               >
                 <h2 className="font-orbitron font-bold text-sm text-white mb-6">
@@ -295,7 +295,7 @@ export default function Dashboard() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="rounded-lg p-6"
+                className="rounded-lg p-3 sm:p-6"
                 style={{ background: '#12121a', border: '1px solid #1e1e2e' }}
               >
                 <h2 className="font-orbitron font-bold text-sm text-white mb-6">

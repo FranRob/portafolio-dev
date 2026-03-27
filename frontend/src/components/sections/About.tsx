@@ -70,7 +70,7 @@ export default function About() {
           <h2 className="section-title">Sobre Mí</h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">
           {/* Left: Text content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -164,7 +164,7 @@ export default function About() {
             >
               {/* Terminal title bar */}
               <div
-                className="flex items-center gap-2 px-4 py-3"
+                className="flex items-center gap-2 px-2 sm:px-4 py-2 sm:py-3"
                 style={{ background: '#16161f', borderBottom: '1px solid #1e1e2e' }}
               >
                 <div className="flex gap-1.5">
@@ -180,7 +180,7 @@ export default function About() {
                 className="p-6 overflow-x-auto"
                 style={{ background: '#0d0d16' }}
               >
-                <pre className="font-mono text-sm leading-7">
+                <pre className="font-mono text-xs sm:text-sm leading-7">
                   {codeLines.map((line, lineIdx) => (
                     <div key={lineIdx}>
                       <span className="select-none mr-4 text-xs" style={{ color: '#3a3a4a' }}>

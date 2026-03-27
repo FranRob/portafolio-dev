@@ -53,7 +53,7 @@ export default function Login() {
         className="w-full max-w-md relative z-10"
       >
         <div
-          className="rounded-xl p-8"
+          className="rounded-xl p-4 sm:p-8"
           style={{
             background: '#12121a',
             border: '1px solid #1e1e2e',
@@ -63,7 +63,7 @@ export default function Login() {
           {/* Header */}
           <div className="text-center mb-8">
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mx-auto mb-4"
               style={{
                 background: 'rgba(176, 38, 255, 0.1)',
                 border: '1px solid rgba(176, 38, 255, 0.3)',

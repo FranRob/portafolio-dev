@@ -114,7 +114,7 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
           {/* Social links */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -135,7 +135,7 @@ export default function Contact() {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 rounded-lg px-6 py-5 transition-all duration-300 group"
+                    className="flex items-center gap-4 rounded-lg px-3 sm:px-6 py-3 sm:py-5 transition-all duration-300 group"
                     style={{
                       background: isHovered ? `rgba(${social.color === 'cyan' ? '0,229,255' : '176,38,255'}, 0.08)` : '#12121a',
                       border: `1px solid ${colors.border}`,
@@ -217,7 +217,7 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   placeholder="Tu nombre"
-                  className="w-full rounded px-4 py-3"
+                  className="w-full rounded px-3 py-2 sm:px-4 sm:py-3"
                   style={inputStyle}
                   onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
                   onBlur={(e) => {
@@ -239,7 +239,7 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   placeholder="tu@email.com"
-                  className="w-full rounded px-4 py-3"
+                  className="w-full rounded px-3 py-2 sm:px-4 sm:py-3"
                   style={inputStyle}
                   onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
                   onBlur={(e) => {
@@ -259,9 +259,9 @@ export default function Contact() {
                   value={form.message}
                   onChange={handleChange}
                   required
-                  rows={5}
+                  rows={4}
                   placeholder="Contame en qué puedo ayudarte..."
-                  className="w-full rounded px-4 py-3 resize-none"
+                  className="w-full rounded px-3 py-2 sm:px-4 sm:py-3 resize-none"
                   style={inputStyle}
                   onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
                   onBlur={(e) => {
@@ -310,7 +310,7 @@ export default function Contact() {
               <motion.button
                 type="submit"
                 disabled={status === 'sending'}
-                className="w-full flex items-center justify-center gap-2 rounded px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300"
+                className="w-full flex items-center justify-center gap-2 rounded px-4 sm:px-6 py-2 sm:py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300"
                 style={{
                   border: '1px solid #b026ff',
                   color: status === 'sending' ? '#888' : '#b026ff',

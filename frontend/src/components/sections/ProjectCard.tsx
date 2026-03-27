@@ -47,7 +47,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
       style={{ background: '#12121a', border: '1px solid #1e1e2e' }}
     >
       {/* Image area */}
-      <div className="relative h-44 flex-shrink-0">
+      <div className="relative h-32 sm:h-44 flex-shrink-0">
         {project.imageUrl ? (
           <img
             src={project.imageUrl}
@@ -63,7 +63,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             }}
           >
             <span
-              className="font-orbitron font-bold text-4xl select-none"
+              className="font-orbitron font-bold text-2xl sm:text-4xl select-none"
               style={{
                 color: '#b026ff',
                 textShadow: '0 0 20px rgba(176,38,255,0.6)',
@@ -89,7 +89,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
       </div>
 
       {/* Card body */}
-      <div className="p-5 flex flex-col flex-1">
+      <div className="p-3 sm:p-5 flex flex-col flex-1">
         <h3 className="font-orbitron font-bold text-sm text-white mb-2">
           {project.title}
         </h3>

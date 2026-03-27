@@ -65,7 +65,7 @@ export default function Hero() {
         {/* Name */}
         <motion.h1
           variants={itemVariants}
-          className="font-orbitron font-black text-5xl md:text-7xl lg:text-8xl text-white leading-tight mb-4"
+          className="font-orbitron font-black text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-white leading-tight mb-4"
           style={{
             textShadow: '0 0 30px rgba(255,255,255,0.1)',
           }}
@@ -75,7 +75,7 @@ export default function Hero() {
 
         {/* Dev tag */}
         <motion.div variants={itemVariants} className="mb-6">
-          <span className="font-mono text-xl md:text-2xl font-bold">
+          <span className="font-mono text-lg sm:text-xl md:text-2xl font-bold">
             <span className="text-gray-500">// </span>
             <GlitchText
               text="divMalCentrado"
@@ -111,7 +111,7 @@ export default function Hero() {
         >
           <button
             onClick={() => scrollTo('stack')}
-            className="font-mono text-sm px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider"
+            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider"
             style={{
               border: '1px solid #00e5ff',
               color: '#00e5ff',
@@ -131,7 +131,7 @@ export default function Hero() {
           </button>
           <button
             onClick={() => scrollTo('contact')}
-            className="font-mono text-sm px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider"
+            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider"
             style={{
               border: '1px solid #b026ff',
               color: '#b026ff',
@@ -162,8 +162,8 @@ export default function Hero() {
           style={{
             position: 'absolute',
             bottom: 0,
-            left: '-20%',
-            right: '-20%',
+            left: '-10%',
+            right: '-10%',
             height: '260px',
             backgroundImage: `
               linear-gradient(rgba(176, 38, 255, 0.5) 1px, transparent 1px),
