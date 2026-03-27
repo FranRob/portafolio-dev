@@ -1,6 +1,7 @@
 import cors from 'cors';
 import 'dotenv/config';
 import express, { type NextFunction, type Request, type Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import analyticsRoutes from './modules/analytics/analytics.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import contactRoutes from './modules/contact/contact.routes.js';
@@ -19,11 +20,19 @@ app.use(
 
 app.use(express.json());
 
+const publicLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/projects', projectRoutes);
+app.use('/api/analytics', publicLimiter, analyticsRoutes);
+app.use('/api/contact', publicLimiter, contactRoutes);
+app.use('/api/projects', publicLimiter, projectRoutes);
 
 // Health check
 app.get('/health', (_req: Request, res: Response) => {
