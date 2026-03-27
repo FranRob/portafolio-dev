@@ -91,4 +91,53 @@ export async function markMessageRead(id: string): Promise<void> {
   await api.patch(`/contact/${id}/read`)
 }
 
+// Projects
+export interface Project {
+  id: string
+  title: string
+  description: string
+  stack: string[]
+  status: 'in_progress' | 'completed' | 'private'
+  category: 'freelance' | 'personal' | 'collaborative'
+  featured: boolean
+  order: number
+  repoUrl: string | null
+  demoUrl: string | null
+  imageUrl: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ProjectPayload {
+  title: string
+  description: string
+  stack: string[]
+  status: 'in_progress' | 'completed' | 'private'
+  category?: 'freelance' | 'personal' | 'collaborative'
+  featured?: boolean
+  order?: number
+  repoUrl?: string | null
+  demoUrl?: string | null
+  imageUrl?: string | null
+}
+
+export async function getProjects(): Promise<Project[]> {
+  const res = await api.get<Project[]>('/projects')
+  return res.data
+}
+
+export async function createProject(payload: ProjectPayload): Promise<Project> {
+  const res = await api.post<Project>('/projects', payload)
+  return res.data
+}
+
+export async function updateProject(id: string, payload: Partial<ProjectPayload>): Promise<Project> {
+  const res = await api.patch<Project>(`/projects/${id}`, payload)
+  return res.data
+}
+
+export async function deleteProject(id: string): Promise<void> {
+  await api.delete(`/projects/${id}`)
+}
+
 export default api
