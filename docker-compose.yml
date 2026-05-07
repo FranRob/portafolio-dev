@@ -4,10 +4,12 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: portafolio
-      POSTGRES_USER: ${POSTGRES_USER:-portafolio}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_USER: ${POSTGRES_USER:-portafolio-dev}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-portafolio}"]
       interval: 5s
@@ -23,11 +25,11 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-portafolio}:${POSTGRES_PASSWORD}@db:5432/portafolio
-      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      JWT_SECRET: ${JWT_SECRET}
       PORT: 3001
       CORS_ORIGIN: ${CORS_ORIGIN:-*}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@divmalcentrado.dev}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD is required}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     expose:
       - "3001"
 
