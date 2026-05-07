@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import {
   CheckCircle,
@@ -21,7 +21,7 @@ import { MessagesSkeleton } from './AdminSkeleton'
 
 type TabType = 'no-leido' | 'leido' | string
 
-export default function AdminMessages() {
+export function AdminMessages() {
   const [messages, setMessages] = useState<ContactMessage[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null)
@@ -35,21 +35,12 @@ export default function AdminMessages() {
     new Set(messages.map((m) => m.category || 'leido').filter(Boolean))
   )
 
-  const fetchMessages = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await getMessages()
-      setMessages(data)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
   useEffect(() => {
-    fetchMessages()
-  }, [fetchMessages])
+    setLoading(true)
+    getMessages()
+      .then(setMessages)
+      .finally(() => setLoading(false))
+  }, [])
 
   // Filter messages by active tab
   const filteredMessages = messages.filter((msg) => {
@@ -68,8 +59,8 @@ export default function AdminMessages() {
       setMessages((prev) =>
         prev.map((m) => (m.id === msg.id ? { ...m, read: true, category: 'leido' } : m))
       )
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      console.error('Failed to mark read:', err)
     }
   }
 
@@ -79,8 +70,8 @@ export default function AdminMessages() {
       setMessages((prev) =>
         prev.map((m) => (m.id === msg.id ? { ...m, read: false, category: 'no-leido' } : m))
       )
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      console.error('Failed to mark unread:', err)
     }
   }
 
@@ -91,8 +82,8 @@ export default function AdminMessages() {
         prev.map((m) => (m.id === msg.id ? { ...m, category } : m))
       )
       setShowMoveMenu(null)
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      console.error('Failed to move message:', err)
     }
   }
 
@@ -104,8 +95,8 @@ export default function AdminMessages() {
       if (selectedMessage?.id === msg.id) {
         setSelectedMessage(null)
       }
-    } catch (e) {
-      console.error(e)
+    } catch (err) {
+      console.error('Failed to delete message:', err)
     }
   }
 
@@ -121,18 +112,16 @@ export default function AdminMessages() {
   const customCategories = categories.filter(c => !defaultTabs.includes(c))
 
   return (
-    <div className="min-h-screen" style={{ background: '#0a0a0f', color: '#e0e0e0' }}>
+    <div className="min-h-screen bg-dark-base text-gray-300">
       {/* Sub-tabs */}
-      <div className="sticky top-16 z-30 flex border-b overflow-x-auto" style={{ background: 'rgba(10,10,15,0.95)', borderColor: '#1e1e2e' }}>
+      <div className="sticky top-16 z-30 flex border-b overflow-x-auto bg-dark-base/95 border-dark-border">
         {[...defaultTabs, ...customCategories].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className="font-mono text-xs px-4 py-3 whitespace-nowrap transition-colors"
-            style={{
-              color: activeTab === tab ? '#b026ff' : '#666',
-              borderBottom: activeTab === tab ? '2px solid #b026ff' : '2px solid transparent',
-            }}
+            className={`font-mono text-xs px-4 py-3 whitespace-nowrap transition-colors ${
+              activeTab === tab ? 'text-neon-purple border-b-2 border-neon-purple' : 'text-gray-500'
+            }`}
           >
             {tab === 'no-leido' ? `No leídos${unreadCount > 0 ? ` (${unreadCount})` : ''}` : 
               tab === 'leido' ? 'Leídos' : tab}
@@ -148,8 +137,7 @@ export default function AdminMessages() {
               onChange={(e) => setNewCategory(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleCreateCategory()}
               placeholder="Nombre..."
-              className="font-mono text-xs bg-transparent border-b border-gray-600 px-2 py-2 outline-none"
-              style={{ color: '#e0e0e0', width: '100px' }}
+              className="font-mono text-xs bg-transparent border-b border-gray-600 px-2 py-2 outline-none text-gray-300 w-24"
               autoFocus
             />
             <button onClick={handleCreateCategory} className="p-2 hover:text-white">
@@ -185,8 +173,7 @@ export default function AdminMessages() {
                 key={msg.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-lg overflow-hidden"
-                style={{ background: '#12121a', border: '1px solid #1e1e2e' }}
+                className="rounded-lg overflow-hidden bg-dark-card border border-dark-border"
               >
                 <button
                   className="w-full flex items-start gap-3 p-4 text-left hover:bg-white/5 transition-colors"
@@ -197,15 +184,15 @@ export default function AdminMessages() {
                 >
                   <div className="flex-shrink-0 mt-1">
                     {msg.read ? (
-                      <CheckCircle size={16} style={{ color: '#4a4a5a' }} />
+                      <CheckCircle size={16} className="text-gray-600" />
                     ) : (
-                      <Clock size={16} style={{ color: '#00e5ff' }} />
+                      <Clock size={16} className="text-neon-cyan" />
                     )}
                   </div>
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-mono text-sm font-bold" style={{ color: msg.read ? '#888' : '#e0e0e0' }}>
+                      <span className={`font-mono text-sm font-bold ${msg.read ? 'text-gray-500' : 'text-gray-300'}`}>
                         {msg.name}
                       </span>
                       <span className="font-mono text-xs text-gray-600 truncate">
@@ -215,19 +202,16 @@ export default function AdminMessages() {
                         {new Date(msg.createdAt).toLocaleDateString('es-AR')}
                       </span>
                     </div>
-                    <p className="font-mono text-xs truncate" style={{ color: msg.read ? '#555' : '#888' }}>
+                    <p className={`font-mono text-xs truncate ${msg.read ? 'text-gray-600' : 'text-gray-500'}`}>
                       {msg.message}
                     </p>
                   </div>
 
                   <ChevronRight
                     size={16}
-                    className="flex-shrink-0 mt-1"
-                    style={{
-                      color: '#444',
-                      transform: selectedMessage?.id === msg.id ? 'rotate(90deg)' : 'none',
-                      transition: 'transform 0.2s',
-                    }}
+                    className={`flex-shrink-0 mt-1 text-gray-600 transition-transform ${
+                      selectedMessage?.id === msg.id ? 'rotate-90' : ''
+                    }`}
                   />
                 </button>
 
@@ -239,11 +223,7 @@ export default function AdminMessages() {
                     className="px-4 pb-4 pl-10"
                   >
                     <div
-                      className="rounded-lg p-4 mb-3"
-                      style={{
-                        background: 'rgba(176,38,255,0.05)',
-                        border: '1px solid rgba(176,38,255,0.15)',
-                      }}
+                      className="rounded-lg p-4 mb-3 bg-dark-card/50 border border-neon-purple/20"
                     >
                       <p className="font-mono text-xs text-gray-500 mb-1">{msg.email}</p>
                       <p className="font-mono text-sm text-gray-300 whitespace-pre-wrap">
@@ -257,8 +237,7 @@ export default function AdminMessages() {
                       {msg.read ? (
                         <button
                           onClick={() => handleMarkUnread(msg)}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs"
-                          style={{ background: '#1e1e2e', color: '#888' }}
+                          className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs bg-dark-border text-gray-400"
                         >
                           <Clock size={12} />
                           Marcar no leído
@@ -266,8 +245,7 @@ export default function AdminMessages() {
                       ) : (
                         <button
                           onClick={() => handleMarkRead(msg)}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs"
-                          style={{ background: '#1e1e2e', color: '#00e5ff' }}
+                          className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs bg-dark-border text-neon-cyan"
                         >
                           <CheckCircle size={12} />
                           Marcar leído
@@ -278,8 +256,7 @@ export default function AdminMessages() {
                       <div className="relative">
                         <button
                           onClick={() => setShowMoveMenu(showMoveMenu === msg.id ? null : msg.id)}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs"
-                          style={{ background: '#1e1e2e', color: '#888' }}
+                          className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs bg-dark-border text-gray-400"
                         >
                           <Move size={12} />
                           Mover a...
@@ -287,8 +264,7 @@ export default function AdminMessages() {
                         
                         {showMoveMenu === msg.id && (
                           <div
-                            className="absolute top-full left-0 mt-1 rounded-lg overflow-hidden z-10"
-                            style={{ background: '#1e1e2e', border: '1px solid #333' }}
+                            className="absolute top-full left-0 mt-1 rounded-lg overflow-hidden z-10 bg-dark-border border border-gray-700"
                           >
                             {[...defaultTabs, ...categories]
                               .filter((c) => c !== msg.category)
@@ -308,8 +284,7 @@ export default function AdminMessages() {
                       {/* Delete */}
                       <button
                         onClick={() => handleDelete(msg)}
-                        className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs"
-                        style={{ background: 'rgba(255,85,85,0.1)', border: '1px solid rgba(255,85,85,0.3)', color: '#ff5555' }}
+                        className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20"
                       >
                         <Trash2 size={12} />
                         Eliminar

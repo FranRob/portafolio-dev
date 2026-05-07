@@ -12,7 +12,7 @@ import {
 import { getStats, logout } from '../../services/api'
 import type { AnalyticsStats } from '../../services/api'
 import AdminProjects from './AdminProjects'
-import AdminMessages from './AdminMessages'
+import { AdminMessages } from './AdminMessages'
 import AdminSettings from './AdminSettings'
 
 interface StatCardProps {
