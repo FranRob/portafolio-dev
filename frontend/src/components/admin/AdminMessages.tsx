@@ -118,12 +118,13 @@ export default function AdminMessages() {
   }
 
   const defaultTabs: TabType[] = ['no-leido', 'leido']
+  const customCategories = categories.filter(c => !defaultTabs.includes(c))
 
   return (
     <div className="min-h-screen" style={{ background: '#0a0a0f', color: '#e0e0e0' }}>
       {/* Sub-tabs */}
       <div className="sticky top-16 z-30 flex border-b overflow-x-auto" style={{ background: 'rgba(10,10,15,0.95)', borderColor: '#1e1e2e' }}>
-        {[...defaultTabs, ...categories].map((tab) => (
+        {[...defaultTabs, ...customCategories].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
