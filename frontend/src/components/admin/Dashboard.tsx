@@ -13,6 +13,7 @@ import { getStats, logout } from '../../services/api'
 import type { AnalyticsStats } from '../../services/api'
 import AdminProjects from './AdminProjects'
 import AdminMessages from './AdminMessages'
+import AdminSettings from './AdminSettings'
 
 interface StatCardProps {
   label: string
@@ -58,11 +59,11 @@ export default function Dashboard() {
   const [stats, setStats] = useState<AnalyticsStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [activeTab, setActiveTab] = useState<'metrics' | 'projects' | 'messages'>(() => {
-    return (localStorage.getItem('admin_active_tab') as 'metrics' | 'projects' | 'messages') || 'metrics'
+  const [activeTab, setActiveTab] = useState<'metrics' | 'projects' | 'messages' | 'settings'>(() => {
+    return (localStorage.getItem('admin_active_tab') as 'metrics' | 'projects' | 'messages' | 'settings') || 'metrics'
   })
 
-  function handleTabChange(tab: 'metrics' | 'projects' | 'messages') {
+  function handleTabChange(tab: 'metrics' | 'projects' | 'messages' | 'settings') {
     setActiveTab(tab)
     localStorage.setItem('admin_active_tab', tab)
   }
@@ -158,7 +159,7 @@ export default function Dashboard() {
         className="sticky top-16 z-30 flex border-b"
         style={{ background: 'rgba(10,10,15,0.95)', borderColor: '#1e1e2e' }}
       >
-        {(['metrics', 'messages', 'projects'] as const).map((tab) => (
+        {(['metrics', 'messages', 'projects', 'settings'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => handleTabChange(tab)}
@@ -168,7 +169,7 @@ export default function Dashboard() {
               borderBottom: activeTab === tab ? '2px solid #b026ff' : '2px solid transparent',
             }}
           >
-            {tab === 'metrics' ? 'Métricas' : tab === 'messages' ? 'Mensajes' : 'Proyectos'}
+            {tab === 'metrics' ? 'Métricas' : tab === 'messages' ? 'Mensajes' : tab === 'projects' ? 'Proyectos' : 'Ajustes'}
           </button>
         ))}
       </div>
@@ -176,6 +177,7 @@ export default function Dashboard() {
 <main className="max-w-6xl mx-auto px-4 py-8 space-y-8">
         {activeTab === 'projects' && <AdminProjects />}
         {activeTab === 'messages' && <AdminMessages />}
+        {activeTab === 'settings' && <AdminSettings />}
         {activeTab === 'metrics' && (
           <>
             {error && (

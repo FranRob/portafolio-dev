@@ -192,3 +192,34 @@ export async function unlockAccount(userId: string): Promise<void> {
     },
   });
 }
+
+// Change password
+export async function changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+  const admin = await prisma.adminUser.findFirst({
+    where: { id: userId },
+  });
+
+  if (!admin) {
+    throw new UnauthorizedError('Usuario no encontrado');
+  }
+
+  const passwordMatch = await bcrypt.compare(currentPassword, admin.passwordHash);
+  if (!passwordMatch) {
+    throw new UnauthorizedError('Contraseña actual incorrecta');
+  }
+
+  const newPasswordHash = await bcrypt.hash(newPassword, 10);
+  await prisma.adminUser.update({
+    where: { id: userId },
+    data: { passwordHash: newPasswordHash },
+  });
+
+  // Log the change
+  await prisma.auditLog.create({
+    data: {
+      action: 'PASSWORD_CHANGED',
+      adminId: userId,
+      details: 'Password changed by user',
+    },
+  });
+}

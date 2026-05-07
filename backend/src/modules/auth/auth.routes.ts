@@ -3,8 +3,8 @@ import { z } from 'zod';
 import crypto from 'crypto';
 import rateLimit from 'express-rate-limit';
 import { requireAuth, generateTokens, revokeAllTokens, generateCsrfToken } from '../../middleware/auth.js';
-import { login, refreshAccessToken, revokeRefreshToken, getAuditLogs, unlockAccount } from './auth.service.js';
-import { generateTwoFactorSecret, enableTwoFactor, disableTwoFactor, verifyTwoFactor } from './twoFactor.service.js';
+import { login, refreshAccessToken, revokeRefreshToken, getAuditLogs, unlockAccount, changePassword } from './auth.service.js';
+import { generateTwoFactorSecret, enableTwoFactor, disableTwoFactor, verifyTwoFactor, hasTwoFactorEnabled } from './twoFactor.service.js';
 import { asyncHandler } from '../../lib/errorMiddleware.js';
 import { ValidationError, UnauthorizedError, TooManyRequestsError } from '../../lib/errors.js';
 
@@ -191,6 +191,12 @@ router.post('/2fa/setup', requireAuth, asyncHandler(async (req: Request, res: Re
   res.json({ secret, qrCode });
 }));
 
+// 2FA Status - check if 2FA is enabled
+router.get('/2fa/status', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+  const has2FA = await hasTwoFactorEnabled(req.user!.id);
+  res.json({ enabled: has2FA });
+}));
+
 // 2FA Enable - verify and enable 2FA
 router.post('/2fa/enable', requireAuth, asyncHandler(async (req: Request, res: Response) => {
   const { code, secret } = req.body;
@@ -215,6 +221,22 @@ router.post('/2fa/disable', requireAuth, asyncHandler(async (req: Request, res: 
 
   await disableTwoFactor(req.user!.id);
   res.json({ success: true, message: '2FA deshabilitado' });
+}));
+
+// Change password
+router.patch('/password', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    throw new ValidationError('Contraseña actual y nueva son requeridas');
+  }
+
+  if (newPassword.length < 8) {
+    throw new ValidationError('La nueva contraseña debe tener al menos 8 caracteres');
+  }
+
+  await changePassword(req.user!.id, currentPassword, newPassword);
+  res.json({ success: true, message: 'Contraseña actualizada' });
 }));
 
 export default router;

@@ -50,9 +50,8 @@ api.interceptors.response.use(
         window.location.pathname = '/admin/login'
       }
     }
-    }
     return Promise.reject(error)
-  },
+  }
 )
 
 // Auth
@@ -202,6 +201,45 @@ export async function updateProject(id: string, payload: Partial<ProjectPayload>
 
 export async function deleteProject(id: string): Promise<void> {
   await api.delete(`/projects/${id}`)
+}
+
+// 2FA
+export interface TwoFactorStatus {
+  enabled: boolean
+}
+
+export async function getTwoFactorStatus(): Promise<TwoFactorStatus> {
+  const res = await api.get<TwoFactorStatus>('/auth/2fa/status')
+  return res.data
+}
+
+export interface TwoFactorSetup {
+  secret: string
+  qrCode: string
+}
+
+export async function setupTwoFactor(): Promise<TwoFactorSetup> {
+  const res = await api.post<TwoFactorSetup>('/auth/2fa/setup')
+  return res.data
+}
+
+export async function enableTwoFactor(code: string, secret: string): Promise<{ success: boolean }> {
+  const res = await api.post<{ success: boolean }>('/auth/2fa/enable', { code, secret })
+  return res.data
+}
+
+export async function disableTwoFactor(code: string): Promise<{ success: boolean }> {
+  const res = await api.post<{ success: boolean }>('/auth/2fa/disable', { code })
+  return res.data
+}
+
+// Password
+export async function changePassword(currentPassword: string, newPassword: string): Promise<{ success: boolean }> {
+  const res = await api.patch<{ success: boolean }>('/auth/password', {
+    currentPassword,
+    newPassword,
+  })
+  return res.data
 }
 
 export default api
