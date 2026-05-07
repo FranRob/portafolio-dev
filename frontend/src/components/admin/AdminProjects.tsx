@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { motion } from 'framer-motion'
 import { getProjects, createProject, updateProject, deleteProject } from '../../services/api'
 import type { Project, ProjectPayload } from '../../services/api'
+import { ProjectsSkeleton } from './AdminSkeleton'
 
 type EditMode = null | 'new' | Project
 
@@ -122,10 +122,17 @@ export default function AdminProjects() {
     setSaving(true)
     setError('')
 
+    // Validate stack before sending
     const stack = form.stackInput
       .split(',')
       .map((t) => t.trim())
       .filter(Boolean)
+
+    if (stack.length === 0) {
+      setError('Agregá al menos una tecnología en el campo Stack.')
+      setSaving(false)
+      return
+    }
 
     const payload: ProjectPayload = {
       title: form.title,
@@ -148,8 +155,9 @@ export default function AdminProjects() {
       }
       await fetchProjects()
       setEditMode(null)
-    } catch {
-      setError('Error al guardar el proyecto.')
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Error al guardar el proyecto.'
+      setError(msg)
     } finally {
       setSaving(false)
     }
@@ -219,7 +227,7 @@ export default function AdminProjects() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label style={labelStyle}>Título</label>
+            <label style={labelStyle}>Título <span style={{ color: '#b026ff' }}>*</span></label>
             <input
               type="text"
               value={form.title}
@@ -231,7 +239,7 @@ export default function AdminProjects() {
 
           {/* Description */}
           <div>
-            <label style={labelStyle}>Descripción</label>
+            <label style={labelStyle}>Descripción <span style={{ color: '#b026ff' }}>*</span></label>
             <textarea
               rows={4}
               value={form.description}
@@ -243,7 +251,7 @@ export default function AdminProjects() {
 
           {/* Stack */}
           <div>
-            <label style={labelStyle}>Stack (separado por comas)</label>
+            <label style={labelStyle}>Stack (separado por comas) <span style={{ color: '#b026ff' }}>*</span></label>
             <input
               type="text"
               value={form.stackInput}
@@ -407,18 +415,8 @@ export default function AdminProjects() {
         </div>
       )}
 
-      {/* Loading */}
-      {loading && (
-        <div className="flex items-center justify-center py-12">
-          <motion.div
-            className="w-6 h-6 border-2 rounded-full"
-            style={{ borderColor: '#b026ff', borderTopColor: 'transparent' }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
-          />
-          <span className="font-mono text-sm text-gray-500 ml-3">Cargando...</span>
-        </div>
-      )}
+      {/* Loading skeleton */}
+      {loading && <ProjectsSkeleton />}
 
       {/* Empty state */}
       {!loading && projects.length === 0 && (

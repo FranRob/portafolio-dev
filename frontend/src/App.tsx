@@ -1,3 +1,4 @@
+import {lazy, Suspense} from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
@@ -7,7 +8,24 @@ import About from './components/sections/About'
 import Projects from './components/sections/Projects'
 import Contact from './components/sections/Contact'
 import Login from './components/admin/Login'
-import Dashboard from './components/admin/Dashboard'
+
+// Lazy load admin dashboard for faster initial load
+const Dashboard = lazy(() => import('./components/admin/Dashboard').then(m => ({ default: m.default })))
+
+// Fallback component for lazy loading
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}>
+      <div className="flex flex-col items-center gap-4">
+        <div
+          className="w-10 h-10 border-3 rounded-full"
+          style={{ borderColor: '#b026ff', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }}
+        />
+        <p className="font-mono text-sm text-gray-500">Cargando...</p>
+      </div>
+    </div>
+  )
+}
 
 function PortfolioPage() {
   return (
@@ -26,8 +44,9 @@ function PortfolioPage() {
 }
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const token = localStorage.getItem('admin_token')
-  if (!token) {
+  // Check if user has a session (via cookies)
+  const hasSession = localStorage.getItem('has_session')
+  if (!hasSession) {
     return <Navigate to="/admin/login" replace />
   }
   return <>{children}</>
@@ -37,15 +56,18 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<PortfolioPage />} />
+      <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
       <Route path="/admin/login" element={<Login />} />
-      <Route
-        path="/admin/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
+<Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<LoadingFallback />}>
+                <Dashboard />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
     </Routes>
   )
 }

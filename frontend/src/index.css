@@ -125,4 +125,26 @@
       linear-gradient(90deg, rgba(176, 38, 255, 0.05) 1px, transparent 1px);
     background-size: 50px 50px;
   }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .border-3 {
+    border-width: 3px;
+  }
 }
