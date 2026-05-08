@@ -106,29 +106,23 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   res.cookie('accessToken', result.accessToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'none', // Required for cross-origin
-    maxAge: 15 * 60 * 1000, // 15 minutes
+    sameSite: 'lax', // More secure: only sent on same-site navigations
+    maxAge: 15 * 60 * 1000,
     path: '/',
   });
 
   res.cookie('refreshToken', result.refreshToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'none', // Required for cross-origin
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     path: '/',
   });
 
-  // Set CSRF token (not httpOnly so client can read it for headers)
-  res.cookie('csrf-token', csrfToken, {
-    httpOnly: false, // Client needs to read this
-    secure: true,
-    sameSite: 'none', // Required for cross-origin
-    maxAge: 15 * 60 * 1000,
-    path: '/',
-  });
+  // Also send accessToken in response body for header-based auth (more secure for cross-origin)
+  const tokenForHeader = result.accessToken;
 
-  res.json({ user: result.user, csrfToken });
+  res.json({ user: result.user, accessToken: tokenForHeader });
 }));
 
 // Refresh token endpoint - obtiene nuevo access token
@@ -145,7 +139,7 @@ router.post('/refresh', asyncHandler(async (req: Request, res: Response) => {
   res.cookie('accessToken', newAccess.accessToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'none',
+    sameSite: 'lax',
     maxAge: 15 * 60 * 1000,
     path: '/',
   });

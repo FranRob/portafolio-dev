@@ -13,16 +13,21 @@ const api = axios.create({
 let isLoggingIn = false
 let isLoggingOut = false
 
-// Request interceptor: check if accessToken cookie exists
+// Request interceptor: use token from localStorage for Authorization header
 api.interceptors.request.use((config) => {
   // Skip redirect for login/logout requests
   if (config.url?.includes('/auth/login') || config.url?.includes('/auth/logout')) {
     return config
   }
   
-  // Check if accessToken cookie exists (set by login via HTTP-only cookie)
-  // We can't read HTTP-only cookies from JS, but we can check localStorage as a fallback
-  const hasSession = document.cookie.includes('accessToken=') || localStorage.getItem('has_session')
+  // Add token from localStorage (set by login) - more secure for cross-origin
+  const token = localStorage.getItem('admin_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  
+  // Check if session exists
+  const hasSession = token || localStorage.getItem('has_session')
   
   if (!hasSession && !isLoggingIn && !isLoggingOut) {
     // No session - redirect to login if on admin route
@@ -43,8 +48,9 @@ api.interceptors.response.use(
     }
     
     if (error.response?.status === 401) {
-      // Clear session flag
+      // Clear session and token
       localStorage.removeItem('has_session')
+      localStorage.removeItem('admin_token')
       // Redirect to login
       if (window.location.pathname.startsWith('/admin')) {
         window.location.pathname = '/admin/login'
@@ -66,14 +72,17 @@ export interface LoginResponse {
     email: string
     createdAt: string
   }
+  accessToken?: string
 }
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
   isLoggingIn = true
   try {
     const res = await api.post<LoginResponse>('/auth/login', payload)
-    // Mark that we have a session (for checking in interceptor)
-    // We can't read the HTTP-only cookie, but we know login succeeded
+    // Store token from body for Authorization header (more secure for cross-origin)
+    if (res.data.accessToken) {
+      localStorage.setItem('admin_token', res.data.accessToken)
+    }
     localStorage.setItem('has_session', 'true')
     return res.data
   } finally {
@@ -89,6 +98,7 @@ export async function logout(): Promise<void> {
   } finally {
     isLoggingOut = false
     localStorage.removeItem('has_session')
+    localStorage.removeItem('admin_token')
     localStorage.removeItem('admin_active_tab')
   }
 }
