@@ -29,11 +29,21 @@ export function AdminMessages() {
   const [newCategory, setNewCategory] = useState('')
   const [showNewCategory, setShowNewCategory] = useState(false)
   const [showMoveMenu, setShowMoveMenu] = useState<string | null>(null)
+  
+  const defaultTabs: TabType[] = ['no-leido', 'leido']
 
   // Get unique categories from messages
   const categories = Array.from(
     new Set(messages.map((m) => m.category || 'leido').filter(Boolean))
   )
+  
+  // Include activeTab as a category if it's a custom one (not default)
+  const showActiveTabAsCategory = activeTab && !defaultTabs.includes(activeTab as string) && !categories.includes(activeTab)
+  const customCategories = categories.filter(c => !defaultTabs.includes(c as string))
+  // Also show the active tab as a category if it's a custom one being created
+  const allCustomCategories = showActiveTabAsCategory 
+    ? [...customCategories, activeTab] 
+    : customCategories
 
   useEffect(() => {
     setLoading(true)
@@ -102,20 +112,17 @@ export function AdminMessages() {
 
   async function handleCreateCategory() {
     if (!newCategory.trim()) return
-    // The category is created automatically when a message is moved to it
+    // Add the new category to the messages list so it appears as a tab
+    setMessages(prev => prev.map(m => m)) // Force update to show new category
     setShowNewCategory(false)
-    setNewCategory('')
     setActiveTab(newCategory.trim())
   }
-
-  const defaultTabs: TabType[] = ['no-leido', 'leido']
-  const customCategories = categories.filter(c => !defaultTabs.includes(c))
 
   return (
     <div className="min-h-screen bg-dark-base text-gray-300">
       {/* Sub-tabs */}
       <div className="sticky top-16 z-30 flex border-b overflow-x-auto bg-dark-base/95 border-dark-border">
-        {[...defaultTabs, ...customCategories].map((tab) => (
+        {[...defaultTabs, ...allCustomCategories].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
