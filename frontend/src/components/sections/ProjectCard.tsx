@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink, Github } from 'lucide-react'
 import type { Project } from '../../services/api'
@@ -34,7 +35,7 @@ function getInitials(title: string): string {
     .toUpperCase()
 }
 
-export default function ProjectCard({ project, index }: ProjectCardProps) {
+export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
   const status = statusConfig[project.status]
 
   return (
@@ -154,4 +155,4 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
       </div>
     </motion.div>
   )
-}
+})

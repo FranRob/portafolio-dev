@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -7,10 +8,57 @@ datasource db {
 }
 
 model AdminUser {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  passwordHash String
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  failedAttempts Int    @default(0)
+  lockedUntil   DateTime?
+  lastLoginAt   DateTime?
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret String?
   createdAt    DateTime @default(now())
+
+  refreshTokens RefreshToken[]
+  auditLogs    AuditLog[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  token     String    @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+  adminId   String
+  admin    AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([adminId])
+}
+
+model AuditLog {
+  id        String    @id @default(uuid())
+  action   String    // login_success, login_failed, logout, token_refresh, account_locked
+  ip       String?
+  userAgent String?
+  details  String?   // additional context
+  createdAt DateTime @default(now())
+  adminId  String?
+  admin    AdminUser? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([adminId])
+  @@index([createdAt])
+  @@index([action])
+}
+
+model RateLimitEntry {
+  id        String   @id @default(uuid())
+  key      String   @unique // ip address or email
+  attempts Int      @default(0)
+  firstAttempt DateTime @default(now())
+  lastAttempt DateTime @default(now())
+  blockedUntil DateTime?
+
+  @@index([key])
 }
 
 model PageView {
@@ -28,6 +76,7 @@ model ContactMessage {
   email     String
   message   String
   read      Boolean  @default(false)
+  category  String?  @default("leido")  // filtro: no-leido, leido, o custom
   createdAt DateTime @default(now())
 }
 

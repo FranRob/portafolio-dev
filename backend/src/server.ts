@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import app from './app.js';
+import { logger } from './lib/logger.js';
 
 const PORT = Number(process.env.PORT) || 3001;
 
 app.listen(PORT, () => {
-  console.log(`[server] Running on http://localhost:${PORT}`);
-  console.log(`[server] Environment: ${process.env.NODE_ENV ?? 'development'}`);
+  logger.info({ port: PORT, env: process.env.NODE_ENV ?? 'development' }, 'Server running');
 });

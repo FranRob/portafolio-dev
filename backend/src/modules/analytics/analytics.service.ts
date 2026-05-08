@@ -1,12 +1,22 @@
 import prisma from '../../lib/prisma.js';
+import type { AnalyticsStatsResponse } from '../../dtos/index.js';
 
-export interface StatsResult {
+function toStatsResponse(stats: {
   totalVisits: number;
   todayVisits: number;
   mostViewedSection: string;
   unreadMessages: number;
   sectionViews: Record<string, number>;
   dailyVisits: Array<{ date: string; count: number }>;
+}): AnalyticsStatsResponse {
+  return {
+    totalVisits: stats.totalVisits,
+    todayVisits: stats.todayVisits,
+    mostViewedSection: stats.mostViewedSection,
+    unreadMessages: stats.unreadMessages,
+    sectionViews: stats.sectionViews,
+    dailyVisits: stats.dailyVisits,
+  };
 }
 
 export async function trackView(
@@ -25,7 +35,7 @@ export async function trackView(
   });
 }
 
-export async function getStats(): Promise<StatsResult> {
+export async function getStats(): Promise<AnalyticsStatsResponse> {
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -83,5 +93,5 @@ export async function getStats(): Promise<StatsResult> {
 
   const dailyVisits = Array.from(dayMap.entries()).map(([date, count]) => ({ date, count }));
 
-  return { totalVisits, todayVisits, mostViewedSection, unreadMessages, sectionViews, dailyVisits };
+  return toStatsResponse({ totalVisits, todayVisits, mostViewedSection, unreadMessages, sectionViews, dailyVisits });
 }

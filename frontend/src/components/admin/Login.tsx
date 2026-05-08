@@ -2,7 +2,39 @@ import { useState, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Lock, AlertCircle } from 'lucide-react'
+import axios from 'axios'
 import { login } from '../../services/api'
+
+const MAX_RETRIES = 3
+const RETRY_DELAYS = [1000, 2000, 4000] // exponential backoff
+
+async function loginWithRetry(email: string, password: string, onRetry: (attempt: number) => void): Promise<void> {
+  let lastError: unknown
+  
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      await login({ email, password })
+      return // success
+    } catch (err) {
+      lastError = err
+      
+      // Only retry on network errors or 499 (cancelled)
+      if (axios.isAxiosError(err)) {
+        const isRetryable = !err.response || err.response.status === 499 || err.code === 'ECONNABORTED'
+        if (!isRetryable || attempt === MAX_RETRIES - 1) {
+          throw err
+        }
+      } else if (attempt === MAX_RETRIES - 1) {
+        throw err
+      }
+      
+      onRetry(attempt + 1)
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAYS[attempt]))
+    }
+  }
+  
+  throw lastError
+}
 
 export default function Login() {
   const navigate = useNavigate()
@@ -10,19 +42,42 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError('')
     setLoading(true)
+    setRetryCount(0)
+    
     try {
-      const res = await login({ email, password })
-      localStorage.setItem('admin_token', res.token)
-      navigate('/admin/dashboard')
-    } catch {
-      setError('Credenciales inválidas. Verificá email y contraseña.')
+      await loginWithRetry(email, password, (attempt) => {
+        setRetryCount(attempt)
+      })
+      navigate('/admin/dashboard', { replace: true })
+    } catch (err: unknown) {
+      // Parse error for better messaging
+      if (axios.isAxiosError(err)) {
+        if (!err.response) {
+          // Network error
+          setError('No hay conexión con el servidor. Verificá que el backend esté funcionando.')
+        } else if (err.response.status === 401) {
+          setError('Email o contraseña incorrectos.')
+        } else if (err.response.status === 429) {
+          setError('Demasiados intentos. Esperá 15 minutos.')
+        } else if (err.response.status === 499) {
+          setError('La solicitud fue cancelada. Intentá de nuevo.')
+        } else {
+          setError(`Error ${err.response.status}: ${err.response.data?.error || 'Error desconocido'}`)
+        }
+      } else if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('Error al iniciar sesión.')
+      }
     } finally {
       setLoading(false)
+      setRetryCount(0)
     }
   }
 
@@ -180,7 +235,7 @@ export default function Login() {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                   />
-                  Verificando...
+                  {retryCount > 0 ? `Reintentando (${retryCount}/${MAX_RETRIES})...` : 'Verificando...'}
                 </>
               ) : (
                 <>

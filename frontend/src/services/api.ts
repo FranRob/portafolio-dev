@@ -5,27 +5,53 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // Important: allow cookies to be sent with requests
+  withCredentials: true,
 })
 
-// Request interceptor: attach token if present
+// Track if we're in the middle of a login request
+let isLoggingIn = false
+let isLoggingOut = false
+
+// Request interceptor: check if accessToken cookie exists
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('admin_token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  // Skip redirect for login/logout requests
+  if (config.url?.includes('/auth/login') || config.url?.includes('/auth/logout')) {
+    return config
+  }
+  
+  // Check if accessToken cookie exists (set by login via HTTP-only cookie)
+  // We can't read HTTP-only cookies from JS, but we can check localStorage as a fallback
+  const hasSession = document.cookie.includes('accessToken=') || localStorage.getItem('has_session')
+  
+  if (!hasSession && !isLoggingIn && !isLoggingOut) {
+    // No session - redirect to login if on admin route
+    if (window.location.pathname.startsWith('/admin')) {
+      window.location.pathname = '/admin/login'
+    }
   }
   return config
 })
 
-// Response interceptor: handle 401
+// Response interceptor: handle 401/expired tokens
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Skip redirect for login/logout responses
+    if (error.config?.url?.includes('/auth/login') || error.config?.url?.includes('/auth/logout')) {
+      return Promise.reject(error)
+    }
+    
     if (error.response?.status === 401) {
-      localStorage.removeItem('admin_token')
-      window.location.hash = '/admin/login'
+      // Clear session flag
+      localStorage.removeItem('has_session')
+      // Redirect to login
+      if (window.location.pathname.startsWith('/admin')) {
+        window.location.pathname = '/admin/login'
+      }
     }
     return Promise.reject(error)
-  },
+  }
 )
 
 // Auth
@@ -35,12 +61,36 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-  token: string
+  user: {
+    id: string
+    email: string
+    createdAt: string
+  }
 }
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
-  const res = await api.post<LoginResponse>('/auth/login', payload)
-  return res.data
+  isLoggingIn = true
+  try {
+    const res = await api.post<LoginResponse>('/auth/login', payload)
+    // Mark that we have a session (for checking in interceptor)
+    // We can't read the HTTP-only cookie, but we know login succeeded
+    localStorage.setItem('has_session', 'true')
+    return res.data
+  } finally {
+    isLoggingIn = false
+  }
+}
+
+// Logout - call the backend to revoke tokens
+export async function logout(): Promise<void> {
+  isLoggingOut = true
+  try {
+    await api.post('/auth/logout')
+  } finally {
+    isLoggingOut = false
+    localStorage.removeItem('has_session')
+    localStorage.removeItem('admin_active_tab')
+  }
 }
 
 // Analytics
@@ -80,6 +130,7 @@ export interface ContactMessage {
   message: string
   createdAt: string
   read: boolean
+  category: string | null
 }
 
 export async function getMessages(): Promise<ContactMessage[]> {
@@ -89,6 +140,18 @@ export async function getMessages(): Promise<ContactMessage[]> {
 
 export async function markMessageRead(id: string): Promise<void> {
   await api.patch(`/contact/${id}/read`)
+}
+
+export async function markMessageUnread(id: string): Promise<void> {
+  await api.patch(`/contact/${id}/unread`)
+}
+
+export async function moveMessage(id: string, category: string): Promise<void> {
+  await api.patch(`/contact/${id}/category`, { category })
+}
+
+export async function deleteMessage(id: string): Promise<void> {
+  await api.delete(`/contact/${id}`)
 }
 
 // Projects
@@ -138,6 +201,45 @@ export async function updateProject(id: string, payload: Partial<ProjectPayload>
 
 export async function deleteProject(id: string): Promise<void> {
   await api.delete(`/projects/${id}`)
+}
+
+// 2FA
+export interface TwoFactorStatus {
+  enabled: boolean
+}
+
+export async function getTwoFactorStatus(): Promise<TwoFactorStatus> {
+  const res = await api.get<TwoFactorStatus>('/auth/2fa/status')
+  return res.data
+}
+
+export interface TwoFactorSetup {
+  secret: string
+  qrCode: string
+}
+
+export async function setupTwoFactor(): Promise<TwoFactorSetup> {
+  const res = await api.post<TwoFactorSetup>('/auth/2fa/setup')
+  return res.data
+}
+
+export async function enableTwoFactor(code: string, secret: string): Promise<{ success: boolean }> {
+  const res = await api.post<{ success: boolean }>('/auth/2fa/enable', { code, secret })
+  return res.data
+}
+
+export async function disableTwoFactor(code: string): Promise<{ success: boolean }> {
+  const res = await api.post<{ success: boolean }>('/auth/2fa/disable', { code })
+  return res.data
+}
+
+// Password
+export async function changePassword(currentPassword: string, newPassword: string): Promise<{ success: boolean }> {
+  const res = await api.patch<{ success: boolean }>('/auth/password', {
+    currentPassword,
+    newPassword,
+  })
+  return res.data
 }
 
 export default api
