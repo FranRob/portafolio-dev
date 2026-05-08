@@ -54,7 +54,10 @@ export default function Login() {
       await loginWithRetry(email, password, (attempt) => {
         setRetryCount(attempt)
       })
-      navigate('/admin/dashboard', { replace: true })
+      // Small delay to ensure token is stored before navigating
+      setTimeout(() => {
+        navigate('/admin/dashboard', { replace: true })
+      }, 100)
     } catch (err: unknown) {
       // Parse error for better messaging
       if (axios.isAxiosError(err)) {

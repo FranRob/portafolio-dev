@@ -44,9 +44,9 @@ function PortfolioPage() {
 }
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  // Check if user has a session (via cookies)
-  const hasSession = localStorage.getItem('has_session')
-  if (!hasSession) {
+  // Check for token - more reliable than has_session
+  const token = localStorage.getItem('admin_token')
+  if (!token) {
     return <Navigate to="/admin/login" replace />
   }
   return <>{children}</>
