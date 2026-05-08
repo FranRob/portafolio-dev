@@ -58,16 +58,16 @@ function App() {
       <Route path="/" element={<PortfolioPage />} />
       <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
       <Route path="/admin/login" element={<Login />} />
-<Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute>
-              <Suspense fallback={<LoadingFallback />}>
-                <Dashboard />
-              </Suspense>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/admin/*"
+        element={
+          <ProtectedRoute>
+            <Suspense fallback={<LoadingFallback />}>
+              <Dashboard />
+            </Suspense>
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   )
 }

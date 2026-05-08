@@ -105,16 +105,16 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   // Set tokens in HTTP-only cookies
   res.cookie('accessToken', result.accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true,
+    sameSite: 'none', // Required for cross-origin
     maxAge: 15 * 60 * 1000, // 15 minutes
     path: '/',
   });
 
   res.cookie('refreshToken', result.refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true,
+    sameSite: 'none', // Required for cross-origin
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
   });
@@ -122,8 +122,8 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   // Set CSRF token (not httpOnly so client can read it for headers)
   res.cookie('csrf-token', csrfToken, {
     httpOnly: false, // Client needs to read this
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true,
+    sameSite: 'none', // Required for cross-origin
     maxAge: 15 * 60 * 1000,
     path: '/',
   });
@@ -144,8 +144,8 @@ router.post('/refresh', asyncHandler(async (req: Request, res: Response) => {
   // Set new access token in cookie
   res.cookie('accessToken', newAccess.accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: true,
+    sameSite: 'none',
     maxAge: 15 * 60 * 1000,
     path: '/',
   });
