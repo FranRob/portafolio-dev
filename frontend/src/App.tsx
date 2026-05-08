@@ -1,6 +1,6 @@
 import {lazy, Suspense} from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import Hero from './components/sections/Hero'
@@ -71,7 +71,7 @@ function App() {
           }
         />
       </Routes>
-      <Analytics />
+      <SpeedInsights />
     </>
   )
 }
