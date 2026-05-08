@@ -1,5 +1,6 @@
 import {lazy, Suspense} from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import Hero from './components/sections/Hero'
@@ -54,11 +55,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<PortfolioPage />} />
-      <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-      <Route path="/admin/login" element={<Login />} />
-<Route
+    <>
+      <Routes>
+        <Route path="/" element={<PortfolioPage />} />
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/admin/login" element={<Login />} />
+        <Route
           path="/admin/dashboard"
           element={
             <ProtectedRoute>
@@ -68,7 +70,9 @@ function App() {
             </ProtectedRoute>
           }
         />
-    </Routes>
+      </Routes>
+      <Analytics />
+    </>
   )
 }
 
