@@ -60,12 +60,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [activeTab, setActiveTab] = useState<'metrics' | 'projects' | 'messages' | 'settings'>(() => {
-    return (localStorage.getItem('admin_active_tab') as 'metrics' | 'projects' | 'messages' | 'settings') || 'metrics'
+    return (sessionStorage.getItem('admin_active_tab') as 'metrics' | 'projects' | 'messages' | 'settings') || 'metrics'
   })
 
   function handleTabChange(tab: 'metrics' | 'projects' | 'messages' | 'settings') {
     setActiveTab(tab)
-    localStorage.setItem('admin_active_tab', tab)
+    sessionStorage.setItem('admin_active_tab', tab)
   }
 
   const fetchData = useCallback(async () => {

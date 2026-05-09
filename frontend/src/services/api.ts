@@ -13,21 +13,24 @@ const api = axios.create({
 let isLoggingIn = false
 let isLoggingOut = false
 
-// Request interceptor: use token from localStorage for Authorization header
+// Use sessionStorage - data is cleared when browser is closed (more secure)
+const storage = sessionStorage
+
+// Request interceptor: use token from sessionStorage for Authorization header
 api.interceptors.request.use((config) => {
   // Skip redirect for login/logout requests
   if (config.url?.includes('/auth/login') || config.url?.includes('/auth/logout')) {
     return config
   }
   
-  // Add token from localStorage (set by login) - more secure for cross-origin
-  const token = localStorage.getItem('admin_token')
+  // Add token from sessionStorage (set by login) - more secure for cross-origin
+  const token = storage.getItem('admin_token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
   
   // Check if session exists
-  const hasSession = token || localStorage.getItem('has_session')
+  const hasSession = token || storage.getItem('has_session')
   
   if (!hasSession && !isLoggingIn && !isLoggingOut) {
     // No session - redirect to login if on admin route
@@ -49,8 +52,8 @@ api.interceptors.response.use(
     
     if (error.response?.status === 401) {
       // Clear session and token
-      localStorage.removeItem('has_session')
-      localStorage.removeItem('admin_token')
+      storage.removeItem('has_session')
+      storage.removeItem('admin_token')
       // Redirect to login
       if (window.location.pathname.startsWith('/admin')) {
         window.location.pathname = '/admin/login'
@@ -79,11 +82,11 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
   isLoggingIn = true
   try {
     const res = await api.post<LoginResponse>('/auth/login', payload)
-    // Store token from body for Authorization header (more secure for cross-origin)
+    // Store token in sessionStorage for Authorization header (more secure for cross-origin)
     if (res.data.accessToken) {
-      localStorage.setItem('admin_token', res.data.accessToken)
+      storage.setItem('admin_token', res.data.accessToken)
     }
-    localStorage.setItem('has_session', 'true')
+    storage.setItem('has_session', 'true')
     return res.data
   } finally {
     isLoggingIn = false
@@ -97,9 +100,9 @@ export async function logout(): Promise<void> {
     await api.post('/auth/logout')
   } finally {
     isLoggingOut = false
-    localStorage.removeItem('has_session')
-    localStorage.removeItem('admin_token')
-    localStorage.removeItem('admin_active_tab')
+    storage.removeItem('has_session')
+    storage.removeItem('admin_token')
+    storage.removeItem('admin_active_tab')
   }
 }
 
