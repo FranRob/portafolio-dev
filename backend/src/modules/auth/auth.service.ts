@@ -64,7 +64,7 @@ export async function login(email: string, password: string, ip?: string, userAg
   const accessToken = jwt.sign(
     { id: admin.id, email: admin.email, type: 'access' },
     JWT_SECRET,
-    { expiresIn: '15m' }
+    { expiresIn: '4h' }
   );
 
   const refreshToken = crypto.randomBytes(64).toString('hex');
@@ -138,7 +138,7 @@ export async function refreshAccessToken(refreshToken: string): Promise<{ access
   const accessToken = jwt.sign(
     { id: admin.id, email: admin.email, type: 'access' },
     JWT_SECRET,
-    { expiresIn: '15m' }
+    { expiresIn: '4h' }
   );
 
   // Audit log

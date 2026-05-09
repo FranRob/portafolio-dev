@@ -107,7 +107,7 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
     httpOnly: true,
     secure: true,
     sameSite: 'lax', // More secure: only sent on same-site navigations
-    maxAge: 15 * 60 * 1000,
+    maxAge: 4 * 60 * 60 * 1000, // 4 hours
     path: '/',
   });
 
