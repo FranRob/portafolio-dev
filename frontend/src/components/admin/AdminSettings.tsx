@@ -34,6 +34,7 @@ export default function AdminSettings() {
   // 2FA setup
   const [showSetup, setShowSetup] = useState(false)
   const [qrCode, setQrCode] = useState('')
+  const [secret, setSecret] = useState('')
   const [code, setCode] = useState('')
 
   // Password change
@@ -65,6 +66,7 @@ export default function AdminSettings() {
     try {
       const data = await setupTwoFactor()
       setQrCode(data.qrCode)
+      setSecret(data.secret)
       setShowSetup(true)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error al generar código 2FA')
@@ -81,7 +83,7 @@ export default function AdminSettings() {
     setSaving(true)
     setError('')
     try {
-      await enableTwoFactor(code, '')
+      await enableTwoFactor(code, secret)
       setTwoFactorEnabled(true)
       setShowSetup(false)
       setCode('')
@@ -315,7 +317,7 @@ export default function AdminSettings() {
         ) : (
           <div className="flex items-center justify-between">
             <span className="font-mono text-xs text-gray-500">
-              Actualizá tu contraseña periodically
+              Actualizá tu contraseña periódicamente
             </span>
             <button
               onClick={() => setShowPasswordForm(true)}

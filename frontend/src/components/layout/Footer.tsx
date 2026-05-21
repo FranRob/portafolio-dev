@@ -31,7 +31,7 @@ export default function Footer() {
             onClick={() => navigate('/admin', { replace: true })}
             onMouseEnter={() => {
               // Prefetch dashboard chunk on hover
-              import(/* webpackPrefetch: true */'../../components/admin/Dashboard')
+              import('../../components/admin/Dashboard')
             }}
             className="flex items-center gap-1 text-gray-700 hover:text-gray-500 transition-colors duration-200 group"
             title="Admin"
