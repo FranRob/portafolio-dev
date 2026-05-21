@@ -76,7 +76,7 @@ model ContactMessage {
   email     String
   message   String
   read      Boolean  @default(false)
-  category  String?  @default("leido")  // filtro: no-leido, leido, o custom
+  category  String?  @default("no-leido")  // filtro: no-leido, leido, o custom
   createdAt DateTime @default(now())
 }
 
