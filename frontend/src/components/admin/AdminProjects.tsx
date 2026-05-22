@@ -50,7 +50,6 @@ const inputStyle: React.CSSProperties = {
   borderRadius: '0.375rem',
   padding: '0.5rem 0.75rem',
   color: '#d1d5db',
-  outline: 'none',
 }
 
 const labelStyle: React.CSSProperties = {
@@ -204,7 +203,7 @@ export default function AdminProjects() {
           <h2 className="font-orbitron font-bold text-sm text-white">{editTitle}</h2>
           <button
             onClick={() => setEditMode(null)}
-            className="font-mono text-xs text-gray-400 hover:text-white transition-colors px-3 py-2 rounded"
+            className="font-mono text-xs text-gray-400 hover:text-white transition-colors px-3 py-2 rounded min-h-[44px]"
             style={{ border: '1px solid #1e1e2e', background: '#12121a' }}
           >
             Cancelar
@@ -359,7 +358,7 @@ export default function AdminProjects() {
             <button
               type="submit"
               disabled={saving}
-              className="font-mono text-xs px-5 py-2 rounded transition-all"
+              className="font-mono text-xs px-5 py-2 rounded transition-all min-h-[44px]"
               style={{
                 background: saving ? 'rgba(176,38,255,0.1)' : 'rgba(176,38,255,0.15)',
                 border: '1px solid rgba(176,38,255,0.4)',
@@ -372,7 +371,7 @@ export default function AdminProjects() {
             <button
               type="button"
               onClick={() => setEditMode(null)}
-              className="font-mono text-xs text-gray-400 hover:text-white transition-colors px-4 py-2 rounded"
+              className="font-mono text-xs text-gray-400 hover:text-white transition-colors px-4 py-2 rounded min-h-[44px]"
               style={{ border: '1px solid #1e1e2e', background: '#12121a' }}
             >
               Cancelar
@@ -391,7 +390,7 @@ export default function AdminProjects() {
         <h2 className="font-orbitron font-bold text-sm text-white">Proyectos</h2>
         <button
           onClick={openCreate}
-          className="font-mono text-xs px-4 py-2 rounded transition-all"
+          className="font-mono text-xs px-4 py-2 rounded transition-all min-h-[44px]"
           style={{
             border: '1px solid rgba(0,229,255,0.4)',
             color: '#00e5ff',
@@ -426,7 +425,7 @@ export default function AdminProjects() {
           </p>
           <button
             onClick={openCreate}
-            className="font-mono text-xs px-4 py-2 rounded"
+            className="font-mono text-xs px-4 py-2 rounded min-h-[44px]"
             style={{
               border: '1px solid rgba(0,229,255,0.4)',
               color: '#00e5ff',
@@ -447,7 +446,7 @@ export default function AdminProjects() {
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3"
+              className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-3 sm:py-4"
               style={{ borderBottom: index < projects.length - 1 ? '1px solid #1e1e2e' : 'none' }}
             >
               {/* Reorder buttons */}
@@ -455,8 +454,9 @@ export default function AdminProjects() {
                 <button
                   onClick={() => handleReorder(index, 'up')}
                   disabled={index === 0}
-                  className="font-mono text-xs px-1 transition-colors"
+                  className="font-mono text-xs px-2 py-1 transition-colors min-h-[32px]"
                   style={{ color: index === 0 ? '#2a2a3a' : '#666', cursor: index === 0 ? 'not-allowed' : 'pointer' }}
+                  aria-label={`Mover ${project.title} arriba`}
                   title="Mover arriba"
                 >
                   ▲
@@ -464,11 +464,12 @@ export default function AdminProjects() {
                 <button
                   onClick={() => handleReorder(index, 'down')}
                   disabled={index === projects.length - 1}
-                  className="font-mono text-xs px-1 transition-colors"
+                  className="font-mono text-xs px-2 py-1 transition-colors min-h-[32px]"
                   style={{
                     color: index === projects.length - 1 ? '#2a2a3a' : '#666',
                     cursor: index === projects.length - 1 ? 'not-allowed' : 'pointer',
                   }}
+                  aria-label={`Mover ${project.title} abajo`}
                   title="Mover abajo"
                 >
                   ▼
@@ -509,23 +510,25 @@ export default function AdminProjects() {
               <div className="flex gap-2">
                 <button
                   onClick={() => openEdit(project)}
-                  className="font-mono text-xs px-3 py-1 rounded transition-colors"
+                  className="font-mono text-xs px-3 py-2 rounded transition-colors min-h-[44px]"
                   style={{
                     border: '1px solid rgba(176,38,255,0.3)',
                     color: '#b026ff',
                     background: 'transparent',
                   }}
+                  aria-label={`Editar proyecto ${project.title}`}
                 >
                   Editar
                 </button>
                 <button
                   onClick={() => handleDelete(project.id)}
-                  className="font-mono text-xs px-3 py-1 rounded transition-colors"
+                  className="font-mono text-xs px-3 py-2 rounded transition-colors min-h-[44px]"
                   style={{
                     border: '1px solid rgba(255,85,85,0.3)',
                     color: '#ff5555',
                     background: 'transparent',
                   }}
+                  aria-label={`Eliminar proyecto ${project.title}`}
                 >
                   Eliminar
                 </button>

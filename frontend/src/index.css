@@ -18,6 +18,8 @@
     font-family: 'Space Mono', monospace;
     overflow-x: hidden;
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Scanlines overlay */
@@ -39,6 +41,18 @@
     z-index: 9998;
   }
 
+  /* Focus visible for keyboard navigation */
+  *:focus-visible {
+    outline: 2px solid #00e5ff;
+    outline-offset: 2px;
+  }
+
+  /* Remove default input appearance for consistent styling */
+  input, select, textarea {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
@@ -55,6 +69,12 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: #00e5ff;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #b026ff #0a0a0f;
   }
 
   /* Selection color */

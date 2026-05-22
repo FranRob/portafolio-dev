@@ -53,6 +53,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
           <img
             src={project.imageUrl}
             alt={project.title}
+            loading="lazy"
             className="w-full h-full object-cover"
           />
         ) : (
@@ -96,13 +97,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
         </h3>
 
         <p
-          className="font-mono text-xs text-gray-400 leading-relaxed mb-3"
-          style={{
-            display: '-webkit-box',
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
+          className="font-mono text-xs text-gray-400 leading-relaxed mb-3 line-clamp-3"
         >
           {project.description}
         </p>
@@ -133,6 +128,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 font-mono text-xs transition-colors"
                 style={{ color: '#00e5ff' }}
+                aria-label={`Ver proyecto ${project.title}`}
               >
                 <ExternalLink size={12} />
                 Ver demo
@@ -145,6 +141,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 font-mono text-xs transition-colors"
                 style={{ color: '#888' }}
+                aria-label={`Código fuente de ${project.title}`}
               >
                 <Github size={12} />
                 Ver código

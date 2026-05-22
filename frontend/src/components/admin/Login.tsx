@@ -89,7 +89,7 @@ export default function Login() {
     border: '1px solid #1e1e2e',
     color: '#e0e0e0',
     fontFamily: '"Space Mono", monospace',
-    fontSize: '13px',
+    fontSize: '16px',
     width: '100%',
     borderRadius: '6px',
     padding: '12px 16px',
@@ -157,7 +157,6 @@ export default function Login() {
                 onFocus={(e) => {
                   e.target.style.borderColor = '#b026ff'
                   e.target.style.boxShadow = '0 0 10px rgba(176, 38, 255, 0.2)'
-                  e.target.style.outline = 'none'
                 }}
                 onBlur={(e) => {
                   e.target.style.borderColor = '#1e1e2e'
@@ -181,7 +180,6 @@ export default function Login() {
                 onFocus={(e) => {
                   e.target.style.borderColor = '#b026ff'
                   e.target.style.boxShadow = '0 0 10px rgba(176, 38, 255, 0.2)'
-                  e.target.style.outline = 'none'
                 }}
                 onBlur={(e) => {
                   e.target.style.borderColor = '#1e1e2e'

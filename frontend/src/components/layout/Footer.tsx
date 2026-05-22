@@ -33,7 +33,8 @@ export default function Footer() {
               // Prefetch dashboard chunk on hover
               import('../../components/admin/Dashboard')
             }}
-            className="flex items-center gap-1 text-gray-700 hover:text-gray-500 transition-colors duration-200 group"
+            className="flex items-center gap-1 text-gray-700 hover:text-gray-500 transition-colors duration-200 group px-3 py-2 rounded"
+            aria-label="Panel de administración"
             title="Admin"
           >
             <Lock size={11} className="opacity-40 group-hover:opacity-60" />

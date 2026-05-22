@@ -139,6 +139,7 @@ export default function Stack() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
+          aria-hidden="true"
         >
           {/* SVG connections */}
           <svg
@@ -258,6 +259,11 @@ export default function Stack() {
             ))}
           </div>
         </motion.div>
+
+        {/* Screen reader fallback for constellation */}
+        <div className="sr-only">
+          Tecnologías: React, TypeScript, Angular, HTML5, CSS3, Tailwind CSS, Node.js, Express, PostgreSQL, Prisma, Git, Docker, VS Code, Linux
+        </div>
 
         {/* Category cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">

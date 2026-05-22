@@ -126,6 +126,7 @@ export default function Hero() {
               e.currentTarget.style.background = 'rgba(0, 229, 255, 0.05)'
               e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 229, 255, 0.2)'
             }}
+            aria-label="Ver mi Stack tecnológico"
           >
             Ver mi Stack
           </button>
@@ -146,6 +147,7 @@ export default function Hero() {
               e.currentTarget.style.background = 'rgba(176, 38, 255, 0.05)'
               e.currentTarget.style.boxShadow = '0 0 10px rgba(176, 38, 255, 0.2)'
             }}
+            aria-label="Contactarme"
           >
             Contactarme
           </button>

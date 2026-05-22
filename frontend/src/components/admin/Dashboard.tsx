@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -11,9 +11,10 @@ import {
 } from 'lucide-react'
 import { getStats, logout } from '../../services/api'
 import type { AnalyticsStats } from '../../services/api'
-import AdminProjects from './AdminProjects'
-import { AdminMessages } from './AdminMessages'
-import AdminSettings from './AdminSettings'
+
+const AdminProjects = lazy(() => import('./AdminProjects'))
+const AdminMessages = lazy(() => import('./AdminMessages').then(m => ({ default: m.AdminMessages })))
+const AdminSettings = lazy(() => import('./AdminSettings'))
 
 interface StatCardProps {
   label: string
@@ -121,8 +122,9 @@ export default function Dashboard() {
         <div className="flex gap-3">
           <button
             onClick={fetchData}
-            className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-white px-3 py-2 rounded transition-colors"
+            className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-white px-3 py-2 rounded transition-colors min-h-[44px]"
             style={{ border: '1px solid #1e1e2e', background: '#12121a' }}
+            aria-label="Recargar datos"
             title="Recargar datos"
           >
             <RefreshCw size={13} />
@@ -130,7 +132,7 @@ export default function Dashboard() {
           </button>
           <button
             onClick={() => navigate('/', { replace: true })}
-            className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-white px-3 py-2 rounded transition-colors"
+            className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-white px-3 py-2 rounded transition-colors min-h-[44px]"
             style={{ border: '1px solid #1e1e2e', background: '#12121a' }}
             title="Volver al portfolio"
           >
@@ -141,12 +143,13 @@ export default function Dashboard() {
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 font-mono text-xs px-3 py-2 rounded transition-all"
+            className="flex items-center gap-2 font-mono text-xs px-3 py-2 rounded transition-all min-h-[44px]"
             style={{
               border: '1px solid rgba(176,38,255,0.3)',
               color: '#b026ff',
               background: 'rgba(176,38,255,0.05)',
             }}
+            aria-label="Cerrar sesión"
           >
             <LogOut size={13} />
             Salir
@@ -163,11 +166,12 @@ export default function Dashboard() {
           <button
             key={tab}
             onClick={() => handleTabChange(tab)}
-            className="font-mono text-xs px-6 py-3 transition-colors"
+            className="font-mono text-xs px-6 py-3 transition-colors min-h-[44px]"
             style={{
               color: activeTab === tab ? '#b026ff' : '#666',
               borderBottom: activeTab === tab ? '2px solid #b026ff' : '2px solid transparent',
             }}
+            aria-label={tab === 'metrics' ? 'Métricas' : tab === 'messages' ? 'Mensajes' : tab === 'projects' ? 'Proyectos' : 'Ajustes'}
           >
             {tab === 'metrics' ? 'Métricas' : tab === 'messages' ? 'Mensajes' : tab === 'projects' ? 'Proyectos' : 'Ajustes'}
           </button>
@@ -175,9 +179,9 @@ export default function Dashboard() {
       </div>
 
 <main className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-        {activeTab === 'projects' && <AdminProjects />}
-        {activeTab === 'messages' && <AdminMessages />}
-        {activeTab === 'settings' && <AdminSettings />}
+        {activeTab === 'projects' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminProjects /></Suspense>}
+        {activeTab === 'messages' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminMessages /></Suspense>}
+        {activeTab === 'settings' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminSettings /></Suspense>}
         {activeTab === 'metrics' && (
           <>
             {error && (

@@ -81,14 +81,13 @@ export default function Contact() {
     border: '1px solid #1e1e2e',
     color: '#e0e0e0',
     fontFamily: '"Space Mono", monospace',
-    fontSize: '13px',
+    fontSize: '16px',
     transition: 'border-color 0.2s, box-shadow 0.2s',
   }
 
   const inputFocusStyle = {
     borderColor: '#b026ff',
     boxShadow: '0 0 10px rgba(176, 38, 255, 0.2)',
-    outline: 'none',
   }
 
   return (
@@ -147,6 +146,7 @@ export default function Contact() {
                     }}
                     onMouseEnter={() => setHoveredCard(social.label)}
                     onMouseLeave={() => setHoveredCard(null)}
+                    aria-label={`${social.label} - ${social.handle}`}
                   >
                     <span style={{ color: colors.text }}>{social.icon}</span>
                     <div className="flex-1">

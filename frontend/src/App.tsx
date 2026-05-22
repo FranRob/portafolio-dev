@@ -1,18 +1,10 @@
 import {lazy, Suspense} from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import Navbar from './components/layout/Navbar'
-import Footer from './components/layout/Footer'
-import Hero from './components/sections/Hero'
-import Stack from './components/sections/Stack'
-import About from './components/sections/About'
-import Projects from './components/sections/Projects'
-import Contact from './components/sections/Contact'
-import Login from './components/admin/Login'
 
-// Lazy load admin dashboard for faster initial load
-const Dashboard = lazy(() => import('./components/admin/Dashboard').then(m => ({ default: m.default })))
+const Dashboard = lazy(() => import('./components/admin/Dashboard'))
+const Login = lazy(() => import('./components/admin/Login'))
+const PortfolioPage = lazy(() => import('./PortfolioPage'))
 
-// Fallback component for lazy loading
 function LoadingFallback() {
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}>
@@ -27,24 +19,7 @@ function LoadingFallback() {
   )
 }
 
-function PortfolioPage() {
-  return (
-    <div className="min-h-screen bg-dark-base">
-      <Navbar />
-      <main>
-        <Hero />
-        <Stack />
-        <About />
-        <Projects />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
-  )
-}
-
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  // Check for token in sessionStorage - cleared when browser closes
   const token = sessionStorage.getItem('admin_token')
   if (!token) {
     return <Navigate to="/admin/login" replace />
@@ -55,9 +30,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<PortfolioPage />} />
+      <Route path="/" element={<Suspense fallback={<LoadingFallback />}><PortfolioPage /></Suspense>} />
       <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-      <Route path="/admin/login" element={<Login />} />
+      <Route path="/admin/login" element={<Suspense fallback={<LoadingFallback />}><Login /></Suspense>} />
       <Route
         path="/admin/*"
         element={
