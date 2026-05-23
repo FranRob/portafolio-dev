@@ -40,7 +40,7 @@ export default function Navbar() {
       aria-label="Navegación principal"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-dark-base/85 backdrop-blur-xl ${
         scrolled
-          ? 'border-b border-neon-purple shadow-[0_0_20px_rgba(176,38,255,0.2)]'
+          ? 'border-b border-neon-purple shadow-[0_0_20px_var(--shadow-purple-sm)]'
           : 'border-b border-transparent'
       }`}
     >
@@ -50,8 +50,7 @@ export default function Navbar() {
           <div className="flex flex-col leading-tight">
             <button
               onClick={() => handleNavClick('#hero')}
-              className="font-orbitron font-bold text-lg text-neon-purple bg-none border-none p-0"
-              style={{ textShadow: '0 0 10px #b026ff, 0 0 20px rgba(176, 38, 255, 0.5)' }}
+              className="font-orbitron font-bold text-lg text-neon-purple neon-text-purple-xl bg-none border-none p-0"
               aria-label="Ir al inicio"
             >
               divMalCentrado

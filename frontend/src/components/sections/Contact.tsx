@@ -31,16 +31,16 @@ const socialLinks: SocialLink[] = [
 
 const colorMap = {
   purple: {
-    border: '#b026ff',
-    glow: 'rgba(176,38,255,0.3)',
-    hoverGlow: 'rgba(176,38,255,0.6)',
-    text: '#b026ff',
+    border: 'var(--social-purple)',
+    glow: 'var(--social-purple-glow)',
+    hoverGlow: 'var(--social-purple-hover)',
+    text: 'var(--social-purple)',
   },
   cyan: {
-    border: '#00e5ff',
-    glow: 'rgba(0,229,255,0.3)',
-    hoverGlow: 'rgba(0,229,255,0.6)',
-    text: '#00e5ff',
+    border: 'var(--social-cyan)',
+    glow: 'var(--social-cyan-glow)',
+    hoverGlow: 'var(--social-cyan-hover)',
+    text: 'var(--social-cyan)',
   },
 }
 
@@ -76,13 +76,13 @@ export default function Contact() {
     }
   }
 
-  const inputClass = "w-full rounded px-3 py-2 sm:px-4 sm:py-3 bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base focus:border-neon-purple focus:shadow-[0_0_10px_rgba(176,38,255,0.2)] outline-none transition-[border-color,box-shadow]"
+  const inputClass = "w-full rounded px-3 py-2 sm:px-4 sm:py-3 bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-none transition-[border-color,box-shadow]"
 
   return (
     <section
       id="contact"
       ref={sectionRef}
-      className="relative z-10 py-24 px-4 bg-gradient-to-b from-dark-base to-[#0e0e18]"
+      className="relative z-10 py-24 px-4 bg-gradient-to-b from-dark-base to-[var(--dark-lighter)]"
     >
       <div className="max-w-5xl mx-auto">
         {/* Section header */}
@@ -162,13 +162,13 @@ export default function Contact() {
             <div
               className="mt-6 flex items-center gap-3 rounded-lg px-4 py-3"
               style={{
-                background: 'rgba(0, 229, 255, 0.05)',
-                border: '1px solid rgba(0, 229, 255, 0.15)',
+                background: 'var(--social-availability-bg)',
+                border: '1px solid var(--social-availability-bdr)',
               }}
             >
               <motion.div
                 className="w-2.5 h-2.5 rounded-full"
-                style={{ background: '#00e5ff' }}
+                style={{ background: 'var(--social-cyan)' }}
                 animate={{ opacity: [1, 0.3, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
@@ -274,7 +274,7 @@ export default function Contact() {
                 type="submit"
                 disabled={status === 'sending'}
                 className="w-full flex items-center justify-center gap-2 rounded px-4 sm:px-6 py-2 sm:py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/[0.08] hover:bg-neon-purple/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                whileHover={{ boxShadow: '0 0 20px rgba(176, 38, 255, 0.4)' }}
+                whileHover={{ boxShadow: '0 0 20px var(--shadow-purple-lg)' }}
                 whileTap={{ scale: 0.98 }}
               >
                 {status === 'sending' ? (

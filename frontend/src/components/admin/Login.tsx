@@ -98,7 +98,7 @@ export default function Login() {
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mx-auto mb-4 bg-neon-purple/10 border border-neon-purple/30">
               <Lock size={20} className="text-neon-purple" />
             </div>
-            <h1 className="font-orbitron font-bold text-xl mb-1 text-neon-purple" style={{ textShadow: '0 0 10px rgba(176, 38, 255, 0.4)' }}>
+            <h1 className="font-orbitron font-bold text-xl mb-1 text-neon-purple neon-text-purple-md">
               divMalCentrado
             </h1>
             <p className="font-mono text-xs text-gray-500">Panel de métricas</p>
@@ -116,7 +116,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="admin@ejemplo.com"
-                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_rgba(176,38,255,0.2)] outline-none transition-[border-color,box-shadow]"
+                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-none transition-[border-color,box-shadow]"
               />
             </div>
 
@@ -131,7 +131,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="••••••••"
-                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_rgba(176,38,255,0.2)] outline-none transition-[border-color,box-shadow]"
+                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-none transition-[border-color,box-shadow]"
               />
             </div>
 

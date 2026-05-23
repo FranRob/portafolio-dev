@@ -57,9 +57,9 @@ const connections: [string, string][] = [
 ]
 
 const categoryColors: Record<Category, { node: string; glow: string; text: string }> = {
-  frontend: { node: '#00e5ff', glow: 'rgba(0,229,255,0.4)', text: 'text-neon-cyan' },
-  backend: { node: '#b026ff', glow: 'rgba(176,38,255,0.4)', text: 'neon-text-purple' },
-  tools: { node: '#ff00ff', glow: 'rgba(255,0,255,0.4)', text: 'neon-text-magenta' },
+  frontend: { node: 'var(--cat-frontend)', glow: 'var(--cat-frontend-glow)', text: 'text-neon-cyan' },
+  backend: { node: 'var(--cat-backend)', glow: 'var(--cat-backend-glow)', text: 'neon-text-purple' },
+  tools: { node: 'var(--cat-tools)', glow: 'var(--cat-tools-glow)', text: 'neon-text-magenta' },
 }
 
 const categoryInfo: { key: Category; label: string; items: string[] }[] = [
@@ -108,7 +108,7 @@ export default function Stack() {
     <section
       id="stack"
       ref={sectionRef}
-      className="relative z-10 py-24 px-4 bg-gradient-to-b from-dark-base via-[#0e0e18] to-dark-base"
+      className="relative z-10 py-24 px-4 bg-gradient-to-b from-dark-base via-[var(--dark-lighter)] to-dark-base"
     >
       <div className="max-w-6xl mx-auto">
         {/* Section header */}

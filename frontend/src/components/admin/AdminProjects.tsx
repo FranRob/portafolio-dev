@@ -30,9 +30,9 @@ const statusLabels: Record<Project['status'], string> = {
 }
 
 const statusColors: Record<Project['status'], string> = {
-  in_progress: '#b026ff',
-  completed: '#00e5ff',
-  private: '#4a4a5a',
+  in_progress: 'var(--status-in-progress)',
+  completed: 'var(--status-completed)',
+  private: 'var(--status-private)',
 }
 
 const categoryLabels: Record<Project['category'], string> = {
@@ -41,7 +41,7 @@ const categoryLabels: Record<Project['category'], string> = {
   collaborative: 'Colaborativo',
 }
 
-const inputClass = "w-full font-mono text-sm bg-dark-card border border-dark-border rounded-md px-3 py-2 text-gray-300 focus:border-neon-purple focus:shadow-[0_0_10px_rgba(176,38,255,0.2)] outline-none transition-[border-color,box-shadow]"
+const inputClass = "w-full font-mono text-sm bg-dark-card border border-dark-border rounded-md px-3 py-2 text-gray-300 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-none transition-[border-color,box-shadow]"
 const labelClass = "font-mono text-xs text-gray-500 uppercase tracking-wider block mb-1"
 
 function isValidUrl(str: string): boolean {
@@ -425,7 +425,7 @@ export default function AdminProjects() {
                 <button
                   onClick={() => handleReorder(index, 'up')}
                   disabled={index === 0}
-                  className={`font-mono text-xs px-2 py-1 transition-colors min-h-[32px] ${index === 0 ? 'text-[#2a2a3a] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
+                   className={`font-mono text-xs px-2 py-1 transition-colors min-h-[32px] ${index === 0 ? 'text-[var(--disabled-text)] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
                   aria-label={`Mover ${project.title} arriba`}
                   title="Mover arriba"
                 >
@@ -434,7 +434,7 @@ export default function AdminProjects() {
                 <button
                   onClick={() => handleReorder(index, 'down')}
                   disabled={index === projects.length - 1}
-                  className={`font-mono text-xs px-2 py-1 transition-colors min-h-[32px] ${index === projects.length - 1 ? 'text-[#2a2a3a] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
+                   className={`font-mono text-xs px-2 py-1 transition-colors min-h-[32px] ${index === projects.length - 1 ? 'text-[var(--disabled-text)] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
                   aria-label={`Mover ${project.title} abajo`}
                   title="Mover abajo"
                 >

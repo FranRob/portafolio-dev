@@ -9,10 +9,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col items-center md:items-start gap-1">
-            <span
-              className="font-orbitron text-sm font-bold text-neon-purple"
-              style={{ textShadow: '0 0 8px rgba(176, 38, 255, 0.5)' }}
-            >
+            <span className="font-orbitron text-sm font-bold text-neon-purple neon-text-purple-sm">
               divMalCentrado
             </span>
             <span className="font-mono text-xs text-gray-600">
