@@ -2,26 +2,8 @@ import { useState, useEffect } from 'react'
 import { Shield, Key, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react'
 import { getTwoFactorStatus, setupTwoFactor, enableTwoFactor, disableTwoFactor, changePassword } from '../../services/api'
 
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  fontFamily: 'monospace',
-  fontSize: '0.875rem',
-  background: '#0d0d16',
-  border: '1px solid #1e1e2e',
-  borderRadius: '0.375rem',
-  padding: '0.5rem 0.75rem',
-  color: '#d1d5db',
-}
-
-const labelStyle: React.CSSProperties = {
-  fontFamily: 'monospace',
-  fontSize: '0.75rem',
-  color: '#6b7280',
-  textTransform: 'uppercase',
-  letterSpacing: '0.05em',
-  display: 'block',
-  marginBottom: '0.25rem',
-}
+const inputClass = "w-full font-mono text-sm bg-dark-card border border-dark-border rounded-md px-3 py-2 text-gray-300 focus:border-neon-purple focus:shadow-[0_0_10px_rgba(176,38,255,0.2)] outline-none transition-[border-color,box-shadow]"
+const labelClass = "font-mono text-xs text-gray-500 uppercase tracking-wider block mb-1"
 
 export default function AdminSettings() {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
@@ -35,6 +17,9 @@ export default function AdminSettings() {
   const [qrCode, setQrCode] = useState('')
   const [secret, setSecret] = useState('')
   const [code, setCode] = useState('')
+  // 2FA disable confirmation
+  const [showDisableConfirm, setShowDisableConfirm] = useState(false)
+  const [disableCode, setDisableCode] = useState('')
 
   // Password change
   const [showPasswordForm, setShowPasswordForm] = useState(false)
@@ -96,14 +81,15 @@ export default function AdminSettings() {
   }
 
   async function handleDisable() {
-    const codeToDisable = prompt('Ingresá el código 2FA para deshabilitar:')
-    if (!codeToDisable) return
+    if (!disableCode) return
     
     setSaving(true)
     setError('')
     try {
-      await disableTwoFactor(codeToDisable)
+      await disableTwoFactor(disableCode)
       setTwoFactorEnabled(false)
+      setShowDisableConfirm(false)
+      setDisableCode('')
       setSuccess('2FA deshabilitado')
       setTimeout(() => setSuccess(''), 3000)
     } catch (err: unknown) {
@@ -145,24 +131,24 @@ export default function AdminSettings() {
       <h2 className="font-orbitron font-bold text-sm text-white mb-6">Ajustes de Seguridad</h2>
 
       {error && (
-        <div className="rounded-lg px-4 py-3 font-mono text-sm mb-4 flex items-center gap-2" style={{ background: 'rgba(255,85,85,0.1)', border: '1px solid rgba(255,85,85,0.3)', color: '#ff5555' }}>
+        <div className="rounded-lg px-4 py-3 font-mono text-sm mb-4 flex items-center gap-2 bg-red-500/10 border border-red-500/30 text-red-400">
           <AlertCircle size={14} />
           {error}
         </div>
       )}
 
       {success && (
-        <div className="rounded-lg px-4 py-3 font-mono text-sm mb-4 flex items-center gap-2" style={{ background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.3)', color: '#00e5ff' }}>
+        <div className="rounded-lg px-4 py-3 font-mono text-sm mb-4 flex items-center gap-2 bg-neon-cyan/10 border border-neon-cyan/30 text-neon-cyan">
           <CheckCircle size={14} />
           {success}
         </div>
       )}
 
       {/* 2FA Section */}
-      <div className="rounded-lg p-6 mb-6" style={{ background: '#12121a', border: '1px solid #1e1e2e' }}>
+      <div className="rounded-lg p-6 mb-6 bg-dark-card border border-dark-border">
         <div className="flex items-center gap-3 mb-4">
-          <Shield size={20} style={{ color: '#b026ff' }} />
-          <h3 className="font-orbitron text-sm font-bold" style={{ color: '#b026ff' }}>
+          <Shield size={20} className="text-neon-purple" />
+          <h3 className="font-orbitron text-sm font-bold text-neon-purple">
             Autenticación de Dos Factores (2FA)
           </h3>
         </div>
@@ -170,20 +156,50 @@ export default function AdminSettings() {
         {loading ? (
           <div className="font-mono text-sm text-gray-500">Cargando...</div>
         ) : twoFactorEnabled ? (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CheckCircle size={16} style={{ color: '#00e5ff' }} />
-              <span className="font-mono text-sm text-green-400">2FA habilitado</span>
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <CheckCircle size={16} className="text-neon-cyan" />
+                <span className="font-mono text-sm text-green-400">2FA habilitado</span>
+              </div>
+              {!showDisableConfirm && (
+                <button
+                  onClick={() => setShowDisableConfirm(true)}
+                  disabled={saving}
+                  className="font-mono text-xs px-4 py-2 rounded transition-colors min-h-[44px] border border-red-500/40 text-red-400 bg-transparent"
+                  aria-label="Deshabilitar autenticación de dos factores"
+                >
+                  Deshabilitar
+                </button>
+              )}
             </div>
-            <button
-              onClick={handleDisable}
-              disabled={saving}
-              className="font-mono text-xs px-4 py-2 rounded transition-colors min-h-[44px]"
-              style={{ border: '1px solid rgba(255,85,85,0.4)', color: '#ff5555', background: 'transparent' }}
-              aria-label="Deshabilitar autenticación de dos factores"
-            >
-              Deshabilitar
-            </button>
+            {showDisableConfirm && (
+              <div className="space-y-3 border-t border-dark-border pt-4">
+                <label className={labelClass}>Código 2FA para deshabilitar</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={disableCode}
+                    onChange={(e) => setDisableCode(e.target.value)}
+                    className={inputClass}
+                    placeholder="Ingresá el código de 6 dígitos"
+                  />
+                  <button
+                    onClick={handleDisable}
+                    disabled={saving || !disableCode}
+                    className="font-mono text-xs px-3 py-2 rounded min-h-[44px] bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
+                  >
+                    Confirmar
+                  </button>
+                  <button
+                    onClick={() => { setShowDisableConfirm(false); setDisableCode('') }}
+                    className="font-mono text-xs px-3 py-2 rounded min-h-[44px] border border-dark-border text-gray-500 hover:text-gray-300 transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ) : showSetup ? (
           <div>
@@ -196,29 +212,27 @@ export default function AdminSettings() {
               </div>
             )}
             <div className="mb-4">
-              <label style={labelStyle}>Código</label>
+              <label className={labelClass}>Código</label>
               <input
                 type="text"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder="Ingresá el código de 6 dígitos"
-                style={inputStyle}
+                className={inputClass}
               />
             </div>
             <div className="flex gap-3">
               <button
                 onClick={handleEnable}
                 disabled={saving || !code}
-                className="font-mono text-xs px-4 py-2 rounded min-h-[44px]"
-                style={{ border: '1px solid rgba(176,38,255,0.4)', color: '#b026ff', background: 'rgba(176,38,255,0.1)', opacity: saving ? 0.5 : 1 }}
+                className="font-mono text-xs px-4 py-2 rounded min-h-[44px] border border-neon-purple/40 text-neon-purple bg-neon-purple/10 disabled:opacity-50"
                 aria-label="Habilitar autenticación de dos factores"
               >
                 {saving ? 'Verificando...' : 'Habilitar'}
               </button>
               <button
                 onClick={() => { setShowSetup(false); setQrCode(''); setCode('') }}
-                className="font-mono text-xs px-4 py-2 rounded min-h-[44px]"
-                style={{ border: '1px solid #1e1e2e', color: '#666' }}
+                className="font-mono text-xs px-4 py-2 rounded min-h-[44px] border border-dark-border text-gray-500 hover:text-gray-300 transition-colors"
               >
                 Cancelar
               </button>
@@ -232,8 +246,7 @@ export default function AdminSettings() {
             <button
               onClick={handleSetup}
               disabled={saving}
-              className="font-mono text-xs px-4 py-2 rounded min-h-[44px]"
-              style={{ border: '1px solid rgba(0,229,255,0.4)', color: '#00e5ff', background: 'rgba(0,229,255,0.1)' }}
+              className="font-mono text-xs px-4 py-2 rounded min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/10"
               aria-label="Configurar autenticación de dos factores"
             >
               {saving ? 'Generando...' : 'Configurar 2FA'}
@@ -243,10 +256,10 @@ export default function AdminSettings() {
       </div>
 
       {/* Password Section */}
-      <div className="rounded-lg p-6" style={{ background: '#12121a', border: '1px solid #1e1e2e' }}>
+      <div className="rounded-lg p-6 bg-dark-card border border-dark-border">
         <div className="flex items-center gap-3 mb-4">
-          <Key size={20} style={{ color: '#00e5ff' }} />
-          <h3 className="font-orbitron text-sm font-bold" style={{ color: '#00e5ff' }}>
+          <Key size={20} className="text-neon-cyan" />
+          <h3 className="font-orbitron text-sm font-bold text-neon-cyan">
             Cambiar Contraseña
           </h3>
         </div>
@@ -254,13 +267,13 @@ export default function AdminSettings() {
         {showPasswordForm ? (
           <div className="space-y-4">
             <div>
-              <label style={labelStyle}>Contraseña actual</label>
+              <label className={labelClass}>Contraseña actual</label>
               <div className="relative">
                 <input
                   type={showCurrentPassword ? 'text' : 'password'}
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  style={inputStyle}
+                  className={inputClass}
                 />
                 <button
                   type="button"
@@ -268,18 +281,18 @@ export default function AdminSettings() {
                   className="absolute right-3 top-1/2 -translate-y-1/2"
                   aria-label={showCurrentPassword ? 'Ocultar contraseña actual' : 'Mostrar contraseña actual'}
                 >
-                  {showCurrentPassword ? <EyeOff size={14} style={{ color: '#666' }} /> : <Eye size={14} style={{ color: '#666' }} />}
+                  {showCurrentPassword ? <EyeOff size={14} className="text-gray-500" /> : <Eye size={14} className="text-gray-500" />}
                 </button>
               </div>
             </div>
             <div>
-              <label style={labelStyle}>Nueva contraseña</label>
+              <label className={labelClass}>Nueva contraseña</label>
               <div className="relative">
                 <input
                   type={showNewPassword ? 'text' : 'password'}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  style={inputStyle}
+                  className={inputClass}
                 />
                 <button
                   type="button"
@@ -287,33 +300,31 @@ export default function AdminSettings() {
                   className="absolute right-3 top-1/2 -translate-y-1/2"
                   aria-label={showNewPassword ? 'Ocultar nueva contraseña' : 'Mostrar nueva contraseña'}
                 >
-                  {showNewPassword ? <EyeOff size={14} style={{ color: '#666' }} /> : <Eye size={14} style={{ color: '#666' }} />}
+                  {showNewPassword ? <EyeOff size={14} className="text-gray-500" /> : <Eye size={14} className="text-gray-500" />}
                 </button>
               </div>
             </div>
             <div>
-              <label style={labelStyle}>Confirmar nueva contraseña</label>
+              <label className={labelClass}>Confirmar nueva contraseña</label>
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                style={inputStyle}
+                className={inputClass}
               />
             </div>
             <div className="flex gap-3">
               <button
                 onClick={handlePasswordChange}
                 disabled={saving || !currentPassword || !newPassword || !confirmPassword}
-                className="font-mono text-xs px-4 py-2 rounded min-h-[44px]"
-                style={{ border: '1px solid rgba(0,229,255,0.4)', color: '#00e5ff', background: 'rgba(0,229,255,0.1)', opacity: saving ? 0.5 : 1 }}
+                className="font-mono text-xs px-4 py-2 rounded min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/10 disabled:opacity-50"
                 aria-label="Confirmar cambio de contraseña"
               >
                 {saving ? 'Cambiando...' : 'Cambiar contraseña'}
               </button>
               <button
                 onClick={() => { setShowPasswordForm(false); setCurrentPassword(''); setNewPassword(''); setConfirmPassword('') }}
-                className="font-mono text-xs px-4 py-2 rounded min-h-[44px]"
-                style={{ border: '1px solid #1e1e2e', color: '#666' }}
+                className="font-mono text-xs px-4 py-2 rounded min-h-[44px] border border-dark-border text-gray-500 hover:text-gray-300 transition-colors"
               >
                 Cancelar
               </button>
@@ -326,8 +337,7 @@ export default function AdminSettings() {
             </span>
             <button
               onClick={() => setShowPasswordForm(true)}
-              className="font-mono text-xs px-4 py-2 rounded min-h-[44px]"
-              style={{ border: '1px solid rgba(0,229,255,0.4)', color: '#00e5ff', background: 'rgba(0,229,255,0.1)' }}
+              className="font-mono text-xs px-4 py-2 rounded min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/10"
               aria-label="Cambiar contraseña"
             >
               Cambiar

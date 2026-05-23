@@ -54,10 +54,7 @@ export default function Login() {
       await loginWithRetry(email, password, (attempt) => {
         setRetryCount(attempt)
       })
-      // Small delay to ensure token is stored before navigating
-      setTimeout(() => {
-        navigate('/admin/dashboard', { replace: true })
-      }, 100)
+      navigate('/admin/dashboard', { replace: true })
     } catch (err: unknown) {
       // Parse error for better messaging
       if (axios.isAxiosError(err)) {
@@ -84,23 +81,8 @@ export default function Login() {
     }
   }
 
-  const inputStyle: React.CSSProperties = {
-    background: 'rgba(18, 18, 26, 0.9)',
-    border: '1px solid #1e1e2e',
-    color: '#e0e0e0',
-    fontFamily: '"Space Mono", monospace',
-    fontSize: '16px',
-    width: '100%',
-    borderRadius: '6px',
-    padding: '12px 16px',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-  }
-
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{ background: '#0a0a0f' }}
-    >
+    <div className="min-h-screen flex items-center justify-center px-4 bg-dark-base">
       {/* Grid bg */}
       <div className="fixed inset-0 grid-bg opacity-20 pointer-events-none" />
 
@@ -110,32 +92,13 @@ export default function Login() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md relative z-10"
       >
-        <div
-          className="rounded-xl p-4 sm:p-8"
-          style={{
-            background: '#12121a',
-            border: '1px solid #1e1e2e',
-            boxShadow: '0 0 40px rgba(176, 38, 255, 0.1)',
-          }}
-        >
+        <div className="rounded-xl p-4 sm:p-8 bg-dark-card border border-dark-border shadow-[0_0_40px_rgba(176,38,255,0.1)]">
           {/* Header */}
           <div className="text-center mb-8">
-            <div
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{
-                background: 'rgba(176, 38, 255, 0.1)',
-                border: '1px solid rgba(176, 38, 255, 0.3)',
-              }}
-            >
-              <Lock size={20} style={{ color: '#b026ff' }} />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mx-auto mb-4 bg-neon-purple/10 border border-neon-purple/30">
+              <Lock size={20} className="text-neon-purple" />
             </div>
-            <h1
-              className="font-orbitron font-bold text-xl mb-1"
-              style={{
-                color: '#b026ff',
-                textShadow: '0 0 10px rgba(176, 38, 255, 0.4)',
-              }}
-            >
+            <h1 className="font-orbitron font-bold text-xl mb-1 text-neon-purple" style={{ textShadow: '0 0 10px rgba(176, 38, 255, 0.4)' }}>
               divMalCentrado
             </h1>
             <p className="font-mono text-xs text-gray-500">Panel de métricas</p>
@@ -153,15 +116,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="admin@ejemplo.com"
-                style={inputStyle}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#b026ff'
-                  e.target.style.boxShadow = '0 0 10px rgba(176, 38, 255, 0.2)'
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#1e1e2e'
-                  e.target.style.boxShadow = 'none'
-                }}
+                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_rgba(176,38,255,0.2)] outline-none transition-[border-color,box-shadow]"
               />
             </div>
 
@@ -176,15 +131,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="••••••••"
-                style={inputStyle}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#b026ff'
-                  e.target.style.boxShadow = '0 0 10px rgba(176, 38, 255, 0.2)'
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#1e1e2e'
-                  e.target.style.boxShadow = 'none'
-                }}
+                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_rgba(176,38,255,0.2)] outline-none transition-[border-color,box-shadow]"
               />
             </div>
 
@@ -193,14 +140,10 @@ export default function Login() {
               <motion.div
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-2 rounded px-3 py-2"
-                style={{
-                  background: 'rgba(255, 85, 85, 0.1)',
-                  border: '1px solid rgba(255, 85, 85, 0.3)',
-                }}
+                className="flex items-center gap-2 rounded px-3 py-2 bg-red-500/10 border border-red-500/30"
               >
-                <AlertCircle size={13} style={{ color: '#ff5555' }} />
-                <span className="font-mono text-xs" style={{ color: '#ff5555' }}>
+                <AlertCircle size={13} className="text-red-400" />
+                <span className="font-mono text-xs text-red-400">
                   {error}
                 </span>
               </motion.div>
@@ -210,29 +153,12 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 rounded py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300"
-              style={{
-                border: '1px solid #b026ff',
-                color: loading ? '#888' : '#b026ff',
-                background: 'rgba(176, 38, 255, 0.1)',
-                cursor: loading ? 'not-allowed' : 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.background = 'rgba(176, 38, 255, 0.2)'
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(176, 38, 255, 0.3)'
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(176, 38, 255, 0.1)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
+              className="w-full flex items-center justify-center gap-2 rounded py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 hover:shadow-neonPurple disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
                   <motion.div
-                    className="w-4 h-4 border-2 rounded-full"
-                    style={{ borderColor: '#b026ff', borderTopColor: 'transparent' }}
+                    className="w-4 h-4 border-2 rounded-full border-neon-purple border-t-transparent"
                     animate={{ rotate: 360 }}
                     transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                   />

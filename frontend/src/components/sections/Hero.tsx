@@ -53,11 +53,8 @@ export default function Hero() {
         {/* "Hola soy" */}
         <motion.p
           variants={itemVariants}
-          className="font-mono text-base md:text-lg tracking-widest mb-3"
-          style={{
-            color: '#00e5ff',
-            textShadow: '0 0 8px rgba(0, 229, 255, 0.5)',
-          }}
+          className="font-mono text-base md:text-lg tracking-widest mb-3 text-neon-cyan"
+          style={{ textShadow: '0 0 8px rgba(0, 229, 255, 0.5)' }}
         >
           Hola, soy
         </motion.p>
@@ -111,42 +108,14 @@ export default function Hero() {
         >
           <button
             onClick={() => scrollTo('stack')}
-            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider"
-            style={{
-              border: '1px solid #00e5ff',
-              color: '#00e5ff',
-              boxShadow: '0 0 10px rgba(0, 229, 255, 0.2)',
-              background: 'rgba(0, 229, 255, 0.05)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 229, 255, 0.15)'
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 229, 255, 0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 229, 255, 0.05)'
-              e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 229, 255, 0.2)'
-            }}
+            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider border border-neon-cyan text-neon-cyan bg-neon-cyan/[0.05] hover:bg-neon-cyan/20 hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] shadow-[0_0_10px_rgba(0,229,255,0.2)]"
             aria-label="Ver mi Stack tecnológico"
           >
             Ver mi Stack
           </button>
           <button
             onClick={() => scrollTo('contact')}
-            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider"
-            style={{
-              border: '1px solid #b026ff',
-              color: '#b026ff',
-              boxShadow: '0 0 10px rgba(176, 38, 255, 0.2)',
-              background: 'rgba(176, 38, 255, 0.05)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(176, 38, 255, 0.15)'
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(176, 38, 255, 0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(176, 38, 255, 0.05)'
-              e.currentTarget.style.boxShadow = '0 0 10px rgba(176, 38, 255, 0.2)'
-            }}
+            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider border border-neon-purple text-neon-purple bg-neon-purple/[0.05] hover:bg-neon-purple/20 hover:shadow-[0_0_20px_rgba(176,38,255,0.4)] shadow-[0_0_10px_rgba(176,38,255,0.2)]"
             aria-label="Contactarme"
           >
             Contactarme

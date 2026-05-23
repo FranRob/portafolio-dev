@@ -38,18 +38,11 @@ export default function Navbar() {
   return (
     <nav
       aria-label="Navegación principal"
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{
-        background: 'rgba(10, 10, 15, 0.85)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: scrolled
-          ? '1px solid #b026ff'
-          : '1px solid transparent',
-        boxShadow: scrolled
-          ? '0 0 20px rgba(176, 38, 255, 0.2)'
-          : 'none',
-      }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-dark-base/85 backdrop-blur-xl ${
+        scrolled
+          ? 'border-b border-neon-purple shadow-[0_0_20px_rgba(176,38,255,0.2)]'
+          : 'border-b border-transparent'
+      }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -57,14 +50,8 @@ export default function Navbar() {
           <div className="flex flex-col leading-tight">
             <button
               onClick={() => handleNavClick('#hero')}
-              className="font-orbitron font-bold text-lg"
-              style={{
-                color: '#b026ff',
-                textShadow: '0 0 10px #b026ff, 0 0 20px rgba(176, 38, 255, 0.5)',
-                background: 'none',
-                border: 'none',
-                padding: 0,
-              }}
+              className="font-orbitron font-bold text-lg text-neon-purple bg-none border-none p-0"
+              style={{ textShadow: '0 0 10px #b026ff, 0 0 20px rgba(176, 38, 255, 0.5)' }}
               aria-label="Ir al inicio"
             >
               divMalCentrado
@@ -107,10 +94,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div
-          className="md:hidden border-t border-dark-border"
-          style={{ background: 'rgba(10, 10, 15, 0.97)' }}
-        >
+        <div className="md:hidden border-t border-dark-border bg-dark-base/97">
           <ul className="flex flex-col py-4 px-6 gap-4">
             {navLinks.map((link) => (
               <li key={link.href}>

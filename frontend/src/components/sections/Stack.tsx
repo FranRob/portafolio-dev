@@ -108,8 +108,7 @@ export default function Stack() {
     <section
       id="stack"
       ref={sectionRef}
-      className="relative z-10 py-24 px-4"
-      style={{ background: 'linear-gradient(180deg, #0a0a0f 0%, #0e0e18 50%, #0a0a0f 100%)' }}
+      className="relative z-10 py-24 px-4 bg-gradient-to-b from-dark-base via-[#0e0e18] to-dark-base"
     >
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
@@ -129,12 +128,7 @@ export default function Stack() {
 
         {/* Constellation */}
         <motion.div
-          className="relative w-full rounded-xl mb-16 min-h-64 sm:min-h-96 md:min-h-[520px]"
-          style={{
-            background: 'rgba(10,10,20,0.8)',
-            border: '1px solid #1e1e2e',
-            boxShadow: 'inset 0 0 60px rgba(176,38,255,0.05)',
-          }}
+          className="relative w-full rounded-xl mb-16 min-h-64 sm:min-h-96 md:min-h-[520px] bg-dark-base/80 border border-dark-border shadow-[inset_0_0_60px_rgba(176,38,255,0.05)]"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -226,11 +220,9 @@ export default function Stack() {
                     style={{ transform: 'translateX(-50%)' }}
                   >
                     <div
-                      className="font-mono rounded px-2 py-1 whitespace-nowrap"
+                      className="font-mono rounded px-2 py-1 bg-dark-card text-gray-300"
                       style={{
-                        background: '#12121a',
                         border: `1px solid ${colors.node}`,
-                        color: '#e0e0e0',
                         boxShadow: `0 0 8px ${colors.glow}`,
                         maxWidth: '160px',
                         whiteSpace: 'normal',
@@ -276,9 +268,8 @@ export default function Stack() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-lg p-3 sm:p-6"
+                className="rounded-lg p-3 sm:p-6 bg-dark-card"
                 style={{
-                  background: '#12121a',
                   border: `1px solid ${colors.node}`,
                   boxShadow: `0 0 10px ${colors.glow}`,
                 }}

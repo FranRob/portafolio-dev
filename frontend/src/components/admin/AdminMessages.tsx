@@ -29,6 +29,14 @@ export function AdminMessages() {
   const [newCategory, setNewCategory] = useState('')
   const [showNewCategory, setShowNewCategory] = useState(false)
   const [showMoveMenu, setShowMoveMenu] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (error) {
+      const t = setTimeout(() => setError(null), 4000)
+      return () => clearTimeout(t)
+    }
+  }, [error])
   
   const defaultTabs: TabType[] = ['no-leido', 'leido']
 
@@ -71,6 +79,7 @@ export function AdminMessages() {
       )
     } catch (err) {
       console.error('Failed to mark read:', err)
+      setError('Error al marcar como leído')
     }
   }
 
@@ -82,6 +91,7 @@ export function AdminMessages() {
       )
     } catch (err) {
       console.error('Failed to mark unread:', err)
+      setError('Error al marcar como no leído')
     }
   }
 
@@ -94,6 +104,7 @@ export function AdminMessages() {
       setShowMoveMenu(null)
     } catch (err) {
       console.error('Failed to move message:', err)
+      setError('Error al mover el mensaje')
     }
   }
 
@@ -107,13 +118,12 @@ export function AdminMessages() {
       }
     } catch (err) {
       console.error('Failed to delete message:', err)
+      setError('Error al eliminar el mensaje')
     }
   }
 
   async function handleCreateCategory() {
     if (!newCategory.trim()) return
-    // Add the new category to the messages list so it appears as a tab
-    setMessages(prev => prev.map(m => m)) // Force update to show new category
     setShowNewCategory(false)
     setActiveTab(newCategory.trim())
   }
@@ -164,6 +174,15 @@ export function AdminMessages() {
           </button>
         )}
       </div>
+
+      {error && (
+        <div className="max-w-4xl mx-auto px-4 pt-4">
+          <div className="rounded-lg px-4 py-3 font-mono text-sm flex items-center gap-2 bg-red-500/10 border border-red-500/30 text-red-400">
+            <span>⚠</span>
+            {error}
+          </div>
+        </div>
+      )}
 
       {/* Messages list */}
       <div className="max-w-4xl mx-auto p-4">

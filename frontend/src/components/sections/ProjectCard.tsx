@@ -44,8 +44,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="rounded-lg overflow-hidden flex flex-col"
-      style={{ background: '#12121a', border: '1px solid #1e1e2e' }}
+      className="rounded-lg overflow-hidden flex flex-col bg-dark-card border border-dark-border"
     >
       {/* Image area */}
       <div className="relative h-32 sm:h-44 flex-shrink-0">
@@ -65,11 +64,8 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
             }}
           >
             <span
-              className="font-orbitron font-bold text-2xl sm:text-4xl select-none"
-              style={{
-                color: '#b026ff',
-                textShadow: '0 0 20px rgba(176,38,255,0.6)',
-              }}
+              className="font-orbitron font-bold text-2xl sm:text-4xl select-none text-neon-purple"
+              style={{ textShadow: '0 0 20px rgba(176,38,255,0.6)' }}
             >
               {getInitials(project.title)}
             </span>
@@ -78,11 +74,10 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
 
         {/* Status badge — top right */}
         <span
-          className="absolute top-3 right-3 font-mono text-xs px-2 py-0.5 rounded"
+          className="absolute top-3 right-3 font-mono text-xs px-2 py-0.5 rounded bg-dark-base/70"
           style={{
             color: status.color,
             border: `1px solid ${status.color}`,
-            background: 'rgba(10,10,15,0.7)',
             boxShadow: status.shadow !== 'none' ? `0 0 8px ${status.shadow}` : undefined,
           }}
         >
@@ -107,11 +102,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
           {project.stack.map((tech) => (
             <span
               key={tech}
-              className="font-mono text-xs text-gray-400 px-2 py-0.5 rounded"
-              style={{
-                background: 'rgba(176,38,255,0.08)',
-                border: '1px solid rgba(176,38,255,0.2)',
-              }}
+              className="font-mono text-xs text-gray-400 px-2 py-0.5 rounded bg-neon-purple/[0.08] border border-neon-purple/20"
             >
               {tech}
             </span>
@@ -126,8 +117,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 font-mono text-xs transition-colors"
-                style={{ color: '#00e5ff' }}
+                className="flex items-center gap-1 font-mono text-xs transition-colors text-neon-cyan"
                 aria-label={`Ver proyecto ${project.title}`}
               >
                 <ExternalLink size={12} />
@@ -139,8 +129,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 font-mono text-xs transition-colors"
-                style={{ color: '#888' }}
+                className="flex items-center gap-1 font-mono text-xs transition-colors text-gray-400 hover:text-white"
                 aria-label={`Código fuente de ${project.title}`}
               >
                 <Github size={12} />
