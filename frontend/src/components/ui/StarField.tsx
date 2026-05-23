@@ -24,6 +24,11 @@ export default function StarField() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    // Read colors from CSS vars (Canvas 2D API can't resolve var() directly)
+    const rootStyle = getComputedStyle(document.documentElement)
+    const C = (v: string) => rootStyle.getPropertyValue(v).trim()
+    const COLORS = [C('--starfield-white'), C('--starfield-white'), C('--starfield-white'), C('--starfield-purple'), C('--starfield-cyan'), C('--starfield-white'), C('--starfield-white')]
+
     function resize() {
       if (!canvas) return
       canvas.width = window.innerWidth
@@ -33,7 +38,6 @@ export default function StarField() {
     function createStars() {
       if (!canvas) return
       const stars: Star[] = []
-      const colors = ['#ffffff', '#ffffff', '#ffffff', '#b026ff', '#00e5ff', '#ffffff', '#ffffff']
       for (let i = 0; i < 200; i++) {
         stars.push({
           x: Math.random() * canvas.width,
@@ -44,7 +48,7 @@ export default function StarField() {
           twinkleOffset: Math.random() * Math.PI * 2,
           driftX: (Math.random() - 0.5) * 0.05,
           driftY: (Math.random() - 0.5) * 0.05,
-          color: colors[Math.floor(Math.random() * colors.length)],
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
         })
       }
       starsRef.current = stars
@@ -73,7 +77,7 @@ export default function StarField() {
         ctx.globalAlpha = twinkle
         ctx.fillStyle = star.color
 
-        if (star.color !== '#ffffff') {
+        if (star.color !== COLORS[0]) {
           ctx.shadowBlur = 6
           ctx.shadowColor = star.color
         }

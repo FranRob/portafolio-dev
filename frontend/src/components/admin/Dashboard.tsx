@@ -100,7 +100,7 @@ export default function Dashboard() {
       {/* Header */}
       <header className="sticky top-0 z-40 px-6 py-4 flex items-center justify-between bg-dark-base/90 backdrop-blur-xl border-b border-dark-border">
         <div>
-          <h1 className="font-orbitron font-bold text-lg text-neon-purple" style={{ textShadow: '0 0 8px rgba(176,38,255,0.4)' }}>
+          <h1 className="font-orbitron font-bold text-lg text-neon-purple neon-text-purple-sm">
             Panel de Métricas
           </h1>
           <p className="font-mono text-xs text-gray-500">divMalCentrado admin</p>
@@ -172,10 +172,10 @@ export default function Dashboard() {
               <>
                 {/* Stats cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <StatCard label="Total Visitas" value={stats?.totalVisits ?? 0} icon={<Eye size={22} />} color="#00e5ff" glow="rgba(0,229,255,0.3)" />
-                  <StatCard label="Visitas Hoy" value={stats?.todayVisits ?? 0} icon={<CalendarDays size={22} />} color="#b026ff" glow="rgba(176,38,255,0.3)" />
-                  <StatCard label="Sección Más Vista" value={stats?.mostViewedSection ?? '—'} icon={<BarChart2 size={22} />} color="#ff00ff" glow="rgba(255,0,255,0.3)" />
-                  <StatCard label="Mensajes Sin Leer" value={stats?.unreadMessages ?? 0} icon={<Mail size={22} />} color="#00e5ff" glow="rgba(0,229,255,0.3)" onClick={() => handleTabChange('messages')} className="cursor-pointer hover:border-cyan-400/50 transition-colors" />
+                  <StatCard label="Total Visitas" value={stats?.totalVisits ?? 0} icon={<Eye size={22} />} color="var(--stat-total-color)" glow="var(--stat-total-glow)" />
+                  <StatCard label="Visitas Hoy" value={stats?.todayVisits ?? 0} icon={<CalendarDays size={22} />} color="var(--stat-today-color)" glow="var(--stat-today-glow)" />
+                  <StatCard label="Sección Más Vista" value={stats?.mostViewedSection ?? '—'} icon={<BarChart2 size={22} />} color="var(--stat-top-section-clr)" glow="var(--stat-top-section-glow)" />
+                  <StatCard label="Mensajes Sin Leer" value={stats?.unreadMessages ?? 0} icon={<Mail size={22} />} color="var(--stat-unread-color)" glow="var(--stat-unread-glow)" onClick={() => handleTabChange('messages')} className="cursor-pointer hover:border-cyan-400/50 transition-colors" />
                 </div>
 
                 {/* Charts row */}
@@ -194,7 +194,7 @@ export default function Dashboard() {
                               <span className="font-mono text-xs text-gray-500">{views}</span>
                             </div>
                             <div className="w-full rounded-full overflow-hidden bg-dark-border" style={{ height: '6px' }}>
-                              <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, delay: 0.3 }} style={{ height: '100%', borderRadius: '9999px', background: 'linear-gradient(90deg, #b026ff, #00e5ff)', boxShadow: '0 0 8px rgba(176,38,255,0.5)' }} />
+                              <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, delay: 0.3 }} className="gradient-bar-section" style={{ height: '100%', borderRadius: '9999px' }} />
                             </div>
                           </div>
                         )
@@ -213,7 +213,7 @@ export default function Dashboard() {
                         return (
                           <div key={day.date} className="flex flex-col items-center gap-1 flex-1">
                             <span className="font-mono text-xs text-gray-500">{day.count}</span>
-                            <motion.div initial={{ height: 0 }} animate={{ height: `${Math.max(heightPct, 4)}%` }} transition={{ duration: 0.6, delay: 0.4 }} className="w-full rounded-t" style={{ background: 'linear-gradient(180deg, #b026ff, rgba(176,38,255,0.3))', boxShadow: '0 0 6px rgba(176,38,255,0.4)', minHeight: '4px' }} />
+                            <motion.div initial={{ height: 0 }} animate={{ height: `${Math.max(heightPct, 4)}%` }} transition={{ duration: 0.6, delay: 0.4 }} className="w-full rounded-t gradient-bar-daily" style={{ minHeight: '4px' }} />
                             <span className="font-mono text-xs text-gray-600 capitalize">{dateLabel}</span>
                           </div>
                         )

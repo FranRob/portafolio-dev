@@ -4,7 +4,7 @@
  */
 
 const skeletonBase: React.CSSProperties = {
-  background: 'linear-gradient(90deg, #1a1a24 25%, #252532 50%, #1a1a24 75%)',
+  background: 'var(--shimmer-gradient)',
   backgroundSize: '200% 100%',
   animation: 'shimmer 1.5s infinite',
 }
@@ -25,8 +25,7 @@ export function ProjectsSkeleton() {
       {Array.from({ length: 5 }).map((_, i) => (
         <div
           key={i}
-          className="flex items-center gap-3 px-4 py-3 rounded-lg"
-          style={{ background: '#12121a', border: '1px solid #1e1e2e' }}
+          className="flex items-center gap-3 px-4 py-3 rounded-lg bg-dark-card border border-dark-border"
         >
           {/* Reorder buttons skeleton */}
           <div className="flex flex-col gap-1">
@@ -69,7 +68,7 @@ export function MessagesSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          style={{ ...itemStyle, background: '#12121a', border: '1px solid #1e1e2e' }}
+          style={{ ...itemStyle, background: 'var(--shimmer-gradient)', border: '1px solid var(--dark-border)' }}
         />
       ))}
     </div>

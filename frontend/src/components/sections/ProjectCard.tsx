@@ -11,17 +11,17 @@ interface ProjectCardProps {
 const statusConfig = {
   in_progress: {
     label: 'En desarrollo',
-    color: '#b026ff',
-    shadow: 'rgba(176,38,255,0.3)',
+    color: 'var(--status-in-progress)',
+    shadow: 'var(--status-in-progress-shadow)',
   },
   completed: {
     label: 'Live',
-    color: '#00e5ff',
-    shadow: 'rgba(0,229,255,0.3)',
+    color: 'var(--status-completed)',
+    shadow: 'var(--status-completed-shadow)',
   },
   private: {
     label: 'Próximamente',
-    color: '#4a4a5a',
+    color: 'var(--status-private)',
     shadow: 'none',
   },
 }
@@ -56,17 +56,8 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div
-            className="w-full h-full flex items-center justify-center"
-            style={{
-              background:
-                'linear-gradient(135deg, rgba(176,38,255,0.3) 0%, rgba(0,229,255,0.15) 50%, rgba(176,38,255,0.1) 100%)',
-            }}
-          >
-            <span
-              className="font-orbitron font-bold text-2xl sm:text-4xl select-none text-neon-purple"
-              style={{ textShadow: '0 0 20px rgba(176,38,255,0.6)' }}
-            >
+          <div className="w-full h-full flex items-center justify-center project-card-gradient">
+            <span className="font-orbitron font-bold text-2xl sm:text-4xl select-none text-neon-purple neon-text-purple-lg">
               {getInitials(project.title)}
             </span>
           </div>

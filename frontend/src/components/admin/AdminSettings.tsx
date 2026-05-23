@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Shield, Key, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react'
 import { getTwoFactorStatus, setupTwoFactor, enableTwoFactor, disableTwoFactor, changePassword } from '../../services/api'
 
-const inputClass = "w-full font-mono text-sm bg-dark-card border border-dark-border rounded-md px-3 py-2 text-gray-300 focus:border-neon-purple focus:shadow-[0_0_10px_rgba(176,38,255,0.2)] outline-none transition-[border-color,box-shadow]"
+const inputClass = "w-full font-mono text-sm bg-dark-card border border-dark-border rounded-md px-3 py-2 text-gray-300 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-none transition-[border-color,box-shadow]"
 const labelClass = "font-mono text-xs text-gray-500 uppercase tracking-wider block mb-1"
 
 export default function AdminSettings() {
