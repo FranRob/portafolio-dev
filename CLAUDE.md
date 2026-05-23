@@ -78,7 +78,7 @@ portafolio-dev/
 
 - **ESM** throughout (both backend and frontend). Backend imports use `.js` extensions.
 - **Analytics tracking**: every section component uses `useAnalytics(sectionName)` hook — it fires once via IntersectionObserver when the section reaches 50% visibility.
-- **Admin auth**: JWT stored in `localStorage` as `admin_token`. The Axios instance in `api.ts` injects it automatically. A 401 response clears the token and redirects to `#/admin/login`.
+- **Admin auth**: JWT stored in `sessionStorage` as `admin_token` (cleared on browser close for security). The Axios instance in `api.ts` injects it automatically. A 401 response clears the token and redirects to `#/admin/login`.
 - **Theme tokens**: always use Tailwind custom classes (`neon-purple`, `neon-cyan`, `dark-card`, etc.) — never hardcode hex colors in components.
 - **Prisma client**: always import from `src/lib/prisma.ts`, never instantiate directly.
 

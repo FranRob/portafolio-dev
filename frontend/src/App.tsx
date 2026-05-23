@@ -7,11 +7,11 @@ const PortfolioPage = lazy(() => import('./PortfolioPage'))
 
 function LoadingFallback() {
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}>
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
       <div className="flex flex-col items-center gap-4">
         <div
           className="w-10 h-10 border-3 rounded-full"
-          style={{ borderColor: '#b026ff', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }}
+          style={{ borderColor: 'var(--status-in-progress)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }}
         />
         <p className="font-mono text-sm text-gray-500">Cargando...</p>
       </div>
