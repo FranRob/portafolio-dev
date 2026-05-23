@@ -9,13 +9,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col items-center md:items-start gap-1">
-            <span
-              className="font-orbitron text-sm font-bold"
-              style={{
-                color: '#b026ff',
-                textShadow: '0 0 8px rgba(176, 38, 255, 0.5)',
-              }}
-            >
+            <span className="font-orbitron text-sm font-bold text-neon-purple neon-text-purple-sm">
               divMalCentrado
             </span>
             <span className="font-mono text-xs text-gray-600">
@@ -33,7 +27,8 @@ export default function Footer() {
               // Prefetch dashboard chunk on hover
               import('../../components/admin/Dashboard')
             }}
-            className="flex items-center gap-1 text-gray-700 hover:text-gray-500 transition-colors duration-200 group"
+            className="flex items-center gap-1 text-gray-700 hover:text-gray-500 transition-colors duration-200 group px-3 py-2 rounded"
+            aria-label="Panel de administración"
             title="Admin"
           >
             <Lock size={11} className="opacity-40 group-hover:opacity-60" />

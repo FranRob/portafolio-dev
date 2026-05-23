@@ -13,6 +13,9 @@ import { logger } from './lib/logger.js';
 
 const app = express();
 
+// Trust proxy for rate-limit behind Nginx
+app.set('trust proxy', 1);
+
 // Security headers middleware
 app.use((req: Request, res: Response, next: Function) => {
   // HSTS - Forces HTTPS for 1 year

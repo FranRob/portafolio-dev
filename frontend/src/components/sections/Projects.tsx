@@ -42,7 +42,7 @@ export default function Projects() {
           <div className="flex items-center justify-center py-20">
             <motion.div
               className="w-8 h-8 border-2 rounded-full"
-              style={{ borderColor: '#b026ff', borderTopColor: 'transparent' }}
+              style={{ borderColor: 'var(--status-in-progress)', borderTopColor: 'transparent' }}
               animate={{ rotate: 360 }}
               transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
             />
@@ -55,9 +55,9 @@ export default function Projects() {
           <div
             className="rounded-lg px-4 py-3 font-mono text-sm"
             style={{
-              background: 'rgba(255,85,85,0.1)',
-              border: '1px solid rgba(255,85,85,0.3)',
-              color: '#ff5555',
+              background: 'var(--error-bg)',
+              border: '1px solid var(--error-border)',
+              color: 'var(--error-color)',
             }}
           >
             {error}

@@ -37,33 +37,24 @@ export default function Navbar() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{
-        background: 'rgba(10, 10, 15, 0.85)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: scrolled
-          ? '1px solid #b026ff'
-          : '1px solid transparent',
-        boxShadow: scrolled
-          ? '0 0 20px rgba(176, 38, 255, 0.2)'
-          : 'none',
-      }}
+      aria-label="Navegación principal"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-dark-base/85 backdrop-blur-xl ${
+        scrolled
+          ? 'border-b border-neon-purple shadow-[0_0_20px_var(--shadow-purple-sm)]'
+          : 'border-b border-transparent'
+      }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
           <div className="flex flex-col leading-tight">
-            <span
-              className="font-orbitron font-bold text-lg cursor-pointer"
-              style={{
-                color: '#b026ff',
-                textShadow: '0 0 10px #b026ff, 0 0 20px rgba(176, 38, 255, 0.5)',
-              }}
+            <button
               onClick={() => handleNavClick('#hero')}
+              className="font-orbitron font-bold text-lg text-neon-purple neon-text-purple-xl bg-none border-none p-0"
+              aria-label="Ir al inicio"
             >
               divMalCentrado
-            </span>
+            </button>
             <span className="font-mono text-xs text-gray-500">
               /* margin: 0 auto; */
             </span>
@@ -76,6 +67,7 @@ export default function Navbar() {
                 <button
                   onClick={() => handleNavClick(link.href)}
                   className="font-mono text-sm text-gray-400 hover:text-white transition-colors duration-200 relative group"
+                  aria-label={`Ir a ${link.label}`}
                 >
                   <span className="text-neon-cyan opacity-60 group-hover:opacity-100 transition-opacity">
                     &gt;{' '}
@@ -89,9 +81,10 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden text-gray-400 hover:text-white transition-colors p-1"
+            className="md:hidden text-gray-400 hover:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
+            aria-label={menuOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'}
+            aria-expanded={menuOpen}
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -100,16 +93,14 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div
-          className="md:hidden border-t border-dark-border"
-          style={{ background: 'rgba(10, 10, 15, 0.97)' }}
-        >
+        <div className="md:hidden border-t border-dark-border bg-dark-base/97">
           <ul className="flex flex-col py-4 px-6 gap-4">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <button
                   onClick={() => handleNavClick(link.href)}
-                  className="font-mono text-sm text-gray-400 hover:text-white transition-colors w-full text-left py-1"
+                  className="font-mono text-sm text-gray-400 hover:text-white transition-colors w-full text-left py-2"
+                  aria-label={`Ir a ${link.label}`}
                 >
                   <span className="neon-text-cyan opacity-60">{'> '}</span>
                   {link.label}

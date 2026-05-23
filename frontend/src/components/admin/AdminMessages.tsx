@@ -29,6 +29,14 @@ export function AdminMessages() {
   const [newCategory, setNewCategory] = useState('')
   const [showNewCategory, setShowNewCategory] = useState(false)
   const [showMoveMenu, setShowMoveMenu] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (error) {
+      const t = setTimeout(() => setError(null), 4000)
+      return () => clearTimeout(t)
+    }
+  }, [error])
   
   const defaultTabs: TabType[] = ['no-leido', 'leido']
 
@@ -71,6 +79,7 @@ export function AdminMessages() {
       )
     } catch (err) {
       console.error('Failed to mark read:', err)
+      setError('Error al marcar como leído')
     }
   }
 
@@ -82,6 +91,7 @@ export function AdminMessages() {
       )
     } catch (err) {
       console.error('Failed to mark unread:', err)
+      setError('Error al marcar como no leído')
     }
   }
 
@@ -94,6 +104,7 @@ export function AdminMessages() {
       setShowMoveMenu(null)
     } catch (err) {
       console.error('Failed to move message:', err)
+      setError('Error al mover el mensaje')
     }
   }
 
@@ -107,13 +118,12 @@ export function AdminMessages() {
       }
     } catch (err) {
       console.error('Failed to delete message:', err)
+      setError('Error al eliminar el mensaje')
     }
   }
 
   async function handleCreateCategory() {
     if (!newCategory.trim()) return
-    // Add the new category to the messages list so it appears as a tab
-    setMessages(prev => prev.map(m => m)) // Force update to show new category
     setShowNewCategory(false)
     setActiveTab(newCategory.trim())
   }
@@ -126,7 +136,7 @@ export function AdminMessages() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`font-mono text-xs px-4 py-3 whitespace-nowrap transition-colors ${
+            className={`font-mono text-xs px-4 py-3 whitespace-nowrap transition-colors min-h-[44px] ${
               activeTab === tab ? 'text-neon-purple border-b-2 border-neon-purple' : 'text-gray-500'
             }`}
           >
@@ -147,23 +157,32 @@ export function AdminMessages() {
               className="font-mono text-xs bg-transparent border-b border-gray-600 px-2 py-2 outline-none text-gray-300 w-24"
               autoFocus
             />
-            <button onClick={handleCreateCategory} className="p-2 hover:text-white">
+            <button onClick={handleCreateCategory} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
               <Plus size={14} />
             </button>
-            <button onClick={() => setShowNewCategory(false)} className="p-2 hover:text-white">
+            <button onClick={() => setShowNewCategory(false)} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
               <X size={14} />
             </button>
           </div>
         ) : (
           <button
             onClick={() => setShowNewCategory(true)}
-            className="flex items-center gap-1 font-mono text-xs px-4 py-3 text-gray-500 hover:text-white transition-colors"
+            className="flex items-center gap-1 font-mono text-xs px-4 py-3 text-gray-500 hover:text-white transition-colors min-h-[44px]"
           >
             <Plus size={12} />
             Agregar
           </button>
         )}
       </div>
+
+      {error && (
+        <div className="max-w-4xl mx-auto px-4 pt-4">
+          <div className="rounded-lg px-4 py-3 font-mono text-sm flex items-center gap-2 bg-red-500/10 border border-red-500/30 text-red-400">
+            <span>⚠</span>
+            {error}
+          </div>
+        </div>
+      )}
 
       {/* Messages list */}
       <div className="max-w-4xl mx-auto p-4">
@@ -244,7 +263,8 @@ export function AdminMessages() {
                       {msg.read ? (
                         <button
                           onClick={() => handleMarkUnread(msg)}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs bg-dark-border text-gray-400"
+                          className="flex items-center gap-1 px-3 py-2 rounded font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
+                          aria-label="Marcar como no leído"
                         >
                           <Clock size={12} />
                           Marcar no leído
@@ -252,7 +272,8 @@ export function AdminMessages() {
                       ) : (
                         <button
                           onClick={() => handleMarkRead(msg)}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs bg-dark-border text-neon-cyan"
+                          className="flex items-center gap-1 px-3 py-2 rounded font-mono text-xs bg-dark-border text-neon-cyan min-h-[44px]"
+                          aria-label="Marcar como leído"
                         >
                           <CheckCircle size={12} />
                           Marcar leído
@@ -263,7 +284,8 @@ export function AdminMessages() {
                       <div className="relative">
                         <button
                           onClick={() => setShowMoveMenu(showMoveMenu === msg.id ? null : msg.id)}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs bg-dark-border text-gray-400"
+                          className="flex items-center gap-1 px-3 py-2 rounded font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
+                          aria-label="Mover mensaje a otra categoría"
                         >
                           <Move size={12} />
                           Mover a...
@@ -291,7 +313,8 @@ export function AdminMessages() {
                       {/* Delete */}
                       <button
                         onClick={() => handleDelete(msg)}
-                        className="flex items-center gap-1 px-3 py-1.5 rounded font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20"
+                        className="flex items-center gap-1 px-3 py-2 rounded font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 min-h-[44px]"
+                        aria-label="Eliminar mensaje"
                       >
                         <Trash2 size={12} />
                         Eliminar

@@ -2,6 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* --- Status colors --- */
+  --status-in-progress: #b026ff;
+  --status-in-progress-shadow: rgba(176, 38, 255, 0.3);
+  --status-completed: #00e5ff;
+  --status-completed-shadow: rgba(0, 229, 255, 0.3);
+  --status-private: #4a4a5a;
+
+  /* --- Category colors (Stack) --- */
+  --cat-frontend: #00e5ff;
+  --cat-frontend-glow: rgba(0, 229, 255, 0.4);
+  --cat-backend: #b026ff;
+  --cat-backend-glow: rgba(176, 38, 255, 0.4);
+  --cat-tools: #ff00ff;
+  --cat-tools-glow: rgba(255, 0, 255, 0.4);
+
+  /* --- Social colors (Contact) --- */
+  --social-purple: #b026ff;
+  --social-purple-glow: rgba(176, 38, 255, 0.3);
+  --social-purple-hover: rgba(176, 38, 255, 0.6);
+  --social-cyan: #00e5ff;
+  --social-cyan-glow: rgba(0, 229, 255, 0.3);
+  --social-cyan-hover: rgba(0, 229, 255, 0.6);
+  --social-availability-bg: rgba(0, 229, 255, 0.05);
+  --social-availability-bdr: rgba(0, 229, 255, 0.15);
+
+  /* --- StatCard colors (Dashboard) --- */
+  --stat-total-color: #00e5ff;
+  --stat-total-glow: rgba(0, 229, 255, 0.3);
+  --stat-today-color: #b026ff;
+  --stat-today-glow: rgba(176, 38, 255, 0.3);
+  --stat-top-section-clr: #ff00ff;
+  --stat-top-section-glow: rgba(255, 0, 255, 0.3);
+  --stat-unread-color: #00e5ff;
+  --stat-unread-glow: rgba(0, 229, 255, 0.3);
+
+  /* --- Syntax colors (About) --- */
+  --syntax-keyword: #ff79c6;
+  --syntax-property: #50fa7b;
+  --syntax-string: #f1fa8c;
+  --syntax-boolean: #bd93f9;
+  --syntax-bracket: #f8f8f2;
+  --syntax-plain: #f8f8f2;
+  --syntax-comment: #6272a4;
+  --syntax-number: #bd93f9;
+
+  /* --- Other UI colors --- */
+  --bg-primary: #0a0a0f;
+  --error-color: #ff5555;
+  --error-bg: rgba(255, 85, 85, 0.1);
+  --error-border: rgba(255, 85, 85, 0.3);
+  --disabled-text: #2a2a3a;
+  --dark-lighter: #0e0e18;
+  --terminal-bg: #0d0d16;
+  --terminal-header: #16161f;
+  --terminal-line-num: #3a3a4a;
+  --starfield-white: #ffffff;
+  --starfield-purple: #b026ff;
+  --starfield-cyan: #00e5ff;
+  --glitch-cyan: #00e5ff;
+  --glitch-magenta: #ff00ff;
+  --shimmer-gradient: linear-gradient(90deg, #1a1a24 25%, #252532 50%, #1a1a24 75%);
+  --input-focus-shadow: rgba(176, 38, 255, 0.2);
+  --shadow-purple-sm: rgba(176, 38, 255, 0.2);
+  --shadow-purple-lg: rgba(176, 38, 255, 0.4);
+  --shadow-cyan-sm: rgba(0, 229, 255, 0.2);
+  --shadow-cyan-lg: rgba(0, 229, 255, 0.4);
+  --dark-border: #1e1e2e;
+  --trait-bg: rgba(176, 38, 255, 0.08);
+  --trait-border: rgba(176, 38, 255, 0.2);
+  --currently-bg: rgba(0, 229, 255, 0.05);
+  --currently-border: rgba(0, 229, 255, 0.2);
+  --terminal-shadow: rgba(176, 38, 255, 0.1);
+}
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -13,11 +88,13 @@
   }
 
   body {
-    background-color: #0a0a0f;
+    background-color: var(--bg-primary);
     color: #e0e0e0;
     font-family: 'Space Mono', monospace;
     overflow-x: hidden;
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Scanlines overlay */
@@ -39,13 +116,25 @@
     z-index: 9998;
   }
 
+  /* Focus visible for keyboard navigation */
+  *:focus-visible {
+    outline: 2px solid #00e5ff;
+    outline-offset: 2px;
+  }
+
+  /* Remove default input appearance for consistent styling */
+  input, select, textarea {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #0a0a0f;
+    background: var(--bg-primary);
   }
 
   ::-webkit-scrollbar-thumb {
@@ -55,6 +144,12 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: #00e5ff;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #b026ff #0a0a0f;
   }
 
   /* Selection color */
@@ -146,5 +241,48 @@
 
   .border-3 {
     border-width: 3px;
+  }
+
+  /* --- textShadow utilities --- */
+  .neon-text-purple-sm {
+    text-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
+  }
+  .neon-text-purple-md {
+    text-shadow: 0 0 10px rgba(176, 38, 255, 0.4);
+  }
+  .neon-text-purple-lg {
+    text-shadow: 0 0 20px rgba(176, 38, 255, 0.6);
+  }
+  .neon-text-purple-xl {
+    text-shadow: 0 0 10px #b026ff, 0 0 20px rgba(176, 38, 255, 0.5);
+  }
+  .neon-text-cyan-sm {
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+  }
+  .neon-text-white-subtle {
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+  }
+
+  /* --- gradient utilities --- */
+  .synthwave-grid {
+    background-image: linear-gradient(rgba(176, 38, 255, 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(176, 38, 255, 0.5) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .horizon-glow {
+    background: linear-gradient(90deg, transparent, #b026ff, #ff00ff, #b026ff, transparent);
+    box-shadow: 0 0 20px #b026ff, 0 0 40px rgba(176, 38, 255, 0.5);
+  }
+  .gradient-bar-section {
+    background: linear-gradient(90deg, #b026ff, #00e5ff);
+    box-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
+  }
+  .gradient-bar-daily {
+    background: linear-gradient(180deg, #b026ff, rgba(176, 38, 255, 0.3));
+    box-shadow: 0 0 6px rgba(176, 38, 255, 0.4);
+  }
+  .project-card-gradient {
+    background: linear-gradient(135deg, rgba(176, 38, 255, 0.3) 0%,
+      rgba(0, 229, 255, 0.15) 50%, rgba(176, 38, 255, 0.1) 100%);
   }
 }

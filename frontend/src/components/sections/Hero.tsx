@@ -53,22 +53,14 @@ export default function Hero() {
         {/* "Hola soy" */}
         <motion.p
           variants={itemVariants}
-          className="font-mono text-base md:text-lg tracking-widest mb-3"
-          style={{
-            color: '#00e5ff',
-            textShadow: '0 0 8px rgba(0, 229, 255, 0.5)',
-          }}
-        >
+          className="font-mono text-base md:text-lg tracking-widest mb-3 text-neon-cyan neon-text-cyan-sm">
           Hola, soy
         </motion.p>
 
         {/* Name */}
         <motion.h1
           variants={itemVariants}
-          className="font-orbitron font-black text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-white leading-tight mb-4"
-          style={{
-            textShadow: '0 0 30px rgba(255,255,255,0.1)',
-          }}
+          className="font-orbitron font-black text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-white leading-tight mb-4 neon-text-white-subtle"
         >
           Franco Robles
         </motion.h1>
@@ -111,41 +103,15 @@ export default function Hero() {
         >
           <button
             onClick={() => scrollTo('stack')}
-            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider"
-            style={{
-              border: '1px solid #00e5ff',
-              color: '#00e5ff',
-              boxShadow: '0 0 10px rgba(0, 229, 255, 0.2)',
-              background: 'rgba(0, 229, 255, 0.05)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 229, 255, 0.15)'
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 229, 255, 0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 229, 255, 0.05)'
-              e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 229, 255, 0.2)'
-            }}
+            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider border border-neon-cyan text-neon-cyan bg-neon-cyan/[0.05] hover:bg-neon-cyan/20 hover:shadow-[0_0_20px_var(--shadow-cyan-lg)] shadow-[0_0_10px_var(--shadow-cyan-sm)]"
+            aria-label="Ver mi Stack tecnológico"
           >
             Ver mi Stack
           </button>
           <button
             onClick={() => scrollTo('contact')}
-            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider"
-            style={{
-              border: '1px solid #b026ff',
-              color: '#b026ff',
-              boxShadow: '0 0 10px rgba(176, 38, 255, 0.2)',
-              background: 'rgba(176, 38, 255, 0.05)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(176, 38, 255, 0.15)'
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(176, 38, 255, 0.4)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(176, 38, 255, 0.05)'
-              e.currentTarget.style.boxShadow = '0 0 10px rgba(176, 38, 255, 0.2)'
-            }}
+            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider border border-neon-purple text-neon-purple bg-neon-purple/[0.05] hover:bg-neon-purple/20 hover:shadow-[0_0_20px_var(--shadow-purple-lg)] shadow-[0_0_10px_var(--shadow-purple-sm)]"
+            aria-label="Contactarme"
           >
             Contactarme
           </button>
@@ -159,17 +125,13 @@ export default function Hero() {
         aria-hidden="true"
       >
         <div
+          className="synthwave-grid"
           style={{
             position: 'absolute',
             bottom: 0,
             left: '-10%',
             right: '-10%',
             height: '260px',
-            backgroundImage: `
-              linear-gradient(rgba(176, 38, 255, 0.5) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(176, 38, 255, 0.5) 1px, transparent 1px)
-            `,
-            backgroundSize: '60px 60px',
             transform: 'perspective(300px) rotateX(75deg)',
             transformOrigin: 'bottom center',
             maskImage: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)',
@@ -178,14 +140,13 @@ export default function Hero() {
         />
         {/* Horizon glow */}
         <div
+          className="horizon-glow"
           style={{
             position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
             height: '2px',
-            background: 'linear-gradient(90deg, transparent, #b026ff, #ff00ff, #b026ff, transparent)',
-            boxShadow: '0 0 20px #b026ff, 0 0 40px rgba(176, 38, 255, 0.5)',
           }}
         />
       </div>
@@ -201,7 +162,7 @@ export default function Hero() {
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ color: '#b026ff' }}
+          className="text-neon-purple"
         >
           <ChevronDown size={20} />
         </motion.div>

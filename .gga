@@ -1,2 +1,5 @@
-PROVIDER="claude"
-RULES_FILE="C:/Users/Franco/.config/gga/AGENTS.md"
+PROVIDER="opencode:opencode/deepseek-v4-flash-free"
+RULES_FILE="F:/Github/portafolio-dev/CLAUDE.md"
+FILE_PATTERNS="*.ts,*.tsx,*.css,*.html,*.json,*.md,*.conf"
+EXCLUDE_PATTERNS="openspec/*,package-lock.json,*.png"
+STRICT_MODE=false

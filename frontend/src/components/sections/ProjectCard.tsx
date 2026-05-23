@@ -11,17 +11,17 @@ interface ProjectCardProps {
 const statusConfig = {
   in_progress: {
     label: 'En desarrollo',
-    color: '#b026ff',
-    shadow: 'rgba(176,38,255,0.3)',
+    color: 'var(--status-in-progress)',
+    shadow: 'var(--status-in-progress-shadow)',
   },
   completed: {
     label: 'Live',
-    color: '#00e5ff',
-    shadow: 'rgba(0,229,255,0.3)',
+    color: 'var(--status-completed)',
+    shadow: 'var(--status-completed-shadow)',
   },
   private: {
     label: 'Próximamente',
-    color: '#4a4a5a',
+    color: 'var(--status-private)',
     shadow: 'none',
   },
 }
@@ -44,8 +44,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="rounded-lg overflow-hidden flex flex-col"
-      style={{ background: '#12121a', border: '1px solid #1e1e2e' }}
+      className="rounded-lg overflow-hidden flex flex-col bg-dark-card border border-dark-border"
     >
       {/* Image area */}
       <div className="relative h-32 sm:h-44 flex-shrink-0">
@@ -53,23 +52,12 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
           <img
             src={project.imageUrl}
             alt={project.title}
+            loading="lazy"
             className="w-full h-full object-cover"
           />
         ) : (
-          <div
-            className="w-full h-full flex items-center justify-center"
-            style={{
-              background:
-                'linear-gradient(135deg, rgba(176,38,255,0.3) 0%, rgba(0,229,255,0.15) 50%, rgba(176,38,255,0.1) 100%)',
-            }}
-          >
-            <span
-              className="font-orbitron font-bold text-2xl sm:text-4xl select-none"
-              style={{
-                color: '#b026ff',
-                textShadow: '0 0 20px rgba(176,38,255,0.6)',
-              }}
-            >
+          <div className="w-full h-full flex items-center justify-center project-card-gradient">
+            <span className="font-orbitron font-bold text-2xl sm:text-4xl select-none text-neon-purple neon-text-purple-lg">
               {getInitials(project.title)}
             </span>
           </div>
@@ -77,11 +65,10 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
 
         {/* Status badge — top right */}
         <span
-          className="absolute top-3 right-3 font-mono text-xs px-2 py-0.5 rounded"
+          className="absolute top-3 right-3 font-mono text-xs px-2 py-0.5 rounded bg-dark-base/70"
           style={{
             color: status.color,
             border: `1px solid ${status.color}`,
-            background: 'rgba(10,10,15,0.7)',
             boxShadow: status.shadow !== 'none' ? `0 0 8px ${status.shadow}` : undefined,
           }}
         >
@@ -96,13 +83,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
         </h3>
 
         <p
-          className="font-mono text-xs text-gray-400 leading-relaxed mb-3"
-          style={{
-            display: '-webkit-box',
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
+          className="font-mono text-xs text-gray-400 leading-relaxed mb-3 line-clamp-3"
         >
           {project.description}
         </p>
@@ -112,11 +93,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
           {project.stack.map((tech) => (
             <span
               key={tech}
-              className="font-mono text-xs text-gray-400 px-2 py-0.5 rounded"
-              style={{
-                background: 'rgba(176,38,255,0.08)',
-                border: '1px solid rgba(176,38,255,0.2)',
-              }}
+              className="font-mono text-xs text-gray-400 px-2 py-0.5 rounded bg-neon-purple/[0.08] border border-neon-purple/20"
             >
               {tech}
             </span>
@@ -131,8 +108,8 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 font-mono text-xs transition-colors"
-                style={{ color: '#00e5ff' }}
+                className="flex items-center gap-1 font-mono text-xs transition-colors text-neon-cyan"
+                aria-label={`Ver proyecto ${project.title}`}
               >
                 <ExternalLink size={12} />
                 Ver demo
@@ -143,8 +120,8 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 font-mono text-xs transition-colors"
-                style={{ color: '#888' }}
+                className="flex items-center gap-1 font-mono text-xs transition-colors text-gray-400 hover:text-white"
+                aria-label={`Código fuente de ${project.title}`}
               >
                 <Github size={12} />
                 Ver código

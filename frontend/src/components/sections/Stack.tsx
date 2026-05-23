@@ -57,9 +57,9 @@ const connections: [string, string][] = [
 ]
 
 const categoryColors: Record<Category, { node: string; glow: string; text: string }> = {
-  frontend: { node: '#00e5ff', glow: 'rgba(0,229,255,0.4)', text: 'text-neon-cyan' },
-  backend: { node: '#b026ff', glow: 'rgba(176,38,255,0.4)', text: 'neon-text-purple' },
-  tools: { node: '#ff00ff', glow: 'rgba(255,0,255,0.4)', text: 'neon-text-magenta' },
+  frontend: { node: 'var(--cat-frontend)', glow: 'var(--cat-frontend-glow)', text: 'text-neon-cyan' },
+  backend: { node: 'var(--cat-backend)', glow: 'var(--cat-backend-glow)', text: 'neon-text-purple' },
+  tools: { node: 'var(--cat-tools)', glow: 'var(--cat-tools-glow)', text: 'neon-text-magenta' },
 }
 
 const categoryInfo: { key: Category; label: string; items: string[] }[] = [
@@ -108,8 +108,7 @@ export default function Stack() {
     <section
       id="stack"
       ref={sectionRef}
-      className="relative z-10 py-24 px-4"
-      style={{ background: 'linear-gradient(180deg, #0a0a0f 0%, #0e0e18 50%, #0a0a0f 100%)' }}
+      className="relative z-10 py-24 px-4 bg-gradient-to-b from-dark-base via-[var(--dark-lighter)] to-dark-base"
     >
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
@@ -129,16 +128,12 @@ export default function Stack() {
 
         {/* Constellation */}
         <motion.div
-          className="relative w-full rounded-xl mb-16 min-h-64 sm:min-h-96 md:min-h-[520px]"
-          style={{
-            background: 'rgba(10,10,20,0.8)',
-            border: '1px solid #1e1e2e',
-            boxShadow: 'inset 0 0 60px rgba(176,38,255,0.05)',
-          }}
+          className="relative w-full rounded-xl mb-16 min-h-64 sm:min-h-96 md:min-h-[520px] bg-dark-base/80 border border-dark-border shadow-[inset_0_0_60px_rgba(176,38,255,0.05)]"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
+          aria-hidden="true"
         >
           {/* SVG connections */}
           <svg
@@ -225,11 +220,9 @@ export default function Stack() {
                     style={{ transform: 'translateX(-50%)' }}
                   >
                     <div
-                      className="font-mono rounded px-2 py-1 whitespace-nowrap"
+                      className="font-mono rounded px-2 py-1 bg-dark-card text-gray-300"
                       style={{
-                        background: '#12121a',
                         border: `1px solid ${colors.node}`,
-                        color: '#e0e0e0',
                         boxShadow: `0 0 8px ${colors.glow}`,
                         maxWidth: '160px',
                         whiteSpace: 'normal',
@@ -259,6 +252,11 @@ export default function Stack() {
           </div>
         </motion.div>
 
+        {/* Screen reader fallback for constellation */}
+        <div className="sr-only">
+          Tecnologías: React, TypeScript, Angular, HTML5, CSS3, Tailwind CSS, Node.js, Express, PostgreSQL, Prisma, Git, Docker, VS Code, Linux
+        </div>
+
         {/* Category cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
           {categoryInfo.map((cat, i) => {
@@ -270,9 +268,8 @@ export default function Stack() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-lg p-3 sm:p-6"
+                className="rounded-lg p-3 sm:p-6 bg-dark-card"
                 style={{
-                  background: '#12121a',
                   border: `1px solid ${colors.node}`,
                   boxShadow: `0 0 10px ${colors.glow}`,
                 }}

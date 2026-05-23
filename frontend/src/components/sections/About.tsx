@@ -38,14 +38,14 @@ const codeLines: CodeLine[] = [
 ]
 
 const tokenColors: Record<CodeToken['type'], string> = {
-  keyword: '#ff79c6',
-  property: '#50fa7b',
-  string: '#f1fa8c',
-  boolean: '#bd93f9',
-  bracket: '#f8f8f2',
-  plain: '#f8f8f2',
-  comment: '#6272a4',
-  number: '#bd93f9',
+  keyword: 'var(--syntax-keyword)',
+  property: 'var(--syntax-property)',
+  string: 'var(--syntax-string)',
+  boolean: 'var(--syntax-boolean)',
+  bracket: 'var(--syntax-bracket)',
+  plain: 'var(--syntax-plain)',
+  comment: 'var(--syntax-comment)',
+  number: 'var(--syntax-number)',
 }
 
 export default function About() {
@@ -110,11 +110,11 @@ export default function About() {
                   transition={{ delay: i * 0.1 }}
                   className="flex items-center gap-2 rounded px-3 py-2"
                   style={{
-                    background: 'rgba(176, 38, 255, 0.08)',
-                    border: '1px solid rgba(176, 38, 255, 0.2)',
+                    background: 'var(--trait-bg)',
+                    border: '1px solid var(--trait-border)',
                   }}
                 >
-                  <span style={{ color: '#b026ff' }}>{trait.icon}</span>
+                  <span style={{ color: 'var(--social-purple)' }}>{trait.icon}</span>
                   <span className="font-mono text-xs text-gray-400">{trait.label}</span>
                 </motion.div>
               ))}
@@ -124,13 +124,13 @@ export default function About() {
             <div
               className="rounded-lg p-4"
               style={{
-                background: 'rgba(0, 229, 255, 0.05)',
-                border: '1px solid rgba(0, 229, 255, 0.2)',
+                background: 'var(--currently-bg)',
+                border: '1px solid var(--currently-border)',
               }}
             >
               <p
                 className="font-mono text-xs font-bold mb-3 tracking-wider uppercase"
-                style={{ color: '#00e5ff' }}
+                style={{ color: 'var(--social-cyan)' }}
               >
                 {'>'} Actualmente
               </p>
@@ -158,14 +158,14 @@ export default function About() {
             <div
               className="rounded-lg overflow-hidden"
               style={{
-                border: '1px solid #1e1e2e',
-                boxShadow: '0 0 30px rgba(176, 38, 255, 0.1)',
+                border: '1px solid var(--dark-border)',
+                boxShadow: '0 0 30px var(--terminal-shadow)',
               }}
             >
               {/* Terminal title bar */}
               <div
                 className="flex items-center gap-2 px-2 sm:px-4 py-2 sm:py-3"
-                style={{ background: '#16161f', borderBottom: '1px solid #1e1e2e' }}
+                style={{ background: 'var(--terminal-header)', borderBottom: '1px solid var(--dark-border)' }}
               >
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500 opacity-80" />
@@ -178,12 +178,12 @@ export default function About() {
               {/* Code content */}
               <div
                 className="p-6 overflow-x-auto"
-                style={{ background: '#0d0d16' }}
+                style={{ background: 'var(--terminal-bg)' }}
               >
                 <pre className="font-mono text-xs sm:text-sm leading-7">
                   {codeLines.map((line, lineIdx) => (
                     <div key={lineIdx}>
-                      <span className="select-none mr-4 text-xs" style={{ color: '#3a3a4a' }}>
+                      <span className="select-none mr-4 text-xs" style={{ color: 'var(--terminal-line-num)' }}>
                         {String(lineIdx + 1).padStart(2, ' ')}
                       </span>
                       {line.map((token, tokenIdx) => (
@@ -205,7 +205,7 @@ export default function About() {
               <span className="font-mono text-xs text-gray-600">$</span>
               <motion.span
                 className="font-mono text-xs"
-                style={{ color: '#b026ff' }}
+                style={{ color: 'var(--social-purple)' }}
                 animate={{ opacity: [1, 0, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
               >

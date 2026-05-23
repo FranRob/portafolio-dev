@@ -15,6 +15,10 @@ const config: Config = {
           card: '#12121a',
           border: '#1e1e2e',
         },
+        gray: {
+          500: '#9ca3af',
+          600: '#6b7280',
+        },
       },
       fontFamily: {
         orbitron: ['Orbitron', 'sans-serif'],

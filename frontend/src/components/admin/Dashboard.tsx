@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -11,9 +11,10 @@ import {
 } from 'lucide-react'
 import { getStats, logout } from '../../services/api'
 import type { AnalyticsStats } from '../../services/api'
-import AdminProjects from './AdminProjects'
-import { AdminMessages } from './AdminMessages'
-import AdminSettings from './AdminSettings'
+
+const AdminProjects = lazy(() => import('./AdminProjects'))
+const AdminMessages = lazy(() => import('./AdminMessages').then(m => ({ default: m.AdminMessages })))
+const AdminSettings = lazy(() => import('./AdminSettings'))
 
 interface StatCardProps {
   label: string
@@ -30,9 +31,8 @@ function StatCard({ label, value, icon, color, glow, onClick, className }: StatC
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-lg p-3 sm:p-5 ${className || ''}`}
+      className={`rounded-lg p-3 sm:p-5 bg-dark-card ${className || ''}`}
       style={{
-        background: '#12121a',
         border: `1px solid ${color}`,
         boxShadow: `0 0 10px ${glow}`,
       }}
@@ -96,24 +96,11 @@ export default function Dashboard() {
   const maxDaily = stats ? Math.max(...stats.dailyVisits.map((d) => d.count), 1) : 1
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ background: '#0a0a0f', color: '#e0e0e0' }}
-    >
+    <div className="min-h-screen bg-dark-base text-gray-300">
       {/* Header */}
-      <header
-        className="sticky top-0 z-40 px-6 py-4 flex items-center justify-between"
-        style={{
-          background: 'rgba(10, 10, 15, 0.9)',
-          backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid #1e1e2e',
-        }}
-      >
+      <header className="sticky top-0 z-40 px-6 py-4 flex items-center justify-between bg-dark-base/90 backdrop-blur-xl border-b border-dark-border">
         <div>
-          <h1
-            className="font-orbitron font-bold text-lg"
-            style={{ color: '#b026ff', textShadow: '0 0 8px rgba(176,38,255,0.4)' }}
-          >
+          <h1 className="font-orbitron font-bold text-lg text-neon-purple neon-text-purple-sm">
             Panel de Métricas
           </h1>
           <p className="font-mono text-xs text-gray-500">divMalCentrado admin</p>
@@ -121,8 +108,8 @@ export default function Dashboard() {
         <div className="flex gap-3">
           <button
             onClick={fetchData}
-            className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-white px-3 py-2 rounded transition-colors"
-            style={{ border: '1px solid #1e1e2e', background: '#12121a' }}
+            className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-white px-3 py-2 rounded transition-colors min-h-[44px] bg-dark-card border border-dark-border"
+            aria-label="Recargar datos"
             title="Recargar datos"
           >
             <RefreshCw size={13} />
@@ -130,8 +117,7 @@ export default function Dashboard() {
           </button>
           <button
             onClick={() => navigate('/', { replace: true })}
-            className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-white px-3 py-2 rounded transition-colors"
-            style={{ border: '1px solid #1e1e2e', background: '#12121a' }}
+            className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-white px-3 py-2 rounded transition-colors min-h-[44px] bg-dark-card border border-dark-border"
             title="Volver al portfolio"
           >
             <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -141,12 +127,8 @@ export default function Dashboard() {
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 font-mono text-xs px-3 py-2 rounded transition-all"
-            style={{
-              border: '1px solid rgba(176,38,255,0.3)',
-              color: '#b026ff',
-              background: 'rgba(176,38,255,0.05)',
-            }}
+            className="flex items-center gap-2 font-mono text-xs px-3 py-2 rounded transition-all min-h-[44px] border border-neon-purple/30 text-neon-purple bg-neon-purple/[0.05] hover:bg-neon-purple/10"
+            aria-label="Cerrar sesión"
           >
             <LogOut size={13} />
             Salir
@@ -155,19 +137,15 @@ export default function Dashboard() {
       </header>
 
       {/* Tab bar */}
-      <div
-        className="sticky top-16 z-30 flex border-b"
-        style={{ background: 'rgba(10,10,15,0.95)', borderColor: '#1e1e2e' }}
-      >
+      <div className="sticky top-16 z-30 flex border-b bg-dark-base/95 border-dark-border">
         {(['metrics', 'messages', 'projects', 'settings'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => handleTabChange(tab)}
-            className="font-mono text-xs px-6 py-3 transition-colors"
-            style={{
-              color: activeTab === tab ? '#b026ff' : '#666',
-              borderBottom: activeTab === tab ? '2px solid #b026ff' : '2px solid transparent',
-            }}
+            className={`font-mono text-xs px-6 py-3 transition-colors min-h-[44px] ${
+              activeTab === tab ? 'text-neon-purple border-b-2 border-neon-purple' : 'text-gray-500 border-b-2 border-transparent'
+            }`}
+            aria-label={tab === 'metrics' ? 'Métricas' : tab === 'messages' ? 'Mensajes' : tab === 'projects' ? 'Proyectos' : 'Ajustes'}
           >
             {tab === 'metrics' ? 'Métricas' : tab === 'messages' ? 'Mensajes' : tab === 'projects' ? 'Proyectos' : 'Ajustes'}
           </button>
@@ -175,35 +153,35 @@ export default function Dashboard() {
       </div>
 
 <main className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-        {activeTab === 'projects' && <AdminProjects />}
-        {activeTab === 'messages' && <AdminMessages />}
-        {activeTab === 'settings' && <AdminSettings />}
+        {activeTab === 'projects' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminProjects /></Suspense>}
+        {activeTab === 'messages' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminMessages /></Suspense>}
+        {activeTab === 'settings' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminSettings /></Suspense>}
         {activeTab === 'metrics' && (
           <>
             {error && (
-              <div className="rounded-lg px-4 py-3 font-mono text-sm" style={{ background: 'rgba(255,85,85,0.1)', border: '1px solid rgba(255,85,85,0.3)', color: '#ff5555' }}>
+              <div className="rounded-lg px-4 py-3 font-mono text-sm bg-red-500/10 border border-red-500/30 text-red-400">
                 {error}
               </div>
             )}
             {loading && !stats ? (
               <div className="flex items-center justify-center py-20">
-                <motion.div className="w-8 h-8 border-2 rounded-full" style={{ borderColor: '#b026ff', borderTopColor: 'transparent' }} animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }} />
+                <motion.div className="w-8 h-8 border-2 rounded-full border-neon-purple border-t-transparent" animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }} />
                 <span className="font-mono text-sm text-gray-500 ml-3">Cargando datos...</span>
               </div>
             ) : (
               <>
                 {/* Stats cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <StatCard label="Total Visitas" value={stats?.totalVisits ?? 0} icon={<Eye size={22} />} color="#00e5ff" glow="rgba(0,229,255,0.3)" />
-                  <StatCard label="Visitas Hoy" value={stats?.todayVisits ?? 0} icon={<CalendarDays size={22} />} color="#b026ff" glow="rgba(176,38,255,0.3)" />
-                  <StatCard label="Sección Más Vista" value={stats?.mostViewedSection ?? '—'} icon={<BarChart2 size={22} />} color="#ff00ff" glow="rgba(255,0,255,0.3)" />
-                  <StatCard label="Mensajes Sin Leer" value={stats?.unreadMessages ?? 0} icon={<Mail size={22} />} color="#00e5ff" glow="rgba(0,229,255,0.3)" onClick={() => handleTabChange('messages')} className="cursor-pointer hover:border-cyan-400/50 transition-colors" />
+                  <StatCard label="Total Visitas" value={stats?.totalVisits ?? 0} icon={<Eye size={22} />} color="var(--stat-total-color)" glow="var(--stat-total-glow)" />
+                  <StatCard label="Visitas Hoy" value={stats?.todayVisits ?? 0} icon={<CalendarDays size={22} />} color="var(--stat-today-color)" glow="var(--stat-today-glow)" />
+                  <StatCard label="Sección Más Vista" value={stats?.mostViewedSection ?? '—'} icon={<BarChart2 size={22} />} color="var(--stat-top-section-clr)" glow="var(--stat-top-section-glow)" />
+                  <StatCard label="Mensajes Sin Leer" value={stats?.unreadMessages ?? 0} icon={<Mail size={22} />} color="var(--stat-unread-color)" glow="var(--stat-unread-glow)" onClick={() => handleTabChange('messages')} className="cursor-pointer hover:border-cyan-400/50 transition-colors" />
                 </div>
 
                 {/* Charts row */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Section views bar chart */}
-                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-lg p-6" style={{ background: '#12121a', border: '1px solid #1e1e2e' }}>
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-lg p-6 bg-dark-card border border-dark-border">
                     <h2 className="font-orbitron font-bold text-sm text-white mb-6">Vistas por Sección</h2>
                     <div className="space-y-4">
                       {sectionNames.map((section) => {
@@ -215,8 +193,8 @@ export default function Dashboard() {
                               <span className="font-mono text-xs text-gray-400 capitalize">{section}</span>
                               <span className="font-mono text-xs text-gray-500">{views}</span>
                             </div>
-                            <div className="w-full rounded-full overflow-hidden" style={{ background: '#1e1e2e', height: '6px' }}>
-                              <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, delay: 0.3 }} style={{ height: '100%', borderRadius: '9999px', background: 'linear-gradient(90deg, #b026ff, #00e5ff)', boxShadow: '0 0 8px rgba(176,38,255,0.5)' }} />
+                            <div className="w-full rounded-full overflow-hidden bg-dark-border" style={{ height: '6px' }}>
+                              <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, delay: 0.3 }} className="gradient-bar-section" style={{ height: '100%', borderRadius: '9999px' }} />
                             </div>
                           </div>
                         )
@@ -226,7 +204,7 @@ export default function Dashboard() {
                   </motion.div>
 
                   {/* Last 7 days timeline */}
-                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-lg p-6" style={{ background: '#12121a', border: '1px solid #1e1e2e' }}>
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-lg p-6 bg-dark-card border border-dark-border">
                     <h2 className="font-orbitron font-bold text-sm text-white mb-6">Últimos 7 Días</h2>
                     <div className="flex items-end justify-between gap-2 h-32">
                       {(stats?.dailyVisits ?? []).map((day) => {
@@ -235,7 +213,7 @@ export default function Dashboard() {
                         return (
                           <div key={day.date} className="flex flex-col items-center gap-1 flex-1">
                             <span className="font-mono text-xs text-gray-500">{day.count}</span>
-                            <motion.div initial={{ height: 0 }} animate={{ height: `${Math.max(heightPct, 4)}%` }} transition={{ duration: 0.6, delay: 0.4 }} className="w-full rounded-t" style={{ background: 'linear-gradient(180deg, #b026ff, rgba(176,38,255,0.3))', boxShadow: '0 0 6px rgba(176,38,255,0.4)', minHeight: '4px' }} />
+                            <motion.div initial={{ height: 0 }} animate={{ height: `${Math.max(heightPct, 4)}%` }} transition={{ duration: 0.6, delay: 0.4 }} className="w-full rounded-t gradient-bar-daily" style={{ minHeight: '4px' }} />
                             <span className="font-mono text-xs text-gray-600 capitalize">{dateLabel}</span>
                           </div>
                         )
