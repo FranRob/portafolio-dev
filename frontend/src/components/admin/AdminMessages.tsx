@@ -8,6 +8,7 @@ import {
   Move,
   Plus,
   X,
+  AlertCircle as AlertCircleIcon,
 } from 'lucide-react'
 import {
   getMessages,
@@ -18,6 +19,7 @@ import {
 } from '../../services/api'
 import type { ContactMessage } from '../../services/api'
 import { MessagesSkeleton } from './AdminSkeleton'
+import { ConfirmModal } from './ConfirmModal'
 
 type TabType = 'no-leido' | 'leido' | string
 
@@ -30,6 +32,17 @@ export function AdminMessages() {
   const [showNewCategory, setShowNewCategory] = useState(false)
   const [showMoveMenu, setShowMoveMenu] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  // Modal state: null | 'delete-message' | 'delete-category'
+  const [modal, setModal] = useState<{ type: 'delete-message'; msg: ContactMessage } | { type: 'delete-category'; category: string } | null>(null)
+  // Persist custom categories independent of messages array
+  const [customCategories, setCustomCategories] = useState<string[]>(() => {
+    try {
+      const stored = sessionStorage.getItem('admin_custom_categories')
+      return stored ? JSON.parse(stored) : []
+    } catch {
+      return []
+    }
+  })
 
   useEffect(() => {
     if (error) {
@@ -40,18 +53,12 @@ export function AdminMessages() {
   
   const defaultTabs: TabType[] = ['no-leido', 'leido']
 
-  // Get unique categories from messages
-  const categories = Array.from(
+  // Merge persisted custom categories with those found in messages
+  const messageCategories = Array.from(
     new Set(messages.map((m) => m.category || 'leido').filter(Boolean))
-  )
-  
-  // Include activeTab as a category if it's a custom one (not default)
-  const showActiveTabAsCategory = activeTab && !defaultTabs.includes(activeTab as string) && !categories.includes(activeTab)
-  const customCategories = categories.filter(c => !defaultTabs.includes(c as string))
-  // Also show the active tab as a category if it's a custom one being created
-  const allCustomCategories = showActiveTabAsCategory 
-    ? [...customCategories, activeTab] 
-    : customCategories
+  ).filter(c => !defaultTabs.includes(c))
+
+  const allCategoryTabs = Array.from(new Set([...customCategories, ...messageCategories]))
 
   useEffect(() => {
     setLoading(true)
@@ -109,7 +116,6 @@ export function AdminMessages() {
   }
 
   async function handleDelete(msg: ContactMessage) {
-    if (!confirm('¿Eliminar este mensaje?')) return
     try {
       await deleteMessage(msg.id)
       setMessages((prev) => prev.filter((m) => m.id !== msg.id))
@@ -123,27 +129,62 @@ export function AdminMessages() {
   }
 
   async function handleCreateCategory() {
-    if (!newCategory.trim()) return
+    const cat = newCategory.trim()
+    if (!cat) return
+    setNewCategory('') // <-- limpiar para la próxima
     setShowNewCategory(false)
-    setActiveTab(newCategory.trim())
+    // Persist to state + sessionStorage so it survives tab switches
+    setCustomCategories(prev => {
+      if (prev.includes(cat)) return prev
+      const updated = [...prev, cat]
+      sessionStorage.setItem('admin_custom_categories', JSON.stringify(updated))
+      return updated
+    })
+    setActiveTab(cat)
+  }
+
+  function handleDeleteCategory(cat: string) {
+    setCustomCategories(prev => {
+      const updated = prev.filter(c => c !== cat)
+      sessionStorage.setItem('admin_custom_categories', JSON.stringify(updated))
+      return updated
+    })
+    // Si estábamos viendo esa categoría, volver a no-leido
+    if (activeTab === cat) {
+      setActiveTab('no-leido')
+    }
   }
 
   return (
     <div className="min-h-screen bg-dark-base text-gray-300">
       {/* Sub-tabs */}
       <div className="sticky top-16 z-30 flex border-b overflow-x-auto bg-dark-base/95 border-dark-border">
-        {[...defaultTabs, ...allCustomCategories].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`font-mono text-xs px-4 py-3 whitespace-nowrap transition-colors min-h-[44px] ${
-              activeTab === tab ? 'text-neon-purple border-b-2 border-neon-purple' : 'text-gray-500'
-            }`}
-          >
-            {tab === 'no-leido' ? `No leídos${unreadCount > 0 ? ` (${unreadCount})` : ''}` : 
-              tab === 'leido' ? 'Leídos' : tab}
-          </button>
-        ))}
+        {[...defaultTabs, ...allCategoryTabs].map((tab) => {
+          const isCustom = !defaultTabs.includes(tab)
+          return (
+            <div key={tab} className="flex items-center shrink-0">
+              <button
+                onClick={() => setActiveTab(tab)}
+                className={`font-mono text-xs px-4 py-3 whitespace-nowrap transition-colors min-h-[44px] ${
+                  activeTab === tab ? 'text-neon-purple border-b-2 border-neon-purple' : 'text-gray-500'
+                }`}
+              >
+                {tab === 'no-leido' ? `No leídos${unreadCount > 0 ? ` (${unreadCount})` : ''}` : 
+                  tab === 'leido' ? 'Leídos' : tab}
+              </button>
+              {isCustom && (
+                <button
+                  onClick={() => setModal({ type: 'delete-category', category: tab })}
+                  className="p-2 text-gray-600 hover:text-red-400 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  aria-label={`Eliminar categoría ${tab}`}
+                  title={`Eliminar ${tab}`}
+                >
+                  <X size={12} />
+                </button>
+              )}
+            </div>
+          )
+        })}
         
         {/* Add new category button */}
         {showNewCategory ? (
@@ -160,7 +201,7 @@ export function AdminMessages() {
             <button onClick={handleCreateCategory} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
               <Plus size={14} />
             </button>
-            <button onClick={() => setShowNewCategory(false)} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
+            <button onClick={() => { setShowNewCategory(false); setNewCategory('') }} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
               <X size={14} />
             </button>
           </div>
@@ -178,7 +219,7 @@ export function AdminMessages() {
       {error && (
         <div className="max-w-4xl mx-auto px-4 pt-4">
           <div className="rounded-lg px-4 py-3 font-mono text-sm flex items-center gap-2 bg-red-500/10 border border-red-500/30 text-red-400">
-            <span>⚠</span>
+            <AlertCircleIcon size={14} />
             {error}
           </div>
         </div>
@@ -201,13 +242,16 @@ export function AdminMessages() {
                 animate={{ opacity: 1, y: 0 }}
                 className="rounded-lg overflow-hidden bg-dark-card border border-dark-border"
               >
-                <button
-                  className="w-full flex items-start gap-3 p-4 text-left hover:bg-white/5 transition-colors"
-                  onClick={() => {
-                    setSelectedMessage(selectedMessage?.id === msg.id ? null : msg)
-                    handleMarkRead(msg)
-                  }}
-                >
+                  <button
+                    className="w-full flex items-start gap-3 p-4 text-left hover:bg-white/5 transition-colors"
+                    onClick={() => {
+                      // Mark as read ONLY when collapsing the message, not when opening
+                      if (selectedMessage?.id === msg.id && !msg.read) {
+                        handleMarkRead(msg)
+                      }
+                      setSelectedMessage(selectedMessage?.id === msg.id ? null : msg)
+                    }}
+                  >
                   <div className="flex-shrink-0 mt-1">
                     {msg.read ? (
                       <CheckCircle size={16} className="text-gray-600" />
@@ -295,7 +339,7 @@ export function AdminMessages() {
                           <div
                             className="absolute top-full left-0 mt-1 rounded-lg overflow-hidden z-10 bg-dark-border border border-gray-700"
                           >
-                            {[...defaultTabs, ...categories]
+                            {[...defaultTabs, ...allCategoryTabs]
                               .filter((c) => c !== msg.category)
                               .map((cat) => (
                                 <button
@@ -312,7 +356,7 @@ export function AdminMessages() {
 
                       {/* Delete */}
                       <button
-                        onClick={() => handleDelete(msg)}
+                        onClick={() => setModal({ type: 'delete-message', msg })}
                         className="flex items-center gap-1 px-3 py-2 rounded font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 min-h-[44px]"
                         aria-label="Eliminar mensaje"
                       >
@@ -327,6 +371,31 @@ export function AdminMessages() {
           </div>
         )}
       </div>
+
+      {/* Confirm modals */}
+      <ConfirmModal
+        open={modal?.type === 'delete-message'}
+        title="Eliminar mensaje"
+        message="¿Estás seguro que querés eliminar este mensaje? No se puede deshacer."
+        confirmLabel="Eliminar"
+        onConfirm={() => {
+          if (modal?.type === 'delete-message') handleDelete(modal.msg)
+          setModal(null)
+        }}
+        onCancel={() => setModal(null)}
+      />
+
+      <ConfirmModal
+        open={modal?.type === 'delete-category'}
+        title="Eliminar categoría"
+        message="¿Estás seguro que querés eliminar esta categoría? Los mensajes no se pierden, solo se elimina el filtro."
+        confirmLabel="Eliminar"
+        onConfirm={() => {
+          if (modal?.type === 'delete-category') handleDeleteCategory(modal.category)
+          setModal(null)
+        }}
+        onCancel={() => setModal(null)}
+      />
     </div>
   )
 }

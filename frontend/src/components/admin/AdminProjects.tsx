@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
+import { ChevronUp, ChevronDown } from 'lucide-react'
 import { getProjects, createProject, updateProject, deleteProject } from '../../services/api'
 import type { Project, ProjectPayload } from '../../services/api'
 import { ProjectsSkeleton } from './AdminSkeleton'
+import { ConfirmModal } from './ConfirmModal'
 
 type EditMode = null | 'new' | Project
 
@@ -60,6 +62,7 @@ export default function AdminProjects() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [editMode, setEditMode] = useState<EditMode>(null)
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null)
   const [form, setForm] = useState<FormState>(emptyForm)
 
   const fetchProjects = useCallback(async () => {
@@ -171,7 +174,6 @@ export default function AdminProjects() {
   }
 
   async function handleDelete(id: string) {
-    if (!window.confirm('¿Eliminás este proyecto?')) return
     setError('')
     try {
       await deleteProject(id)
@@ -425,20 +427,20 @@ export default function AdminProjects() {
                 <button
                   onClick={() => handleReorder(index, 'up')}
                   disabled={index === 0}
-                   className={`font-mono text-xs px-2 py-1 transition-colors min-h-[32px] ${index === 0 ? 'text-[var(--disabled-text)] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
+                   className={`flex items-center justify-center p-1 transition-colors min-h-[32px] min-w-[32px] ${index === 0 ? 'text-[var(--disabled-text)] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
                   aria-label={`Mover ${project.title} arriba`}
                   title="Mover arriba"
                 >
-                  ▲
+                  <ChevronUp size={14} />
                 </button>
                 <button
                   onClick={() => handleReorder(index, 'down')}
                   disabled={index === projects.length - 1}
-                   className={`font-mono text-xs px-2 py-1 transition-colors min-h-[32px] ${index === projects.length - 1 ? 'text-[var(--disabled-text)] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
+                   className={`flex items-center justify-center p-1 transition-colors min-h-[32px] min-w-[32px] ${index === projects.length - 1 ? 'text-[var(--disabled-text)] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
                   aria-label={`Mover ${project.title} abajo`}
                   title="Mover abajo"
                 >
-                  ▼
+                  <ChevronDown size={14} />
                 </button>
               </div>
 
@@ -475,7 +477,7 @@ export default function AdminProjects() {
                   Editar
                 </button>
                 <button
-                  onClick={() => handleDelete(project.id)}
+                  onClick={() => setProjectToDelete(project)}
                   className="font-mono text-xs px-3 py-2 rounded transition-colors min-h-[44px] border border-red-500/30 text-red-400 bg-transparent hover:bg-red-500/10"
                   aria-label={`Eliminar proyecto ${project.title}`}
                 >
@@ -486,6 +488,19 @@ export default function AdminProjects() {
           ))}
         </div>
       )}
+
+      {/* Delete confirmation modal */}
+      <ConfirmModal
+        open={projectToDelete !== null}
+        title="Eliminar proyecto"
+        message={`¿Estás seguro que querés eliminar "${projectToDelete?.title ?? ''}"? No se puede deshacer.`}
+        confirmLabel="Eliminar"
+        onConfirm={() => {
+          if (projectToDelete) handleDelete(projectToDelete.id)
+          setProjectToDelete(null)
+        }}
+        onCancel={() => setProjectToDelete(null)}
+      />
     </div>
   )
 }
