@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV — Franco Robles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:          #f8f9fc;
+      --surface:     #ffffff;
+      --surface-2:   #f1f3f8;
+      --border:      #e2e6f0;
+      --accent:      #2563eb;
+      --accent-soft: #dbeafe;
+      --text-1:      #0f172a;
+      --text-2:      #475569;
+      --text-3:      #94a3b8;
+      --tag-bg:      #eff6ff;
+      --tag-text:    #1d4ed8;
+      --shadow:      0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.05);
+    }
+    [data-theme="dark"] {
+      --bg:          #0f1117;
+      --surface:     #1a1d27;
+      --surface-2:   #22263a;
+      --border:      #2d3149;
+      --accent:      #60a5fa;
+      --accent-soft: #1e3a5f;
+      --text-1:      #f1f5f9;
+      --text-2:      #94a3b8;
+      --text-3:      #475569;
+      --tag-bg:      #1e3a5f;
+      --tag-text:    #93c5fd;
+      --shadow:      0 1px 3px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.2);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      background: var(--bg);
+      color: var(--text-1);
+      transition: background .25s, color .25s;
+      min-height: 100vh;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      position: fixed;
+      top: 16px; right: 20px;
+      display: flex; gap: 8px;
+      z-index: 100;
+    }
+    .btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-2);
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: all .2s;
+    }
+    .btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* Layout */
+    .page { max-width: 920px; margin: 40px auto; padding: 0 16px 60px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px; align-items: start;
+      padding: 36px 40px 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .name { font-size: 28px; font-weight: 700; letter-spacing: -.5px; margin-bottom: 4px; }
+    .title-line { font-size: 14px; font-weight: 500; color: var(--accent); margin-bottom: 16px; }
+    .contact-grid { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+    .contact-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--text-2); text-decoration: none;
+    }
+    .contact-item:hover { color: var(--accent); }
+    .contact-item svg { width: 14px; height: 14px; flex-shrink: 0; opacity: .7; }
+
+    .availability-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px;
+      background: #dcfce7; color: #15803d;
+      border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap;
+    }
+    [data-theme="dark"] .availability-badge { background: #14532d; color: #86efac; }
+    .availability-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #22c55e; animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+
+    /* Body */
+    .body { display: grid; grid-template-columns: 1fr 272px; }
+    .main { padding: 32px 40px; border-right: 1px solid var(--border); }
+    .aside { padding: 32px 28px; }
+
+    /* Sections */
+    .section { margin-bottom: 30px; }
+    .section:last-child { margin-bottom: 0; }
+    .section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-3);
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Summary */
+    .summary { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+
+    /* Experience entries */
+    .exp-entry { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .exp-entry:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .exp-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 2px; }
+    .exp-company { font-size: 14px; font-weight: 600; color: var(--text-1); }
+    .exp-period { font-size: 11px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+    .exp-role { font-size: 12px; font-weight: 500; color: var(--accent); margin-bottom: 8px; }
+    .exp-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+    .exp-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+    .exp-tag {
+      padding: 2px 8px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 4px; font-size: 11px; color: var(--text-3);
+    }
+
+    /* Project card */
+    .project {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px; margin-bottom: 12px;
+    }
+    .project-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 4px; }
+    .project-name { font-size: 15px; font-weight: 600; color: var(--text-1); }
+    .project-meta { font-size: 12px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+    .project-subtitle { font-size: 12px; font-weight: 500; color: var(--accent); margin-bottom: 12px; }
+    .project-desc { font-size: 13px; color: var(--text-2); line-height: 1.65; margin-bottom: 14px; }
+
+    .bullets { list-style: none; padding: 0; margin: 0 0 14px; }
+    .bullets li {
+      font-size: 13px; color: var(--text-2);
+      padding: 3px 0 3px 16px; position: relative; line-height: 1.55;
+    }
+    .bullets li::before {
+      content: '→'; position: absolute; left: 0;
+      color: var(--accent); font-size: 11px; top: 4px;
+    }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+    .tag {
+      padding: 3px 9px;
+      background: var(--tag-bg); color: var(--tag-text);
+      border-radius: 5px; font-size: 11px; font-weight: 500;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .highlight-box {
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px; padding: 10px 14px;
+      margin: 14px 0; font-size: 12.5px; color: var(--text-2); line-height: 1.5;
+    }
+
+    /* Aside */
+    .skill-group { margin-bottom: 18px; }
+    .skill-group-title { font-size: 11px; font-weight: 600; color: var(--text-3); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 8px; }
+    .skill-list { display: flex; flex-wrap: wrap; gap: 5px; }
+    .skill-pill {
+      padding: 4px 10px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 6px; font-size: 12px; color: var(--text-2); font-weight: 500;
+    }
+
+    .edu-entry { margin-bottom: 14px; }
+    .edu-title { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+    .edu-sub { font-size: 12px; color: var(--text-2); }
+
+    .ref-entry { margin-bottom: 14px; }
+    .ref-name { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+    .ref-detail { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+
+    /* Print */
+    @media print {
+      .toolbar { display: none !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { font-size: 13px; }
+      .page { margin: 0; padding: 0; max-width: 100%; }
+      .card { box-shadow: none; border-radius: 0; border: none; }
+      .project, .exp-entry, .section { break-inside: avoid; }
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .header { grid-template-columns: 1fr; }
+      .body { grid-template-columns: 1fr; }
+      .main { border-right: none; border-bottom: 1px solid var(--border); }
+      .header, .main, .aside { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <button class="btn" onclick="toggleTheme()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span id="theme-label">Dark mode</span>
+    </button>
+    <button class="btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Exportar PDF
+    </button>
+  </div>
+
+  <div class="page">
+    <div class="card">
+
+      <!-- ── Header ─────────────────────────────────────────── -->
+      <div class="header">
+        <div>
+          <div class="name">Franco Robles</div>
+          <div class="title-line">Desarrollador Backend · Node.js · TypeScript · PostgreSQL</div>
+          <div class="contact-grid">
+
+            <a class="contact-item" href="tel:+5493446581705">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 5.5 5.5l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              +54 9 3446 581705
+            </a>
+
+            <a class="contact-item" href="mailto:roblesafranco@gmail.com">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              roblesafranco@gmail.com
+            </a>
+
+            <a class="contact-item" href="https://divmalcentrado.vercel.app" target="_blank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              divmalcentrado.vercel.app
+            </a>
+
+            <a class="contact-item" href="https://www.linkedin.com/in/francorob/" target="_blank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              linkedin.com/in/francorob
+            </a>
+
+            <a class="contact-item" href="https://github.com/FranRob" target="_blank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              github.com/FranRob
+            </a>
+
+            <span class="contact-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              Gualeguaychú, Entre Ríos · Argentina
+            </span>
+
+          </div>
+        </div>
+        <div>
+          <div class="availability-badge">
+            <div class="availability-dot"></div>
+            Disponible
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Body ───────────────────────────────────────────── -->
+      <div class="body">
+
+        <!-- Main -->
+        <div class="main">
+
+          <!-- Sobre mí -->
+          <div class="section">
+            <div class="section-title">Sobre mí</div>
+            <p class="summary">
+              Técnico Superior en Análisis y Desarrollo de Software con experiencia profesional
+              en desarrollo de software y soporte técnico. Construí de forma independiente una
+              plataforma SaaS multi-tenant para barberías — incluyendo autenticación avanzada
+              (JWT + 2FA TOTP), integración con MercadoPago y WhatsApp, sistema de notificaciones
+              con retry automático y más de 130 tests de integración con bases de datos reales.
+              Mi paso por empresas regionales me dio una comprensión concreta de las necesidades
+              reales de los usuarios en entornos no técnicos — contexto que aplico directamente
+              al diseño de productos.
+            </p>
+          </div>
+
+          <!-- Experiencia -->
+          <div class="section">
+            <div class="section-title">Experiencia</div>
+
+            <div class="exp-entry">
+              <div class="exp-header">
+                <div class="exp-company">Rebrit S.R.L.</div>
+                <div class="exp-period">dic. 2023 – jun. 2024 · 7 meses</div>
+              </div>
+              <div class="exp-role">Desarrollador Full Stack</div>
+              <p class="exp-desc">
+                Desarrollo de módulos para aplicaciones de clientes de terceros utilizando PHP
+                y el framework propietario de la empresa. Integración con sistemas existentes,
+                adaptación a requerimientos específicos de cada cliente y entrega dentro de
+                ciclos de desarrollo internos.
+              </p>
+              <div class="exp-tags">
+                <span class="exp-tag">PHP</span>
+                <span class="exp-tag">Framework propietario</span>
+                <span class="exp-tag">Módulos de negocio</span>
+                <span class="exp-tag">Integración de sistemas</span>
+              </div>
+            </div>
+
+            <div class="exp-entry">
+              <div class="exp-header">
+                <div class="exp-company">Bourlot Maxiferretería</div>
+                <div class="exp-period">dic. 2024 – mar. 2026</div>
+              </div>
+              <div class="exp-role">Técnico de TI</div>
+              <p class="exp-desc">
+                Soporte, implementación y mantenimiento de equipos informáticos en empresa
+                regional del rubro ferretero. Contacto directo con usuarios no técnicos en
+                entornos operativos reales, lo que generó una comprensión profunda de las
+                fricciones que enfrentan las PyMEs al adoptar tecnología: desde la resistencia
+                al cambio hasta los requerimientos de usabilidad en herramientas de gestión.
+              </p>
+              <div class="exp-tags">
+                <span class="exp-tag">Soporte técnico</span>
+                <span class="exp-tag">Hardware</span>
+                <span class="exp-tag">Implementaciones</span>
+                <span class="exp-tag">Entorno PyME regional</span>
+              </div>
+            </div>
+
+            <div class="exp-entry">
+              <div class="exp-header">
+                <div class="exp-company">Critical Tech Gchu</div>
+                <div class="exp-period">jul. 2025 – presente</div>
+              </div>
+              <div class="exp-role">Freelance — Técnico en Sistemas</div>
+              <p class="exp-desc">
+                Primeros proyectos freelance con clientes locales: relevamiento de requerimientos,
+                elaboración de presupuestos y documentación de planes de acción para soluciones de software.
+              </p>
+              <div class="exp-tags">
+                <span class="exp-tag">Freelance</span>
+                <span class="exp-tag">Toma de requerimientos</span>
+                <span class="exp-tag">Documentación</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Proyecto -->
+          <div class="section">
+            <div class="section-title">Proyecto principal</div>
+
+            <div class="project">
+              <div class="project-header">
+                <div class="project-name">GlowApp — SaaS Multi-Tenant para Barberías</div>
+                <div class="project-meta">2025 – presente</div>
+              </div>
+              <div class="project-subtitle">Node.js · TypeScript · PostgreSQL · Next.js · Docker</div>
+
+              <p class="project-desc">
+                Plataforma SaaS completa construida de forma independiente. Permite a múltiples
+                barberías operar con datos completamente aislados. 15+ módulos de negocio,
+                sistema de pagos, notificaciones con retry y frontend con booking público por tenant.
+              </p>
+
+              <div class="highlight-box">
+                130+ tests de integración · PostgreSQL y Redis reales con Testcontainers · TDD estricto
+              </div>
+
+              <ul class="bullets">
+                <li>API RESTful con Express y TypeScript strict — arquitectura modular por feature</li>
+                <li>Multi-tenancy estricto: toda query filtrada por <code style="font-family:monospace;font-size:11px">tenantId</code></li>
+                <li>Auth completa: JWT rotativo (15min/7d), blacklisting en Redis, 2FA TOTP con trusted devices</li>
+                <li>Tokens de terceros encriptados con AES; HMAC para OAuth state y validación de webhooks</li>
+                <li>Retry de notificaciones con <code style="font-family:monospace;font-size:11px">SELECT FOR UPDATE SKIP LOCKED</code> y backoff exponencial</li>
+                <li>OAuth 2.0 con MercadoPago: authorize → callback → token encriptado → rotación proactiva</li>
+                <li>Transacciones para evitar doble reserva concurrente; paginación por cursor</li>
+                <li>Deploy: Docker Compose con backend + frontend + PostgreSQL + Redis + Caddy (TLS automático)</li>
+              </ul>
+
+              <div class="tags">
+                <span class="tag">Node.js</span>
+                <span class="tag">TypeScript</span>
+                <span class="tag">Express</span>
+                <span class="tag">Prisma</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Redis</span>
+                <span class="tag">Next.js</span>
+                <span class="tag">Docker</span>
+                <span class="tag">Vitest</span>
+                <span class="tag">Testcontainers</span>
+                <span class="tag">TDD</span>
+                <span class="tag">JWT · 2FA</span>
+                <span class="tag">MercadoPago</span>
+                <span class="tag">WhatsApp API</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Educación -->
+          <div class="section">
+            <div class="section-title">Educación</div>
+            <div class="edu-entry">
+              <div class="edu-title">Técnico Superior en Análisis y Desarrollo de Software</div>
+              <div class="edu-sub">Instituto Sedes Sapientiae · Gualeguaychú, Entre Ríos · 2022 – 2025</div>
+            </div>
+            <div class="edu-entry">
+              <div class="edu-title">Marketing Digital</div>
+              <div class="edu-sub">Neetwork.com · 2021 – 2022</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Aside -->
+        <div class="aside">
+
+          <div class="section">
+            <div class="section-title">Stack principal</div>
+
+            <div class="skill-group">
+              <div class="skill-group-title">Backend</div>
+              <div class="skill-list">
+                <span class="skill-pill">Node.js</span>
+                <span class="skill-pill">TypeScript</span>
+                <span class="skill-pill">Express</span>
+                <span class="skill-pill">PHP</span>
+                <span class="skill-pill">Prisma ORM</span>
+                <span class="skill-pill">Zod</span>
+              </div>
+            </div>
+
+            <div class="skill-group">
+              <div class="skill-group-title">Base de datos</div>
+              <div class="skill-list">
+                <span class="skill-pill">PostgreSQL</span>
+                <span class="skill-pill">Redis</span>
+                <span class="skill-pill">MongoDB</span>
+                <span class="skill-pill">Multi-tenancy</span>
+              </div>
+            </div>
+
+            <div class="skill-group">
+              <div class="skill-group-title">Seguridad</div>
+              <div class="skill-list">
+                <span class="skill-pill">JWT</span>
+                <span class="skill-pill">2FA TOTP</span>
+                <span class="skill-pill">OAuth 2.0</span>
+                <span class="skill-pill">HMAC</span>
+                <span class="skill-pill">AES</span>
+                <span class="skill-pill">Rate limiting</span>
+              </div>
+            </div>
+
+            <div class="skill-group">
+              <div class="skill-group-title">Testing</div>
+              <div class="skill-list">
+                <span class="skill-pill">TDD</span>
+                <span class="skill-pill">Vitest</span>
+                <span class="skill-pill">Supertest</span>
+                <span class="skill-pill">Testcontainers</span>
+              </div>
+            </div>
+
+            <div class="skill-group">
+              <div class="skill-group-title">Frontend</div>
+              <div class="skill-list">
+                <span class="skill-pill">Next.js 14</span>
+                <span class="skill-pill">React</span>
+                <span class="skill-pill">Tailwind CSS</span>
+                <span class="skill-pill">shadcn/ui</span>
+                <span class="skill-pill">Zustand</span>
+              </div>
+            </div>
+
+            <div class="skill-group">
+              <div class="skill-group-title">Infra</div>
+              <div class="skill-list">
+                <span class="skill-pill">Docker</span>
+                <span class="skill-pill">Docker Compose</span>
+                <span class="skill-pill">Caddy</span>
+                <span class="skill-pill">Git</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="section">
+            <div class="section-title">Metodologías</div>
+            <div class="skill-group">
+              <div class="skill-list">
+                <span class="skill-pill">TDD</span>
+                <span class="skill-pill">REST API design</span>
+                <span class="skill-pill">Conventional commits</span>
+                <span class="skill-pill">Documentación técnica</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Idiomas</div>
+            <div class="edu-entry">
+              <div class="edu-title">Español</div>
+              <div class="edu-sub">Nativo</div>
+            </div>
+            <div class="edu-entry">
+              <div class="edu-title">Inglés</div>
+              <div class="edu-sub">Lectura técnica fluida</div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Referencias</div>
+            <div class="ref-entry">
+              <div class="ref-name">Alejandra Garrigue</div>
+              <div class="ref-detail">
+                Profesora de Ingeniería de Software<br>
+                Instituto Sedes Sapientiae<br>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px">Tel. institución: 03446 42-6865</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let dark = false;
+    function toggleTheme() {
+      dark = !dark;
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+      document.getElementById('theme-label').textContent = dark ? 'Light mode' : 'Dark mode';
+    }
+  </script>
+</body>
+</html>
