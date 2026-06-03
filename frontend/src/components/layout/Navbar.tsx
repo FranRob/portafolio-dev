@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 
 interface NavLink {
@@ -15,6 +16,9 @@ const navLinks: NavLink[] = [
 ]
 
 export default function Navbar() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const isHome = location.pathname === '/'
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -26,12 +30,25 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  function handleNavClick(href: string) {
+  function handleSectionClick(href: string) {
     setMenuOpen(false)
-    const id = href.replace('#', '')
-    const el = document.getElementById(id)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+    if (isHome) {
+      const id = href.replace('#', '')
+      const el = document.getElementById(id)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
+      }
+    } else {
+      navigate('/' + href)
+    }
+  }
+
+  function handleCurriculumClick() {
+    setMenuOpen(false)
+    if (location.pathname === '/curriculum') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      navigate('/curriculum')
     }
   }
 
@@ -49,7 +66,7 @@ export default function Navbar() {
           {/* Brand */}
           <div className="flex flex-col leading-tight">
             <button
-              onClick={() => handleNavClick('#hero')}
+              onClick={() => handleSectionClick('#hero')}
               className="font-orbitron font-bold text-lg text-neon-purple neon-text-purple-xl bg-none border-none p-0"
               aria-label="Ir al inicio"
             >
@@ -65,7 +82,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <li key={link.href}>
                 <button
-                  onClick={() => handleNavClick(link.href)}
+                  onClick={() => handleSectionClick(link.href)}
                   className="font-mono text-sm text-gray-400 hover:text-white transition-colors duration-200 relative group"
                   aria-label={`Ir a ${link.label}`}
                 >
@@ -77,6 +94,29 @@ export default function Navbar() {
                 </button>
               </li>
             ))}
+
+            {/* Curriculum link */}
+            <li>
+              <button
+                onClick={handleCurriculumClick}
+                className={`font-mono text-sm transition-colors duration-200 relative group ${
+                  location.pathname === '/curriculum'
+                    ? 'text-neon-cyan'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+                aria-label="Ir a Curriculum"
+              >
+                <span className="text-neon-cyan opacity-60 group-hover:opacity-100 transition-opacity">
+                  &gt;{' '}
+                </span>
+                Curriculum
+                <span
+                  className={`absolute -bottom-1 left-0 h-px bg-neon-cyan transition-all duration-300 ${
+                    location.pathname === '/curriculum' ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                />
+              </button>
+            </li>
           </ul>
 
           {/* Mobile hamburger */}
@@ -98,7 +138,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <li key={link.href}>
                 <button
-                  onClick={() => handleNavClick(link.href)}
+                  onClick={() => handleSectionClick(link.href)}
                   className="font-mono text-sm text-gray-400 hover:text-white transition-colors w-full text-left py-2"
                   aria-label={`Ir a ${link.label}`}
                 >
@@ -107,6 +147,22 @@ export default function Navbar() {
                 </button>
               </li>
             ))}
+
+            {/* Curriculum link (mobile) */}
+            <li>
+              <button
+                onClick={handleCurriculumClick}
+                className={`font-mono text-sm transition-colors w-full text-left py-2 ${
+                  location.pathname === '/curriculum'
+                    ? 'text-neon-cyan'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+                aria-label="Ir a Curriculum"
+              >
+                <span className="neon-text-cyan opacity-60">{'> '}</span>
+                Curriculum
+              </button>
+            </li>
           </ul>
         </div>
       )}
