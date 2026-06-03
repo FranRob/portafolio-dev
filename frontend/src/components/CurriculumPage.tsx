@@ -45,7 +45,7 @@ const experiences: Experience[] = [
   },
   {
     company: 'Bourlot Maxiferretería',
-    period: 'dic. 2024 – mar. 2026',
+    period: 'dic. 2024 – mar. 2026 · 1 año 3 meses',
     role: 'Técnico de TI',
     desc: 'Soporte, implementación y mantenimiento de equipos informáticos en empresa regional del rubro ferretero. Contacto directo con usuarios no técnicos en entornos operativos reales, lo que generó una comprensión profunda de las fricciones que enfrentan las PyMEs al adoptar tecnología: desde la resistencia al cambio hasta los requerimientos de usabilidad en herramientas de gestión.',
     tags: ['Soporte técnico', 'Hardware', 'Implementaciones', 'Entorno PyME regional'],
