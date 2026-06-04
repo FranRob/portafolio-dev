@@ -5,7 +5,6 @@ import 'dotenv/config';
 import { UnauthorizedError } from '../lib/errors.js';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
-const CSRF_SECRET = process.env.CSRF_SECRET ?? crypto.randomBytes(32).toString('hex');
 
 export interface JwtPayload {
   id: string;
@@ -46,6 +45,11 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction):
   }
 
   // Validate they match (constant-time comparison)
+  // timingSafeEqual requires equal-length buffers — check length first to avoid RangeError
+  if (csrfHeader.length !== csrfCookie.length) {
+    res.status(403).json({ error: 'CSRF token inválido' });
+    return;
+  }
   if (!crypto.timingSafeEqual(Buffer.from(csrfHeader), Buffer.from(csrfCookie))) {
     res.status(403).json({ error: 'CSRF token inválido' });
     return;
@@ -116,16 +120,6 @@ export function generateTokens(payload: { id: string; email: string }): { access
   const csrfToken = generateCsrfToken();
 
   return { accessToken, refreshToken, csrfToken };
-}
-
-// Verify and optionally revoke refresh token
-export function verifyRefreshToken(token: string): boolean {
-  try {
-    // This will be implemented in auth.service.ts
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 // Revoke all tokens for user

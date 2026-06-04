@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express';
-import { requireAuth } from '../../middleware/auth.js';
+import { requireAuth, csrfProtection } from '../../middleware/auth.js';
 import { listProjects, createProject, updateProject, deleteProject } from './projects.service.js';
 import { createProjectSchema, updateProjectSchema, idSchema } from './projects.validator.js';
 import { asyncHandler } from '../../lib/errorMiddleware.js';
@@ -13,8 +13,11 @@ router.get('/', asyncHandler(async (_req: Request, res: Response) => {
   res.json(projects);
 }));
 
+// CSRF + Auth for admin write operations
+router.use(csrfProtection, requireAuth);
+
 // POST /api/projects — protected
-router.post('/', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+router.post('/', asyncHandler(async (req: Request, res: Response) => {
   const parsed = createProjectSchema.safeParse(req.body);
   if (!parsed.success) {
     const errors = parsed.error.issues.map(i => i.message);
@@ -25,7 +28,7 @@ router.post('/', requireAuth, asyncHandler(async (req: Request, res: Response) =
 }));
 
 // PATCH /api/projects/:id — protected
-router.patch('/:id', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+router.patch('/:id', asyncHandler(async (req: Request, res: Response) => {
   const idParsed = idSchema.safeParse(req.params['id']);
   if (!idParsed.success) {
     throw new ValidationError(idParsed.error.issues[0].message);
@@ -43,7 +46,7 @@ router.patch('/:id', requireAuth, asyncHandler(async (req: Request, res: Respons
 }));
 
 // DELETE /api/projects/:id — protected
-router.delete('/:id', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+router.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
   const idParsed = idSchema.safeParse(req.params['id']);
   if (!idParsed.success) {
     throw new ValidationError(idParsed.error.issues[0].message);

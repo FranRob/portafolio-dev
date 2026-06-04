@@ -16,10 +16,16 @@ let isLoggingOut = false
 // Use sessionStorage - data is cleared when browser is closed (more secure)
 const storage = sessionStorage
 
+// Read a cookie by name
+function getCookie(name: string): string | null {
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))
+  return match ? decodeURIComponent(match[2]) : null
+}
+
 // Request interceptor: use token from sessionStorage for Authorization header
 api.interceptors.request.use((config) => {
-  // Skip redirect for login/logout requests
-  if (config.url?.includes('/auth/login') || config.url?.includes('/auth/logout')) {
+  // Skip redirect for login requests (no session yet)
+  if (config.url?.includes('/auth/login')) {
     return config
   }
   
@@ -28,7 +34,15 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
-  
+
+  // CSRF protection: send x-csrf-token header on state-changing requests
+  if (config.method && !['get', 'head', 'options'].includes(config.method)) {
+    const csrfToken = getCookie('csrf-token')
+    if (csrfToken) {
+      config.headers['x-csrf-token'] = csrfToken
+    }
+  }
+
   // Check if session exists
   const hasSession = token || storage.getItem('has_session')
   
@@ -41,25 +55,80 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Response interceptor: handle 401/expired tokens
+// Token refresh state — evita múltiples refreshes simultáneos
+let isRefreshing = false
+let failedQueue: Array<{
+  resolve: (token: string) => void
+  reject: (error: unknown) => void
+}> = []
+
+function processQueue(error: unknown, token: string | null = null) {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error)
+    } else {
+      resolve(token!)
+    }
+  })
+  failedQueue = []
+}
+
+// Response interceptor: handle 401/expired tokens with auto-refresh
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    // Skip redirect for login/logout responses
-    if (error.config?.url?.includes('/auth/login') || error.config?.url?.includes('/auth/logout')) {
+  async (error) => {
+    const originalRequest = error.config
+    const isRefreshEndpoint = originalRequest?.url?.includes('/auth/refresh')
+    const isLoginOrLogout =
+      originalRequest?.url?.includes('/auth/login') ||
+      originalRequest?.url?.includes('/auth/logout')
+
+    // No reintentar login, logout, ni el propio refresh
+    if (isLoginOrLogout || isRefreshEndpoint || !error.response || error.response.status !== 401) {
       return Promise.reject(error)
     }
-    
-    if (error.response?.status === 401) {
-      // Clear session and token
+
+    // Si ya hay un refresh en curso, encolar esta request para reintentarla después
+    if (isRefreshing) {
+      return new Promise<string>((resolve, reject) => {
+        failedQueue.push({ resolve, reject })
+      }).then((token) => {
+        originalRequest.headers.Authorization = `Bearer ${token}`
+        return api(originalRequest)
+      })
+    }
+
+    isRefreshing = true
+
+    try {
+      const res = await api.post<{ accessToken: string }>('/auth/refresh')
+      const newToken = res.data.accessToken
+
+      // Guardar el nuevo token
+      storage.setItem('admin_token', newToken)
+      storage.setItem('has_session', 'true')
+
+      // Reintentar todas las requests encoladas
+      processQueue(null, newToken)
+
+      // Reintentar la request original
+      originalRequest.headers.Authorization = `Bearer ${newToken}`
+      return api(originalRequest)
+    } catch (refreshError) {
+      processQueue(refreshError, null)
+
+      // Refresh falló — limpiar sesión
       storage.removeItem('has_session')
       storage.removeItem('admin_token')
-      // Redirect to login
+
       if (window.location.pathname.startsWith('/admin')) {
         window.location.pathname = '/admin/login'
       }
+
+      return Promise.reject(refreshError)
+    } finally {
+      isRefreshing = false
     }
-    return Promise.reject(error)
   }
 )
 

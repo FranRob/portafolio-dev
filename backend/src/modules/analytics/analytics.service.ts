@@ -55,7 +55,7 @@ export async function getStats(): Promise<AnalyticsStatsResponse> {
   });
 
   const sectionViews = Object.fromEntries(
-    sectionGroups.map((g) => [g.section, g._count.section]),
+    sectionGroups.map((g: typeof sectionGroups[number]) => [g.section, g._count.section]),
   );
 
   const mostViewedSection = sectionGroups[0]?.section ?? '';

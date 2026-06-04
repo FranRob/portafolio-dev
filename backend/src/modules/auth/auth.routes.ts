@@ -1,8 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import { z } from 'zod';
 import crypto from 'crypto';
-import rateLimit from 'express-rate-limit';
-import { requireAuth, generateTokens, revokeAllTokens, generateCsrfToken } from '../../middleware/auth.js';
+import { requireAuth, csrfProtection } from '../../middleware/auth.js';
 import { login, refreshAccessToken, revokeRefreshToken, getAuditLogs, unlockAccount, changePassword } from './auth.service.js';
 import { generateTwoFactorSecret, enableTwoFactor, disableTwoFactor, verifyTwoFactor, hasTwoFactorEnabled } from './twoFactor.service.js';
 import { asyncHandler } from '../../lib/errorMiddleware.js';
@@ -72,19 +71,19 @@ const refreshSchema = z.object({
 
 router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   const ip = req.ip || req.socket.remoteAddress || 'unknown';
-  const { email, password } = req.body;
 
-  // Check rate limit before anything
-  const rateCheck = checkRateLimit(email, ip);
-  if (!rateCheck.allowed) {
-    throw new TooManyRequestsError(`Cuenta bloqueada. Intenta de nuevo en ${Math.ceil(LOCKOUT_MS / 60000)} minutos.`);
-  }
-
+  // Validate body FIRST — avoids using undefined email in rate limit key
   const parsed = loginSchema.safeParse(req.body);
 
   if (!parsed.success) {
     const errors = parsed.error.issues.map(i => i.message);
     throw new ValidationError(errors);
+  }
+
+  // Check rate limit AFTER validation — email is guaranteed to exist
+  const rateCheck = checkRateLimit(parsed.data.email, ip);
+  if (!rateCheck.allowed) {
+    throw new TooManyRequestsError(`Cuenta bloqueada. Intenta de nuevo en ${Math.ceil(LOCKOUT_MS / 60000)} minutos.`);
   }
 
   const result = await login(parsed.data.email, parsed.data.password, ip, req.headers['user-agent']);
@@ -99,8 +98,15 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   // Reset rate limit on success
   resetRateLimit(parsed.data.email, ip);
 
-  // Generate CSRF token for double-submit cookie pattern
+  // Set CSRF token in non-httpOnly cookie (readable by JS for double-submit pattern)
   const csrfToken = crypto.randomBytes(32).toString('hex');
+  res.cookie('csrf-token', csrfToken, {
+    httpOnly: false,  // JS needs to read it for the x-csrf-token header
+    secure: true,
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (same as refresh token — needed for /refresh)
+    path: '/',
+  });
 
   // Set tokens in HTTP-only cookies
   res.cookie('accessToken', result.accessToken, {
@@ -125,15 +131,19 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   res.json({ user: result.user, accessToken: tokenForHeader });
 }));
 
+// CSRF protection for all subsequent auth routes (login is excluded)
+router.use(csrfProtection);
+
 // Refresh token endpoint - obtiene nuevo access token
 router.post('/refresh', asyncHandler(async (req: Request, res: Response) => {
-  const parsed = refreshSchema.safeParse(req.body);
+  // Try cookie first (auto-enviada por el browser), fallback a body
+  const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
 
-  if (!parsed.success) {
+  if (!refreshToken) {
     throw new ValidationError('Refresh token requerido');
   }
 
-  const newAccess = await refreshAccessToken(parsed.data.refreshToken);
+  const newAccess = await refreshAccessToken(refreshToken);
 
   // Set new access token in cookie
   res.cookie('accessToken', newAccess.accessToken, {
@@ -144,7 +154,8 @@ router.post('/refresh', asyncHandler(async (req: Request, res: Response) => {
     path: '/',
   });
 
-  res.json({ success: true });
+  // Devolvemos el token en el body para que el frontend lo guarde en sessionStorage
+  res.json({ accessToken: newAccess.accessToken });
 }));
 
 // Logout endpoint - invalida el refresh token

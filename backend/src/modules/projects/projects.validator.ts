@@ -28,10 +28,8 @@ export const updateProjectSchema = z.object({
   imageUrl: optionalUrl,
 });
 
-// Acepta UUID (ej: 550e8400-e29b-41d4-a716-446655440000) O slug (ej: proj-barber-saas-003)
-export const idSchema = z.string().regex(/^(proj-[a-z0-9-]+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i, 
-  'El ID debe ser UUID (ej: 550e8400-e29b-41d4-a716-446655440000) o slug (ej: proj-barber-saas-003)'
-);
+// Solo UUIDs (los IDs se generan con @default(uuid()) en Prisma)
+export const idSchema = z.string().uuid('El ID debe ser un UUID válido (ej: 550e8400-e29b-41d4-a716-446655440000)');
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;

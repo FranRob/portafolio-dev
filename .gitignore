@@ -1,6 +1,7 @@
 .env
 node_modules/
 dist/
+package-lock.json
 .atl/
 APRENDIZAJE_PROFESIONAL.md
 ROADMAP_DOTNET_ANGULAR.md

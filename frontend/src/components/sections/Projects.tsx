@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { useAnalytics } from '../../hooks/useAnalytics'
 import { getProjects } from '../../services/api'
 import type { Project } from '../../services/api'

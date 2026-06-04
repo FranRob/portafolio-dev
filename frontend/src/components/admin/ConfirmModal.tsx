@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 import { AlertTriangle } from 'lucide-react'
 
 interface ConfirmModalProps {
@@ -22,13 +22,19 @@ export function ConfirmModal({
   onCancel,
   variant = 'danger',
 }: ConfirmModalProps) {
-  const glowRgb = variant === 'danger' ? '255,85,85' : '0,229,255'
+  const isDanger = variant === 'danger'
+  const glowColor = isDanger ? 'var(--error-color)' : 'var(--color-neon-cyan)'
+  const glowBg10 = isDanger ? 'var(--error-bg)' : 'color-mix(in srgb, var(--color-neon-cyan) 10%, transparent)'
+  const glowBg20 = isDanger ? 'color-mix(in srgb, var(--error-color) 20%, transparent)' : 'color-mix(in srgb, var(--color-neon-cyan) 20%, transparent)'
+  const glowBorder30 = isDanger ? 'var(--error-border)' : 'color-mix(in srgb, var(--color-neon-cyan) 30%, transparent)'
+  const glowBorder40 = isDanger ? 'color-mix(in srgb, var(--error-color) 40%, transparent)' : 'color-mix(in srgb, var(--color-neon-cyan) 40%, transparent)'
+  const glowShadow = isDanger ? 'color-mix(in srgb, var(--error-color) 12%, transparent)' : 'color-mix(in srgb, var(--color-neon-cyan) 12%, transparent)'
 
   return (
     <AnimatePresence>
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop — solid color, NO backdrop-blur (carísimo) */}
+          {/* Backdrop — solid color, NO backdrop-blur-sm (carísimo) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -46,8 +52,8 @@ export function ConfirmModal({
             transition={{ duration: 0.15, ease: 'easeOut' }}
             className="relative w-full max-w-sm rounded-xl bg-dark-card border p-6 shadow-2xl will-change-[transform,opacity]"
             style={{
-              borderColor: `rgba(${glowRgb},0.3)`,
-              boxShadow: `0 0 20px rgba(${glowRgb},0.12)`,
+              borderColor: glowBorder30,
+              boxShadow: `0 0 20px ${glowShadow}`,
             }}
           >
             {/* Icon */}
@@ -55,13 +61,13 @@ export function ConfirmModal({
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center"
                 style={{
-                  background: `rgba(${glowRgb},0.1)`,
-                  border: `1px solid rgba(${glowRgb},0.3)`,
+                  background: glowBg10,
+                  border: `1px solid ${glowBorder30}`,
                 }}
               >
                 <AlertTriangle
                   size={22}
-                  className={variant === 'danger' ? 'text-red-400' : 'text-neon-cyan'}
+                  className={isDanger ? 'text-red-400' : 'text-neon-cyan'}
                 />
               </div>
             </div>
@@ -88,15 +94,15 @@ export function ConfirmModal({
                 onClick={onConfirm}
                 className="flex-1 font-mono text-xs px-4 py-2.5 rounded-lg border font-bold tracking-wider transition-colors min-h-[44px]"
                 style={{
-                  borderColor: `rgba(${glowRgb},0.4)`,
-                  color: variant === 'danger' ? '#ff5555' : '#00e5ff',
-                  background: `rgba(${glowRgb},0.1)`,
+                  borderColor: glowBorder40,
+                  color: glowColor,
+                  background: glowBg10,
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = `rgba(${glowRgb},0.2)`
+                  e.currentTarget.style.background = glowBg20
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = `rgba(${glowRgb},0.1)`
+                  e.currentTarget.style.background = glowBg10
                 }}
               >
                 {confirmLabel}

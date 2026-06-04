@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'motion/react'
 import { useAnalytics } from '../../hooks/useAnalytics'
 
 type Category = 'frontend' | 'backend' | 'tools'
@@ -94,12 +94,12 @@ export default function Stack() {
   const sectionRef = useAnalytics('stack')
   const [tooltip, setTooltip] = useState<TooltipState | null>(null)
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.05 } },
   }
 
-  const nodeVariants = {
+  const nodeVariants: Variants = {
     hidden: { opacity: 0, scale: 0 },
     visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 200, damping: 15 } },
   }
@@ -108,7 +108,7 @@ export default function Stack() {
     <section
       id="stack"
       ref={sectionRef}
-      className="relative z-10 py-24 px-4 bg-gradient-to-b from-dark-base via-[var(--dark-lighter)] to-dark-base"
+      className="relative z-10 py-24 px-4 bg-linear-to-b from-dark-base via-(--dark-lighter) to-dark-base"
     >
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
@@ -220,7 +220,7 @@ export default function Stack() {
                     style={{ transform: 'translateX(-50%)' }}
                   >
                     <div
-                      className="font-mono rounded px-2 py-1 bg-dark-card text-gray-300"
+                      className="font-mono rounded-sm px-2 py-1 bg-dark-card text-gray-300"
                       style={{
                         border: `1px solid ${colors.node}`,
                         boxShadow: `0 0 8px ${colors.glow}`,
@@ -284,7 +284,7 @@ export default function Stack() {
                   {cat.items.map((item) => (
                     <span
                       key={item}
-                      className="font-mono text-xs px-2 py-1 rounded"
+                      className="font-mono text-xs px-2 py-1 rounded-sm"
                       style={{
                         background: `${colors.glow}`,
                         border: `1px solid ${colors.node}`,

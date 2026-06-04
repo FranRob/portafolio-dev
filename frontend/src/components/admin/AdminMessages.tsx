@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import {
   CheckCircle,
   Clock,
@@ -195,7 +195,7 @@ export function AdminMessages() {
               onChange={(e) => setNewCategory(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleCreateCategory()}
               placeholder="Nombre..."
-              className="font-mono text-xs bg-transparent border-b border-gray-600 px-2 py-2 outline-none text-gray-300 w-24"
+              className="font-mono text-xs bg-transparent border-b border-gray-600 px-2 py-2 outline-hidden text-gray-300 w-24"
               autoFocus
             />
             <button onClick={handleCreateCategory} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
@@ -252,7 +252,7 @@ export function AdminMessages() {
                       setSelectedMessage(selectedMessage?.id === msg.id ? null : msg)
                     }}
                   >
-                  <div className="flex-shrink-0 mt-1">
+                  <div className="shrink-0 mt-1">
                     {msg.read ? (
                       <CheckCircle size={16} className="text-gray-600" />
                     ) : (
@@ -279,7 +279,7 @@ export function AdminMessages() {
 
                   <ChevronRight
                     size={16}
-                    className={`flex-shrink-0 mt-1 text-gray-600 transition-transform ${
+                    className={`shrink-0 mt-1 text-gray-600 transition-transform ${
                       selectedMessage?.id === msg.id ? 'rotate-90' : ''
                     }`}
                   />
@@ -307,7 +307,7 @@ export function AdminMessages() {
                       {msg.read ? (
                         <button
                           onClick={() => handleMarkUnread(msg)}
-                          className="flex items-center gap-1 px-3 py-2 rounded font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
+                          className="flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
                           aria-label="Marcar como no leído"
                         >
                           <Clock size={12} />
@@ -316,7 +316,7 @@ export function AdminMessages() {
                       ) : (
                         <button
                           onClick={() => handleMarkRead(msg)}
-                          className="flex items-center gap-1 px-3 py-2 rounded font-mono text-xs bg-dark-border text-neon-cyan min-h-[44px]"
+                          className="flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-dark-border text-neon-cyan min-h-[44px]"
                           aria-label="Marcar como leído"
                         >
                           <CheckCircle size={12} />
@@ -328,7 +328,7 @@ export function AdminMessages() {
                       <div className="relative">
                         <button
                           onClick={() => setShowMoveMenu(showMoveMenu === msg.id ? null : msg.id)}
-                          className="flex items-center gap-1 px-3 py-2 rounded font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
+                          className="flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
                           aria-label="Mover mensaje a otra categoría"
                         >
                           <Move size={12} />
@@ -357,7 +357,7 @@ export function AdminMessages() {
                       {/* Delete */}
                       <button
                         onClick={() => setModal({ type: 'delete-message', msg })}
-                        className="flex items-center gap-1 px-3 py-2 rounded font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 min-h-[44px]"
+                        className="flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 min-h-[44px]"
                         aria-label="Eliminar mensaje"
                       >
                         <Trash2 size={12} />
