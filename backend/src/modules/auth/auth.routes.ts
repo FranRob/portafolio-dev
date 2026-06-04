@@ -98,13 +98,12 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   // Reset rate limit on success
   resetRateLimit(parsed.data.email, ip);
 
-  // Set CSRF token in non-httpOnly cookie (readable by JS for double-submit pattern)
-  const csrfToken = crypto.randomBytes(32).toString('hex');
-  res.cookie('csrf-token', csrfToken, {
-    httpOnly: false,  // JS needs to read it for the x-csrf-token header
+  // Set CSRF token cookie for same-origin (local dev) — JS-readable for double-submit pattern
+  res.cookie('csrf-token', result.csrfToken, {
+    httpOnly: false,
     secure: true,
     sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (same as refresh token — needed for /refresh)
+    maxAge: 4 * 60 * 60 * 1000, // same as access token
     path: '/',
   });
 
@@ -112,8 +111,8 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
   res.cookie('accessToken', result.accessToken, {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax', // More secure: only sent on same-site navigations
-    maxAge: 4 * 60 * 60 * 1000, // 4 hours
+    sameSite: 'lax',
+    maxAge: 4 * 60 * 60 * 1000,
     path: '/',
   });
 
@@ -125,18 +124,13 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
     path: '/',
   });
 
-  // Also send accessToken in response body for header-based auth (more secure for cross-origin)
-  const tokenForHeader = result.accessToken;
-
-  res.json({ user: result.user, accessToken: tokenForHeader });
+  // csrfToken also in body — frontend saves to sessionStorage for cross-origin use
+  res.json({ user: result.user, accessToken: result.accessToken, csrfToken: result.csrfToken });
 }));
 
-// CSRF protection for all subsequent auth routes (login is excluded)
-router.use(csrfProtection);
-
-// Refresh token endpoint - obtiene nuevo access token
+// Refresh token endpoint — must be BEFORE csrfProtection (bootstrap operation, no CSRF needed)
 router.post('/refresh', asyncHandler(async (req: Request, res: Response) => {
-  // Try cookie first (auto-enviada por el browser), fallback a body
+  // Try cookie first (same-origin), fallback to body (cross-origin if sent explicitly)
   const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
 
   if (!refreshToken) {
@@ -145,18 +139,30 @@ router.post('/refresh', asyncHandler(async (req: Request, res: Response) => {
 
   const newAccess = await refreshAccessToken(refreshToken);
 
-  // Set new access token in cookie
+  // Set new access token cookie (same-origin)
   res.cookie('accessToken', newAccess.accessToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
-    maxAge: 15 * 60 * 1000,
+    maxAge: 4 * 60 * 60 * 1000,
     path: '/',
   });
 
-  // Devolvemos el token en el body para que el frontend lo guarde en sessionStorage
-  res.json({ accessToken: newAccess.accessToken });
+  // Set new CSRF cookie (same-origin)
+  res.cookie('csrf-token', newAccess.csrfToken, {
+    httpOnly: false,
+    secure: true,
+    sameSite: 'lax',
+    maxAge: 4 * 60 * 60 * 1000,
+    path: '/',
+  });
+
+  // Both tokens in body for cross-origin use
+  res.json({ accessToken: newAccess.accessToken, csrfToken: newAccess.csrfToken });
 }));
+
+// CSRF protection for all subsequent auth routes (login and refresh are excluded)
+router.use(csrfProtection);
 
 // Logout endpoint - invalida el refresh token
 router.post('/logout', requireAuth, asyncHandler(async (req: Request, res: Response) => {

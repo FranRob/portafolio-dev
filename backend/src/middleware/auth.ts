@@ -26,7 +26,7 @@ export function generateCsrfToken(): string {
   return crypto.randomBytes(32).toString('hex');
 }
 
-// CSRF middleware - validates double-submit cookie pattern
+// CSRF middleware - validates either double-submit cookie (same-origin) or JWT-embedded token (cross-origin)
 export function csrfProtection(req: Request, res: Response, next: NextFunction): void {
   // Skip for safe methods
   if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') {
@@ -34,28 +34,38 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction):
     return;
   }
 
-  // Get CSRF token from header
   const csrfHeader = req.headers['x-csrf-token'] as string;
-  const csrfCookie = req.cookies?.['csrf-token'] as string;
 
-  // If either is missing, reject
-  if (!csrfHeader || !csrfCookie) {
+  if (!csrfHeader) {
     res.status(403).json({ error: 'CSRF token requerido' });
     return;
   }
 
-  // Validate they match (constant-time comparison)
-  // timingSafeEqual requires equal-length buffers — check length first to avoid RangeError
-  if (csrfHeader.length !== csrfCookie.length) {
-    res.status(403).json({ error: 'CSRF token inválido' });
-    return;
-  }
-  if (!crypto.timingSafeEqual(Buffer.from(csrfHeader), Buffer.from(csrfCookie))) {
-    res.status(403).json({ error: 'CSRF token inválido' });
-    return;
+  // Strategy 1: cookie double-submit (same-origin / local dev)
+  const csrfCookie = req.cookies?.['csrf-token'] as string;
+  if (csrfCookie && csrfHeader.length === csrfCookie.length) {
+    if (crypto.timingSafeEqual(Buffer.from(csrfHeader), Buffer.from(csrfCookie))) {
+      next();
+      return;
+    }
   }
 
-  next();
+  // Strategy 2: JWT-embedded csrf claim (cross-origin / production)
+  const authHeader = req.headers.authorization;
+  if (authHeader?.startsWith('Bearer ')) {
+    try {
+      const payload = jwt.verify(authHeader.slice(7), JWT_SECRET) as JwtPayload;
+      if (payload.csrf && csrfHeader.length === payload.csrf.length &&
+          crypto.timingSafeEqual(Buffer.from(csrfHeader), Buffer.from(payload.csrf))) {
+        next();
+        return;
+      }
+    } catch {
+      // Invalid JWT — fall through to 403
+    }
+  }
+
+  res.status(403).json({ error: 'CSRF token inválido' });
 }
 
 // Extract token from cookie or header

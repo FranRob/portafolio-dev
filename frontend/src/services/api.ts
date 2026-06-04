@@ -36,8 +36,9 @@ api.interceptors.request.use((config) => {
   }
 
   // CSRF protection: send x-csrf-token header on state-changing requests
+  // Read from sessionStorage first (cross-origin production), fallback to cookie (same-origin local dev)
   if (config.method && !['get', 'head', 'options'].includes(config.method)) {
-    const csrfToken = getCookie('csrf-token')
+    const csrfToken = storage.getItem('csrf_token') || getCookie('csrf-token')
     if (csrfToken) {
       config.headers['x-csrf-token'] = csrfToken
     }
@@ -101,12 +102,14 @@ api.interceptors.response.use(
     isRefreshing = true
 
     try {
-      const res = await api.post<{ accessToken: string }>('/auth/refresh')
+      const res = await api.post<{ accessToken: string; csrfToken?: string }>('/auth/refresh')
       const newToken = res.data.accessToken
 
-      // Guardar el nuevo token
       storage.setItem('admin_token', newToken)
       storage.setItem('has_session', 'true')
+      if (res.data.csrfToken) {
+        storage.setItem('csrf_token', res.data.csrfToken)
+      }
 
       // Reintentar todas las requests encoladas
       processQueue(null, newToken)
@@ -120,6 +123,7 @@ api.interceptors.response.use(
       // Refresh falló — limpiar sesión
       storage.removeItem('has_session')
       storage.removeItem('admin_token')
+      storage.removeItem('csrf_token')
 
       if (window.location.pathname.startsWith('/admin')) {
         window.location.pathname = '/admin/login'
@@ -145,15 +149,18 @@ export interface LoginResponse {
     createdAt: string
   }
   accessToken?: string
+  csrfToken?: string
 }
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
   isLoggingIn = true
   try {
     const res = await api.post<LoginResponse>('/auth/login', payload)
-    // Store token in sessionStorage for Authorization header (more secure for cross-origin)
     if (res.data.accessToken) {
       storage.setItem('admin_token', res.data.accessToken)
+    }
+    if (res.data.csrfToken) {
+      storage.setItem('csrf_token', res.data.csrfToken)
     }
     storage.setItem('has_session', 'true')
     return res.data
