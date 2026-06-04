@@ -17,6 +17,7 @@ export interface TokenPayload {
 export interface LoginResult {
   accessToken: string;
   refreshToken: string;
+  csrfToken: string;
   user: {
     id: string;
     email: string;
@@ -61,8 +62,9 @@ export async function login(email: string, password: string, ip?: string, userAg
   }
 
   // Generate tokens
+  const csrfToken = crypto.randomBytes(32).toString('hex');
   const accessToken = jwt.sign(
-    { id: admin.id, email: admin.email, type: 'access' },
+    { id: admin.id, email: admin.email, type: 'access', csrf: csrfToken },
     JWT_SECRET,
     { expiresIn: '4h' }
   );
@@ -102,6 +104,7 @@ export async function login(email: string, password: string, ip?: string, userAg
   return {
     accessToken,
     refreshToken,
+    csrfToken,
     user: {
       id: admin.id,
       email: admin.email,
@@ -110,7 +113,7 @@ export async function login(email: string, password: string, ip?: string, userAg
   };
 }
 
-export async function refreshAccessToken(refreshToken: string): Promise<{ accessToken: string }> {
+export async function refreshAccessToken(refreshToken: string): Promise<{ accessToken: string; csrfToken: string }> {
   const tokenRecord = await prisma.refreshToken.findUnique({
     where: { token: refreshToken },
   });
@@ -135,8 +138,9 @@ export async function refreshAccessToken(refreshToken: string): Promise<{ access
     throw new UnauthorizedError('User not found');
   }
 
+  const csrfToken = crypto.randomBytes(32).toString('hex');
   const accessToken = jwt.sign(
-    { id: admin.id, email: admin.email, type: 'access' },
+    { id: admin.id, email: admin.email, type: 'access', csrf: csrfToken },
     JWT_SECRET,
     { expiresIn: '4h' }
   );
@@ -150,7 +154,7 @@ export async function refreshAccessToken(refreshToken: string): Promise<{ access
     },
   });
 
-  return { accessToken };
+  return { accessToken, csrfToken };
 }
 
 export async function revokeRefreshToken(refreshToken: string): Promise<void> {

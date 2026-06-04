@@ -240,7 +240,7 @@ export function AdminMessages() {
                 key={msg.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-lg overflow-hidden bg-dark-card border border-dark-border"
+                className="rounded-lg bg-dark-card border border-dark-border"
               >
                   <button
                     className="cursor-pointer w-full flex items-start gap-3 p-4 text-left hover:bg-white/5 transition-colors"
