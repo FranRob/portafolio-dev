@@ -92,7 +92,7 @@ export default function Login() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="rounded-xl p-4 sm:p-8 bg-dark-card border border-dark-border shadow-[0_0_40px_rgba(176,38,255,0.1)]">
+        <div className="rounded-xl p-4 sm:p-8 bg-dark-card border border-dark-border shadow-[0_0_40px_var(--shadow-purple-sm)]">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mx-auto mb-4 bg-neon-purple/10 border border-neon-purple/30">
@@ -153,7 +153,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 rounded-sm py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 hover:shadow-neon-purple disabled:opacity-50 disabled:cursor-not-allowed"
+              className="cursor-pointer w-full flex items-center justify-center gap-2 rounded-sm py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 hover:shadow-neon-purple disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -176,7 +176,7 @@ export default function Login() {
           <div className="mt-6 text-center">
             <button
               onClick={() => navigate('/')}
-              className="font-mono text-xs text-gray-600 hover:text-gray-400 transition-colors"
+              className="cursor-pointer font-mono text-xs text-gray-600 hover:text-gray-400 transition-colors"
             >
               ← Volver al portfolio
             </button>

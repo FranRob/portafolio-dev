@@ -123,7 +123,7 @@ export default function CurriculumPage() {
       <div className="fixed top-4 right-4 z-50 flex gap-2">
         <button
           onClick={() => window.print()}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-dark-border bg-dark-card text-gray-400 hover:text-neon-cyan hover:border-neon-cyan font-mono text-xs transition-colors"
+          className="cursor-pointer flex items-center gap-2 px-3 py-2 rounded-lg border border-dark-border bg-dark-card text-gray-400 hover:text-neon-cyan hover:border-neon-cyan font-mono text-xs transition-colors"
         >
           <Printer size={14} />
           Exportar PDF
@@ -138,7 +138,7 @@ export default function CurriculumPage() {
         {/* Back link */}
         <motion.button
           onClick={() => navigate('/')}
-          className="flex items-center gap-1 text-gray-500 hover:text-neon-cyan font-mono text-xs mb-6 transition-colors"
+          className="cursor-pointer flex items-center gap-1 text-gray-500 hover:text-neon-cyan font-mono text-xs mb-6 transition-colors"
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}
@@ -163,7 +163,7 @@ export default function CurriculumPage() {
                 <div className="flex flex-wrap gap-x-6 gap-y-2.5">
                   <a
                     href="tel:+5493446581705"
-                    className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
+                    className="cursor-pointer flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
                   >
                     <Phone size={12} className="text-gray-600 shrink-0" />
                     +54 9 3446 581705
@@ -171,7 +171,7 @@ export default function CurriculumPage() {
 
                   <a
                     href="mailto:roblesafranco@gmail.com"
-                    className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
+                    className="cursor-pointer flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
                   >
                     <Mail size={12} className="text-gray-600 shrink-0" />
                     roblesafranco@gmail.com
@@ -181,7 +181,7 @@ export default function CurriculumPage() {
                     href="https://divmalcentrado.vercel.app"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
+                    className="cursor-pointer flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
                   >
                     <Globe size={12} className="text-gray-600 shrink-0" />
                     divmalcentrado.vercel.app
@@ -191,7 +191,7 @@ export default function CurriculumPage() {
                     href="https://www.linkedin.com/in/francorob/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
+                    className="cursor-pointer flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
                   >
                     <LinkedinIcon size={12} className="text-gray-600 shrink-0" />
                     linkedin.com/in/francorob
@@ -201,7 +201,7 @@ export default function CurriculumPage() {
                     href="https://github.com/FranRob"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
+                    className="cursor-pointer flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
                   >
                     <GithubIcon size={12} className="text-gray-600 shrink-0" />
                     github.com/FranRob

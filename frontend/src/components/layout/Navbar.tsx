@@ -67,7 +67,7 @@ export default function Navbar() {
           <div className="flex flex-col leading-tight">
             <button
               onClick={() => handleSectionClick('#hero')}
-              className="font-orbitron font-bold text-lg text-neon-purple neon-text-purple-xl bg-none border-none p-0"
+              className="cursor-pointer font-orbitron font-bold text-lg text-neon-purple neon-text-purple-xl bg-none border-none p-0"
               aria-label="Ir al inicio"
             >
               divMalCentrado
@@ -83,7 +83,7 @@ export default function Navbar() {
               <li key={link.href}>
                 <button
                   onClick={() => handleSectionClick(link.href)}
-                  className="font-mono text-sm text-gray-400 hover:text-white transition-colors duration-200 relative group"
+                  className="cursor-pointer font-mono text-sm text-gray-400 hover:text-white transition-colors duration-200 relative group"
                   aria-label={`Ir a ${link.label}`}
                 >
                   <span className="text-neon-cyan opacity-60 group-hover:opacity-100 transition-opacity">
@@ -99,7 +99,7 @@ export default function Navbar() {
             <li>
               <button
                 onClick={handleCurriculumClick}
-                className={`font-mono text-sm transition-colors duration-200 relative group ${
+                className={`cursor-pointer font-mono text-sm transition-colors duration-200 relative group ${
                   location.pathname === '/curriculum'
                     ? 'text-neon-cyan'
                     : 'text-gray-400 hover:text-white'
@@ -121,7 +121,7 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden text-gray-400 hover:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="cursor-pointer md:hidden text-gray-400 hover:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'}
             aria-expanded={menuOpen}
@@ -139,7 +139,7 @@ export default function Navbar() {
               <li key={link.href}>
                 <button
                   onClick={() => handleSectionClick(link.href)}
-                  className="font-mono text-sm text-gray-400 hover:text-white transition-colors w-full text-left py-2"
+                  className="cursor-pointer font-mono text-sm text-gray-400 hover:text-white transition-colors w-full text-left py-2"
                   aria-label={`Ir a ${link.label}`}
                 >
                   <span className="neon-text-cyan opacity-60">{'> '}</span>
@@ -152,7 +152,7 @@ export default function Navbar() {
             <li>
               <button
                 onClick={handleCurriculumClick}
-                className={`font-mono text-sm transition-colors w-full text-left py-2 ${
+                className={`cursor-pointer font-mono text-sm transition-colors w-full text-left py-2 ${
                   location.pathname === '/curriculum'
                     ? 'text-neon-cyan'
                     : 'text-gray-400 hover:text-white'

@@ -165,7 +165,7 @@ export function AdminMessages() {
             <div key={tab} className="flex items-center shrink-0">
               <button
                 onClick={() => setActiveTab(tab)}
-                className={`font-mono text-xs px-4 py-3 whitespace-nowrap transition-colors min-h-[44px] ${
+                className={`cursor-pointer font-mono text-xs px-4 py-3 whitespace-nowrap transition-colors min-h-[44px] ${
                   activeTab === tab ? 'text-neon-purple border-b-2 border-neon-purple' : 'text-gray-500'
                 }`}
               >
@@ -175,7 +175,7 @@ export function AdminMessages() {
               {isCustom && (
                 <button
                   onClick={() => setModal({ type: 'delete-category', category: tab })}
-                  className="p-2 text-gray-600 hover:text-red-400 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  className="cursor-pointer p-2 text-gray-600 hover:text-red-400 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                   aria-label={`Eliminar categoría ${tab}`}
                   title={`Eliminar ${tab}`}
                 >
@@ -198,17 +198,17 @@ export function AdminMessages() {
               className="font-mono text-xs bg-transparent border-b border-gray-600 px-2 py-2 outline-hidden text-gray-300 w-24"
               autoFocus
             />
-            <button onClick={handleCreateCategory} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
+            <button onClick={handleCreateCategory} className="cursor-pointer p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
               <Plus size={14} />
             </button>
-            <button onClick={() => { setShowNewCategory(false); setNewCategory('') }} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
+            <button onClick={() => { setShowNewCategory(false); setNewCategory('') }} className="cursor-pointer p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:text-white">
               <X size={14} />
             </button>
           </div>
         ) : (
           <button
             onClick={() => setShowNewCategory(true)}
-            className="flex items-center gap-1 font-mono text-xs px-4 py-3 text-gray-500 hover:text-white transition-colors min-h-[44px]"
+            className="cursor-pointer flex items-center gap-1 font-mono text-xs px-4 py-3 text-gray-500 hover:text-white transition-colors min-h-[44px]"
           >
             <Plus size={12} />
             Agregar
@@ -243,7 +243,7 @@ export function AdminMessages() {
                 className="rounded-lg overflow-hidden bg-dark-card border border-dark-border"
               >
                   <button
-                    className="w-full flex items-start gap-3 p-4 text-left hover:bg-white/5 transition-colors"
+                    className="cursor-pointer w-full flex items-start gap-3 p-4 text-left hover:bg-white/5 transition-colors"
                     onClick={() => {
                       // Mark as read ONLY when collapsing the message, not when opening
                       if (selectedMessage?.id === msg.id && !msg.read) {
@@ -307,7 +307,7 @@ export function AdminMessages() {
                       {msg.read ? (
                         <button
                           onClick={() => handleMarkUnread(msg)}
-                          className="flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
+                          className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
                           aria-label="Marcar como no leído"
                         >
                           <Clock size={12} />
@@ -316,7 +316,7 @@ export function AdminMessages() {
                       ) : (
                         <button
                           onClick={() => handleMarkRead(msg)}
-                          className="flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-dark-border text-neon-cyan min-h-[44px]"
+                          className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-dark-border text-neon-cyan min-h-[44px]"
                           aria-label="Marcar como leído"
                         >
                           <CheckCircle size={12} />
@@ -328,7 +328,7 @@ export function AdminMessages() {
                       <div className="relative">
                         <button
                           onClick={() => setShowMoveMenu(showMoveMenu === msg.id ? null : msg.id)}
-                          className="flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
+                          className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-dark-border text-gray-400 min-h-[44px]"
                           aria-label="Mover mensaje a otra categoría"
                         >
                           <Move size={12} />
@@ -345,7 +345,7 @@ export function AdminMessages() {
                                 <button
                                   key={cat}
                                   onClick={() => handleMove(msg, cat)}
-                                  className="block w-full px-4 py-2 text-left font-mono text-xs hover:bg-white/5"
+                                  className="cursor-pointer block w-full px-4 py-2 text-left font-mono text-xs hover:bg-white/5"
                                 >
                                   {cat === 'no-leido' ? 'No leídos' : cat === 'leido' ? 'Leídos' : cat}
                                 </button>
@@ -357,7 +357,7 @@ export function AdminMessages() {
                       {/* Delete */}
                       <button
                         onClick={() => setModal({ type: 'delete-message', msg })}
-                        className="flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 min-h-[44px]"
+                        className="cursor-pointer flex items-center gap-1 px-3 py-2 rounded-sm font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 min-h-[44px]"
                         aria-label="Eliminar mensaje"
                       >
                         <Trash2 size={12} />

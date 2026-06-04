@@ -27,7 +27,7 @@ export default function Footer() {
               // Prefetch dashboard chunk on hover
               import('../../components/admin/Dashboard')
             }}
-            className="flex items-center gap-1 text-gray-700 hover:text-gray-500 transition-colors duration-200 group px-3 py-2 rounded-sm"
+            className="cursor-pointer flex items-center gap-1 text-gray-700 hover:text-gray-500 transition-colors duration-200 group px-3 py-2 rounded-sm"
             aria-label="Panel de administración"
             title="Admin"
           >

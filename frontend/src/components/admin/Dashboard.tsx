@@ -108,7 +108,7 @@ export default function Dashboard() {
         <div className="flex gap-1.5 sm:gap-3">
           <button
             onClick={fetchData}
-            className="flex items-center justify-center gap-1 sm:gap-2 font-mono text-[10px] sm:text-xs text-gray-400 hover:text-white px-2 sm:px-3 py-2 rounded-sm transition-colors min-h-[44px] min-w-[44px] bg-dark-card border border-dark-border"
+            className="cursor-pointer flex items-center justify-center gap-1 sm:gap-2 font-mono text-[10px] sm:text-xs text-gray-400 hover:text-white px-2 sm:px-3 py-2 rounded-sm transition-colors min-h-[44px] min-w-[44px] bg-dark-card border border-dark-border"
             aria-label="Recargar datos"
             title="Recargar datos"
           >
@@ -117,7 +117,7 @@ export default function Dashboard() {
           </button>
           <button
             onClick={() => navigate('/', { replace: true })}
-            className="flex items-center justify-center gap-1 sm:gap-2 font-mono text-[10px] sm:text-xs text-gray-400 hover:text-white px-2 sm:px-3 py-2 rounded-sm transition-colors min-h-[44px] min-w-[44px] bg-dark-card border border-dark-border"
+            className="cursor-pointer flex items-center justify-center gap-1 sm:gap-2 font-mono text-[10px] sm:text-xs text-gray-400 hover:text-white px-2 sm:px-3 py-2 rounded-sm transition-colors min-h-[44px] min-w-[44px] bg-dark-card border border-dark-border"
             title="Volver al portfolio"
           >
             <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -127,7 +127,7 @@ export default function Dashboard() {
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center justify-center gap-1 sm:gap-2 font-mono text-[10px] sm:text-xs px-2 sm:px-3 py-2 rounded-sm transition-all min-h-[44px] min-w-[44px] border border-neon-purple/30 text-neon-purple bg-neon-purple/5 hover:bg-neon-purple/10"
+            className="cursor-pointer flex items-center justify-center gap-1 sm:gap-2 font-mono text-[10px] sm:text-xs px-2 sm:px-3 py-2 rounded-sm transition-all min-h-[44px] min-w-[44px] border border-neon-purple/30 text-neon-purple bg-neon-purple/5 hover:bg-neon-purple/10"
             aria-label="Cerrar sesión"
           >
             <LogOut size={14} />
@@ -142,7 +142,7 @@ export default function Dashboard() {
           <button
             key={tab}
             onClick={() => handleTabChange(tab)}
-            className={`font-mono text-[11px] sm:text-xs px-3 sm:px-6 py-3 transition-colors min-h-[44px] whitespace-nowrap ${
+            className={`cursor-pointer font-mono text-[11px] sm:text-xs px-3 sm:px-6 py-3 transition-colors min-h-[44px] whitespace-nowrap ${
               activeTab === tab ? 'text-neon-purple border-b-2 border-neon-purple' : 'text-gray-500 border-b-2 border-transparent'
             }`}
             aria-label={tab === 'metrics' ? 'Métricas' : tab === 'messages' ? 'Mensajes' : tab === 'projects' ? 'Proyectos' : 'Ajustes'}

@@ -122,7 +122,7 @@ export default function Contact() {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 rounded-lg px-3 sm:px-6 py-3 sm:py-5 transition-all duration-300 group bg-dark-card no-underline"
+                    className="cursor-pointer flex items-center gap-4 rounded-lg px-3 sm:px-6 py-3 sm:py-5 transition-all duration-300 group bg-dark-card no-underline"
                     style={{
                       border: `1px solid ${colors.border}`,
                       boxShadow: isHovered
@@ -274,7 +274,7 @@ export default function Contact() {
               <motion.button
                 type="submit"
                 disabled={status === 'sending'}
-                className="w-full flex items-center justify-center gap-2 rounded-sm px-4 sm:px-6 py-2 sm:py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/8 hover:bg-neon-purple/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="cursor-pointer w-full flex items-center justify-center gap-2 rounded-sm px-4 sm:px-6 py-2 sm:py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/8 hover:bg-neon-purple/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 whileHover={{ boxShadow: '0 0 20px var(--shadow-purple-lg)' }}
                 whileTap={{ scale: 0.98 }}
               >

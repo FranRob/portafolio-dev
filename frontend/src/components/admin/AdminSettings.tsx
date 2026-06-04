@@ -166,7 +166,7 @@ export default function AdminSettings() {
                 <button
                   onClick={() => setShowDisableConfirm(true)}
                   disabled={saving}
-                  className="font-mono text-xs px-4 py-2 rounded-sm transition-colors min-h-[44px] border border-red-500/40 text-red-400 bg-transparent"
+                  className="cursor-pointer font-mono text-xs px-4 py-2 rounded-sm transition-colors min-h-[44px] border border-red-500/40 text-red-400 bg-transparent"
                   aria-label="Deshabilitar autenticación de dos factores"
                 >
                   Deshabilitar
@@ -187,13 +187,13 @@ export default function AdminSettings() {
                   <button
                     onClick={handleDisable}
                     disabled={saving || !disableCode}
-                    className="font-mono text-xs px-3 py-2 rounded-sm min-h-[44px] bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
+                    className="cursor-pointer font-mono text-xs px-3 py-2 rounded-sm min-h-[44px] bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
                   >
                     Confirmar
                   </button>
                   <button
                     onClick={() => { setShowDisableConfirm(false); setDisableCode('') }}
-                    className="font-mono text-xs px-3 py-2 rounded-sm min-h-[44px] border border-dark-border text-gray-500 hover:text-gray-300 transition-colors"
+                    className="cursor-pointer font-mono text-xs px-3 py-2 rounded-sm min-h-[44px] border border-dark-border text-gray-500 hover:text-gray-300 transition-colors"
                   >
                     Cancelar
                   </button>
@@ -225,14 +225,14 @@ export default function AdminSettings() {
               <button
                 onClick={handleEnable}
                 disabled={saving || !code}
-                className="font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-neon-purple/40 text-neon-purple bg-neon-purple/10 disabled:opacity-50"
+                className="cursor-pointer font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-neon-purple/40 text-neon-purple bg-neon-purple/10 disabled:opacity-50"
                 aria-label="Habilitar autenticación de dos factores"
               >
                 {saving ? 'Verificando...' : 'Habilitar'}
               </button>
               <button
                 onClick={() => { setShowSetup(false); setQrCode(''); setCode('') }}
-                className="font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-dark-border text-gray-500 hover:text-gray-300 transition-colors"
+                className="cursor-pointer font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-dark-border text-gray-500 hover:text-gray-300 transition-colors"
               >
                 Cancelar
               </button>
@@ -246,7 +246,7 @@ export default function AdminSettings() {
             <button
               onClick={handleSetup}
               disabled={saving}
-              className="font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/10"
+              className="cursor-pointer font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/10"
               aria-label="Configurar autenticación de dos factores"
             >
               {saving ? 'Generando...' : 'Configurar 2FA'}
@@ -278,7 +278,7 @@ export default function AdminSettings() {
                 <button
                   type="button"
                   onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2"
                   aria-label={showCurrentPassword ? 'Ocultar contraseña actual' : 'Mostrar contraseña actual'}
                 >
                   {showCurrentPassword ? <EyeOff size={14} className="text-gray-500" /> : <Eye size={14} className="text-gray-500" />}
@@ -297,7 +297,7 @@ export default function AdminSettings() {
                 <button
                   type="button"
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2"
                   aria-label={showNewPassword ? 'Ocultar nueva contraseña' : 'Mostrar nueva contraseña'}
                 >
                   {showNewPassword ? <EyeOff size={14} className="text-gray-500" /> : <Eye size={14} className="text-gray-500" />}
@@ -317,14 +317,14 @@ export default function AdminSettings() {
               <button
                 onClick={handlePasswordChange}
                 disabled={saving || !currentPassword || !newPassword || !confirmPassword}
-                className="font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/10 disabled:opacity-50"
+                className="cursor-pointer font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/10 disabled:opacity-50"
                 aria-label="Confirmar cambio de contraseña"
               >
                 {saving ? 'Cambiando...' : 'Cambiar contraseña'}
               </button>
               <button
                 onClick={() => { setShowPasswordForm(false); setCurrentPassword(''); setNewPassword(''); setConfirmPassword('') }}
-                className="font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-dark-border text-gray-500 hover:text-gray-300 transition-colors"
+                className="cursor-pointer font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-dark-border text-gray-500 hover:text-gray-300 transition-colors"
               >
                 Cancelar
               </button>
@@ -337,7 +337,7 @@ export default function AdminSettings() {
             </span>
             <button
               onClick={() => setShowPasswordForm(true)}
-              className="font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/10"
+              className="cursor-pointer font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/10"
               aria-label="Cambiar contraseña"
             >
               Cambiar

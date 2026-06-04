@@ -109,7 +109,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 font-mono text-xs transition-colors text-neon-cyan"
+                className="cursor-pointer flex items-center gap-1 font-mono text-xs transition-colors text-neon-cyan"
                 aria-label={`Ver proyecto ${project.title}`}
               >
                 <ExternalLink size={12} />
@@ -121,7 +121,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 font-mono text-xs transition-colors text-gray-400 hover:text-white"
+                className="cursor-pointer flex items-center gap-1 font-mono text-xs transition-colors text-gray-400 hover:text-white"
                 aria-label={`Código fuente de ${project.title}`}
               >
                 <GithubIcon size={12} />
