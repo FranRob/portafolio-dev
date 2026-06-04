@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { Lock } from 'lucide-react'
 
 export default function Footer() {
@@ -27,7 +27,7 @@ export default function Footer() {
               // Prefetch dashboard chunk on hover
               import('../../components/admin/Dashboard')
             }}
-            className="flex items-center gap-1 text-gray-700 hover:text-gray-500 transition-colors duration-200 group px-3 py-2 rounded"
+            className="flex items-center gap-1 text-gray-700 hover:text-gray-500 transition-colors duration-200 group px-3 py-2 rounded-sm"
             aria-label="Panel de administración"
             title="Admin"
           >

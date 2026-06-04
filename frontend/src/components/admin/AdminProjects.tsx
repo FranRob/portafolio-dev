@@ -43,7 +43,7 @@ const categoryLabels: Record<Project['category'], string> = {
   collaborative: 'Colaborativo',
 }
 
-const inputClass = "w-full font-mono text-sm bg-dark-card border border-dark-border rounded-md px-3 py-2 text-gray-300 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-none transition-[border-color,box-shadow]"
+const inputClass = "w-full font-mono text-sm bg-dark-card border border-dark-border rounded-md px-3 py-2 text-gray-300 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-hidden transition-[border-color,box-shadow]"
 const labelClass = "font-mono text-xs text-gray-500 uppercase tracking-wider block mb-1"
 
 function isValidUrl(str: string): boolean {
@@ -212,7 +212,7 @@ export default function AdminProjects() {
           <h2 className="font-orbitron font-bold text-sm text-white">{editTitle}</h2>
           <button
             onClick={() => setEditMode(null)}
-            className="font-mono text-xs text-gray-400 hover:text-white transition-colors px-3 py-2 rounded min-h-[44px] bg-dark-card border border-dark-border"
+            className="font-mono text-xs text-gray-400 hover:text-white transition-colors px-3 py-2 rounded-sm min-h-[44px] bg-dark-card border border-dark-border"
           >
             Cancelar
           </button>
@@ -359,14 +359,14 @@ export default function AdminProjects() {
             <button
               type="submit"
               disabled={saving}
-              className="font-mono text-xs px-5 py-2 rounded transition-all min-h-[44px] border border-neon-purple/40 text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 disabled:opacity-50"
+              className="font-mono text-xs px-5 py-2 rounded-sm transition-all min-h-[44px] border border-neon-purple/40 text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 disabled:opacity-50"
             >
               {saving ? 'Guardando...' : 'Guardar'}
             </button>
             <button
               type="button"
               onClick={() => setEditMode(null)}
-              className="font-mono text-xs text-gray-400 hover:text-white transition-colors px-4 py-2 rounded min-h-[44px] bg-dark-card border border-dark-border"
+              className="font-mono text-xs text-gray-400 hover:text-white transition-colors px-4 py-2 rounded-sm min-h-[44px] bg-dark-card border border-dark-border"
             >
               Cancelar
             </button>
@@ -384,7 +384,7 @@ export default function AdminProjects() {
         <h2 className="font-orbitron font-bold text-sm text-white">Proyectos</h2>
         <button
           onClick={openCreate}
-          className="font-mono text-xs px-4 py-2 rounded transition-all min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/[0.05] hover:bg-neon-cyan/10"
+          className="font-mono text-xs px-4 py-2 rounded-sm transition-all min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/5 hover:bg-neon-cyan/10"
         >
           + Nuevo Proyecto
         </button>
@@ -407,7 +407,7 @@ export default function AdminProjects() {
           </p>
           <button
             onClick={openCreate}
-            className="font-mono text-xs px-4 py-2 rounded min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/[0.05]"
+            className="font-mono text-xs px-4 py-2 rounded-sm min-h-[44px] border border-neon-cyan/40 text-neon-cyan bg-neon-cyan/5"
           >
             + Nuevo Proyecto
           </button>
@@ -427,7 +427,7 @@ export default function AdminProjects() {
                 <button
                   onClick={() => handleReorder(index, 'up')}
                   disabled={index === 0}
-                   className={`flex items-center justify-center p-1 transition-colors min-h-[32px] min-w-[32px] ${index === 0 ? 'text-[var(--disabled-text)] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
+                   className={`flex items-center justify-center p-1 transition-colors min-h-[32px] min-w-[32px] ${index === 0 ? 'text-(--disabled-text) cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
                   aria-label={`Mover ${project.title} arriba`}
                   title="Mover arriba"
                 >
@@ -436,7 +436,7 @@ export default function AdminProjects() {
                 <button
                   onClick={() => handleReorder(index, 'down')}
                   disabled={index === projects.length - 1}
-                   className={`flex items-center justify-center p-1 transition-colors min-h-[32px] min-w-[32px] ${index === projects.length - 1 ? 'text-[var(--disabled-text)] cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
+                   className={`flex items-center justify-center p-1 transition-colors min-h-[32px] min-w-[32px] ${index === projects.length - 1 ? 'text-(--disabled-text) cursor-not-allowed' : 'text-gray-500 hover:text-gray-300'}`}
                   aria-label={`Mover ${project.title} abajo`}
                   title="Mover abajo"
                 >
@@ -451,7 +451,7 @@ export default function AdminProjects() {
 
               {/* Status badge */}
               <span
-                className="font-mono text-xs px-2 py-0.5 rounded hidden sm:block bg-transparent whitespace-nowrap"
+                className="font-mono text-xs px-2 py-0.5 rounded-sm hidden sm:block bg-transparent whitespace-nowrap"
                 style={{
                   color: statusColors[project.status],
                   border: `1px solid ${statusColors[project.status]}`,
@@ -462,7 +462,7 @@ export default function AdminProjects() {
 
               {/* Category badge */}
               <span
-                className="font-mono text-xs px-2 py-0.5 rounded hidden md:block whitespace-nowrap text-gray-500 border border-dark-border"
+                className="font-mono text-xs px-2 py-0.5 rounded-sm hidden md:block whitespace-nowrap text-gray-500 border border-dark-border"
               >
                 {categoryLabels[project.category]}
               </span>
@@ -471,14 +471,14 @@ export default function AdminProjects() {
               <div className="flex gap-2">
                 <button
                   onClick={() => openEdit(project)}
-                  className="font-mono text-xs px-3 py-2 rounded transition-colors min-h-[44px] border border-neon-purple/30 text-neon-purple bg-transparent hover:bg-neon-purple/10"
+                  className="font-mono text-xs px-3 py-2 rounded-sm transition-colors min-h-[44px] border border-neon-purple/30 text-neon-purple bg-transparent hover:bg-neon-purple/10"
                   aria-label={`Editar proyecto ${project.title}`}
                 >
                   Editar
                 </button>
                 <button
                   onClick={() => setProjectToDelete(project)}
-                  className="font-mono text-xs px-3 py-2 rounded transition-colors min-h-[44px] border border-red-500/30 text-red-400 bg-transparent hover:bg-red-500/10"
+                  className="font-mono text-xs px-3 py-2 rounded-sm transition-colors min-h-[44px] border border-red-500/30 text-red-400 bg-transparent hover:bg-red-500/10"
                   aria-label={`Eliminar proyecto ${project.title}`}
                 >
                   Eliminar

@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router'
+import { motion } from 'motion/react'
 import { Lock, AlertCircle } from 'lucide-react'
 import axios from 'axios'
 import { login } from '../../services/api'
@@ -116,7 +116,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="admin@ejemplo.com"
-                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-none transition-[border-color,box-shadow]"
+                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-hidden transition-[border-color,box-shadow]"
               />
             </div>
 
@@ -131,7 +131,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="••••••••"
-                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-none transition-[border-color,box-shadow]"
+                className="w-full bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base rounded-md px-4 py-3 focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-hidden transition-[border-color,box-shadow]"
               />
             </div>
 
@@ -140,7 +140,7 @@ export default function Login() {
               <motion.div
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-2 rounded px-3 py-2 bg-red-500/10 border border-red-500/30"
+                className="flex items-center gap-2 rounded-sm px-3 py-2 bg-red-500/10 border border-red-500/30"
               >
                 <AlertCircle size={13} className="text-red-400" />
                 <span className="font-mono text-xs text-red-400">
@@ -153,7 +153,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 rounded py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 hover:shadow-neonPurple disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 rounded-sm py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 hover:shadow-neon-purple disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>

@@ -145,7 +145,7 @@ cd portafolio-dev
 
 # Variables de entorno
 cp .env.example .env
-# Completar: DATABASE_URL, JWT_SECRET, ENCRYPTION_KEY, ADMIN_EMAIL, ADMIN_PASSWORD
+# Completar: DATABASE_URL, JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD
 
 # Docker (recomendado)
 docker compose up -d

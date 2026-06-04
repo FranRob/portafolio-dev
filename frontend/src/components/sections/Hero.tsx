@@ -1,10 +1,10 @@
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import StarField from '../ui/StarField'
 import GlitchText from '../ui/GlitchText'
 import { useAnalytics } from '../../hooks/useAnalytics'
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -15,7 +15,7 @@ const containerVariants = {
   },
 }
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -103,14 +103,14 @@ export default function Hero() {
         >
           <button
             onClick={() => scrollTo('stack')}
-            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider border border-neon-cyan text-neon-cyan bg-neon-cyan/[0.05] hover:bg-neon-cyan/20 hover:shadow-[0_0_20px_var(--shadow-cyan-lg)] shadow-[0_0_10px_var(--shadow-cyan-sm)]"
+            className="font-mono text-sm px-4 sm:px-8 py-3 rounded-sm transition-all duration-300 uppercase tracking-wider border border-neon-cyan text-neon-cyan bg-neon-cyan/5 hover:bg-neon-cyan/20 hover:shadow-[0_0_20px_var(--shadow-cyan-lg)] shadow-[0_0_10px_var(--shadow-cyan-sm)]"
             aria-label="Ver mi Stack tecnológico"
           >
             Ver mi Stack
           </button>
           <button
             onClick={() => scrollTo('contact')}
-            className="font-mono text-sm px-4 sm:px-8 py-3 rounded transition-all duration-300 uppercase tracking-wider border border-neon-purple text-neon-purple bg-neon-purple/[0.05] hover:bg-neon-purple/20 hover:shadow-[0_0_20px_var(--shadow-purple-lg)] shadow-[0_0_10px_var(--shadow-purple-sm)]"
+            className="font-mono text-sm px-4 sm:px-8 py-3 rounded-sm transition-all duration-300 uppercase tracking-wider border border-neon-purple text-neon-purple bg-neon-purple/5 hover:bg-neon-purple/20 hover:shadow-[0_0_20px_var(--shadow-purple-lg)] shadow-[0_0_10px_var(--shadow-purple-sm)]"
             aria-label="Contactarme"
           >
             Contactarme

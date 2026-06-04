@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from 'express';
 import { z } from 'zod';
-import { requireAuth } from '../../middleware/auth.js';
+import { requireAuth, csrfProtection } from '../../middleware/auth.js';
 import { createMessage, getAllMessages, markAsRead, markAsUnread, updateCategory, deleteMessage } from './contact.service.js';
 import { asyncHandler } from '../../lib/errorMiddleware.js';
 import { ValidationError, NotFoundError } from '../../lib/errors.js';
@@ -32,7 +32,10 @@ router.get('/messages', requireAuth, asyncHandler(async (_req: Request, res: Res
   res.json(messages);
 }));
 
-router.patch('/:id/read', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+// CSRF protection for all admin write operations
+router.use(csrfProtection, requireAuth);
+
+router.patch('/:id/read', asyncHandler(async (req: Request, res: Response) => {
   const id = req.params['id'] as string;
   const updated = await markAsRead(id);
   if (!updated) {
@@ -41,7 +44,7 @@ router.patch('/:id/read', requireAuth, asyncHandler(async (req: Request, res: Re
   res.json(updated);
 }));
 
-router.patch('/:id/unread', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+router.patch('/:id/unread', asyncHandler(async (req: Request, res: Response) => {
   const id = req.params['id'] as string;
   const updated = await markAsUnread(id);
   if (!updated) {
@@ -50,7 +53,7 @@ router.patch('/:id/unread', requireAuth, asyncHandler(async (req: Request, res: 
   res.json(updated);
 }));
 
-router.patch('/:id/category', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+router.patch('/:id/category', asyncHandler(async (req: Request, res: Response) => {
   const id = req.params['id'] as string;
   const parsed = categorySchema.safeParse(req.body);
   if (!parsed.success) {
@@ -64,7 +67,7 @@ router.patch('/:id/category', requireAuth, asyncHandler(async (req: Request, res
   res.json(updated);
 }));
 
-router.delete('/:id', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+router.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
   const id = req.params['id'] as string;
   const deleted = await deleteMessage(id);
   if (!deleted) {

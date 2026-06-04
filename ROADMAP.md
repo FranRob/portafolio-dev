@@ -47,13 +47,13 @@
 
 ## Fase 4 — Accesibilidad & UX (2-3 hrs)
 
-| # | Tarea | Esfuerzo | Impacto |
-|---|-------|----------|---------|
-| 15 | Skip-to-content link para navegación por teclado | 🟢 Bajo | 🟡 Medio |
-| 16 | ARIA labels en interactive elements (nav, botones, icons) | 🟡 Medio | 🟢 Alto |
-| 17 | Color contrast audit en toda la paleta neon | 🟡 Medio | 🟡 Medio |
-| 18 | Focus indicators visibles para navegación por teclado | 🟢 Bajo | 🟡 Medio |
-| 19 | Testing: cobertura de tests para componentes críticos | 🟡 Medio | 🟢 Alto |
+| # | Tarea | Esfuerzo | Impacto | Estado |
+|---|-------|----------|---------|--------|
+| 15 | Skip-to-content link para navegación por teclado | 🟢 Bajo | 🟡 Medio | Pendiente |
+| 16 | ARIA labels en interactive elements (nav, botones, icons) | 🟡 Medio | 🟢 Alto | Pendiente |
+| 17 | Color contrast audit en toda la paleta neon | 🟡 Medio | 🟡 Medio | Pendiente |
+| 18 | Focus indicators visibles para navegación por teclado | 🟢 Bajo | 🟡 Medio | Pendiente |
+| 19 | Testing: cobertura de tests para componentes críticos | 🟡 Medio | 🟢 Alto | ✅ Completado |
 
 **Impacto esperado**: Accessibility 96→100
 
@@ -84,3 +84,38 @@
 | FCP | 2.8s | ~2.5s | ~1.5s | ~1.2s | ~1.2s | ~1.2s |
 
 **Total estimado**: ~10-14 hrs distribuidas en 5 fases.
+
+---
+
+## Testing Coverage (Agregado F4-T19)
+
+| Área | Tests | Framework | Stack |
+|------|-------|-----------|-------|
+| **Backend API** (auth, CRUD, rate-limit, CSRF) | 47 tests | Vitest 4.x + Supertest + Testcontainers | Express, Prisma, JWT, PostgreSQL |
+| **Frontend Admin** (Login, Dashboard) | 39 tests | Vitest 2.x + jsdom + @testing-library/react | React 18, React Router, Framer Motion (mockeado) |
+| **Total** | **86 tests** | — | — |
+
+### Cobertura por flujo
+
+| Flujo | Escenarios | Estado |
+|-------|-----------|--------|
+| Auth login (válido/inválido/rate-limit/CSRF) | 17 | ✅ |
+| Admin CRUD Projects | 7 | ✅ |
+| Admin CRUD Contact Messages | 7 | ✅ |
+| Admin Analytics Stats | 3 | ✅ |
+| Login component (loading/error/navegación/retry) | 12 | ✅ |
+| Dashboard component (stats/tabs/logout/error) | 15 | ✅ |
+| Health & endpoints públicos (preexistentes) | 6 | ✅ |
+| **Total escenarios** | **67** (65 specs + 2 extras) | ✅ |
+
+### Archivos de test creados/modificados
+
+- `backend/tests/helpers/auth.ts` — seedAdmin, getValidToken, getAuthHeaders, getCsrfConfig
+- `backend/tests/helpers/factories.ts` — createTestProject, createTestMessage
+- `backend/tests/api.test.ts` — 47 tests (existente + extendido)
+- `backend/src/middleware/auth.ts` — CSRF timingSafeEqual fix
+- `frontend/src/test-setup.ts` — framer-motion global mock
+- `frontend/src/components/admin/__tests__/Login.test.tsx` — 12 escenarios
+- `frontend/src/components/admin/__tests__/Dashboard.test.tsx` — 15 escenarios
+
+> **Nota**: Coverage tool no disponible en frontend (Vite plugin no compatible con Vitest 2.x). Backend coverage configurado pero no bloqueante.

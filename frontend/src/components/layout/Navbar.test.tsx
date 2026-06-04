@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 
 vi.mock('../../hooks/useAnalytics', () => ({
   useAnalytics: vi.fn(() => ({ current: null })),
@@ -7,13 +8,15 @@ vi.mock('../../hooks/useAnalytics', () => ({
 
 import Navbar from './Navbar'
 
+const renderNavbar = () => render(<MemoryRouter><Navbar /></MemoryRouter>)
+
 describe('Navbar', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('renders all navigation links', () => {
-    render(<Navbar />)
+    renderNavbar()
 
     expect(screen.getByRole('button', { name: /ir a inicio/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /ir a stack/i })).toBeInTheDocument()
@@ -23,7 +26,7 @@ describe('Navbar', () => {
   })
 
   it('renders the brand button to go home', () => {
-    render(<Navbar />)
+    renderNavbar()
 
     const brand = screen.getByRole('button', { name: /ir al inicio/i })
     expect(brand).toBeInTheDocument()
@@ -31,7 +34,7 @@ describe('Navbar', () => {
   })
 
   it('toggles mobile menu when hamburger button is clicked', () => {
-    render(<Navbar />)
+    renderNavbar()
 
     const toggleButton = screen.getByRole('button', { name: /abrir menú/i })
     expect(toggleButton).toBeInTheDocument()
@@ -53,7 +56,7 @@ describe('Navbar', () => {
   })
 
   it('has proper aria-label on navigation', () => {
-    render(<Navbar />)
+    renderNavbar()
 
     const nav = screen.getByRole('navigation', { name: /navegación principal/i })
     expect(nav).toBeInTheDocument()

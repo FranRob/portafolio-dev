@@ -3,11 +3,11 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 vi.mock('../../../services/api', () => ({ login: vi.fn() }))
-vi.mock('react-router-dom', () => ({ useNavigate: vi.fn() }))
+vi.mock('react-router', () => ({ useNavigate: vi.fn() }))
 
 import Login from '../Login'
 import { login } from '../../../services/api'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 function createAxiosError(status?: number, data?: Record<string, string>) {
   if (status) {

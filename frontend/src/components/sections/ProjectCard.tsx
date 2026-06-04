@@ -1,6 +1,7 @@
 import { memo } from 'react'
-import { motion } from 'framer-motion'
-import { ExternalLink, Github } from 'lucide-react'
+import { motion } from 'motion/react'
+import { ExternalLink } from 'lucide-react'
+import { GithubIcon } from '../ui/BrandIcons'
 import type { Project } from '../../services/api'
 
 interface ProjectCardProps {
@@ -47,7 +48,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
       className="rounded-lg overflow-hidden flex flex-col bg-dark-card border border-dark-border"
     >
       {/* Image area */}
-      <div className="relative h-32 sm:h-44 flex-shrink-0">
+      <div className="relative h-32 sm:h-44 shrink-0">
         {project.imageUrl ? (
           <img
             src={project.imageUrl}
@@ -65,7 +66,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
 
         {/* Status badge — top right */}
         <span
-          className="absolute top-3 right-3 font-mono text-xs px-2 py-0.5 rounded bg-dark-base/70"
+          className="absolute top-3 right-3 font-mono text-xs px-2 py-0.5 rounded-sm bg-dark-base/70"
           style={{
             color: status.color,
             border: `1px solid ${status.color}`,
@@ -93,7 +94,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
           {project.stack.map((tech) => (
             <span
               key={tech}
-              className="font-mono text-xs text-gray-400 px-2 py-0.5 rounded bg-neon-purple/[0.08] border border-neon-purple/20"
+              className="font-mono text-xs text-gray-400 px-2 py-0.5 rounded-sm bg-neon-purple/8 border border-neon-purple/20"
             >
               {tech}
             </span>
@@ -123,7 +124,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
                 className="flex items-center gap-1 font-mono text-xs transition-colors text-gray-400 hover:text-white"
                 aria-label={`Código fuente de ${project.title}`}
               >
-                <Github size={12} />
+                <GithubIcon size={12} />
                 Ver código
               </a>
             )}

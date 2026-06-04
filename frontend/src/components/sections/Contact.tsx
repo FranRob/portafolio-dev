@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react'
-import { motion } from 'framer-motion'
-import { Linkedin, Github, ExternalLink, Send, CheckCircle, AlertCircle } from 'lucide-react'
+import { motion } from 'motion/react'
+import { ExternalLink, Send, CheckCircle, AlertCircle } from 'lucide-react'
+import { GithubIcon, LinkedinIcon } from '../ui/BrandIcons'
 import { submitContact } from '../../services/api'
 import { useAnalytics } from '../../hooks/useAnalytics'
 
@@ -17,14 +18,14 @@ const socialLinks: SocialLink[] = [
     label: 'LinkedIn',
     handle: 'Franco Robles',
     url: 'https://www.linkedin.com/in/francorob',
-    icon: <Linkedin size={28} />,
+    icon: <LinkedinIcon size={28} />,
     color: 'cyan',
   },
   {
     label: 'GitHub',
     handle: 'divMalCentrado',
     url: 'https://github.com/FranRob',
-    icon: <Github size={28} />,
+    icon: <GithubIcon size={28} />,
     color: 'purple',
   },
 ]
@@ -76,13 +77,13 @@ export default function Contact() {
     }
   }
 
-  const inputClass = "w-full rounded px-3 py-2 sm:px-4 sm:py-3 bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-none transition-[border-color,box-shadow]"
+  const inputClass = "w-full rounded-sm px-3 py-2 sm:px-4 sm:py-3 bg-dark-card/90 border border-dark-border text-gray-300 font-mono text-base focus:border-neon-purple focus:shadow-[0_0_10px_var(--input-focus-shadow)] outline-hidden transition-[border-color,box-shadow]"
 
   return (
     <section
       id="contact"
       ref={sectionRef}
-      className="relative z-10 py-24 px-4 bg-gradient-to-b from-dark-base to-[var(--dark-lighter)]"
+      className="relative z-10 py-24 px-4 bg-linear-to-b from-dark-base to-(--dark-lighter)"
     >
       <div className="max-w-5xl mx-auto">
         {/* Section header */}
@@ -243,7 +244,7 @@ export default function Contact() {
                 <motion.div
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 rounded px-4 py-3 bg-green-500/10 border border-green-500/30"
+                  className="flex items-center gap-2 rounded-sm px-4 py-3 bg-green-500/10 border border-green-500/30"
                   role="status"
                   aria-live="polite"
                 >
@@ -258,7 +259,7 @@ export default function Contact() {
                 <motion.div
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 rounded px-4 py-3 bg-red-500/10 border border-red-500/30"
+                  className="flex items-center gap-2 rounded-sm px-4 py-3 bg-red-500/10 border border-red-500/30"
                   role="status"
                   aria-live="polite"
                 >
@@ -273,7 +274,7 @@ export default function Contact() {
               <motion.button
                 type="submit"
                 disabled={status === 'sending'}
-                className="w-full flex items-center justify-center gap-2 rounded px-4 sm:px-6 py-2 sm:py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/[0.08] hover:bg-neon-purple/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 rounded-sm px-4 sm:px-6 py-2 sm:py-3 font-mono text-sm font-bold uppercase tracking-wider transition-all duration-300 border border-neon-purple text-neon-purple bg-neon-purple/8 hover:bg-neon-purple/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 whileHover={{ boxShadow: '0 0 20px var(--shadow-purple-lg)' }}
                 whileTap={{ scale: 0.98 }}
               >

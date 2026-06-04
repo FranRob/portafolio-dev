@@ -1,17 +1,16 @@
-import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { motion } from 'motion/react'
+import { useNavigate } from 'react-router'
 import {
   Phone,
   Mail,
   Globe,
-  Linkedin,
-  Github,
   MapPin,
   Printer,
   ChevronLeft,
 } from 'lucide-react'
 import { useAnalytics } from '../hooks/useAnalytics'
 import StarField from './ui/StarField'
+import { GithubIcon, LinkedinIcon } from './ui/BrandIcons'
 
 // ── Types ────────────────────────────────────────────────────────
 
@@ -149,7 +148,7 @@ export default function CurriculumPage() {
         </motion.button>
 
         {/* Card */}
-        <div className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-neonPurple">
+        <div className="bg-dark-card border border-dark-border rounded-2xl overflow-hidden shadow-neon-purple">
           {/* ── Header ──────────────────────────────────────── */}
           <div className="p-8 lg:p-10 border-b border-dark-border">
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
@@ -194,7 +193,7 @@ export default function CurriculumPage() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
                   >
-                    <Linkedin size={12} className="text-gray-600 shrink-0" />
+                    <LinkedinIcon size={12} className="text-gray-600 shrink-0" />
                     linkedin.com/in/francorob
                   </a>
 
@@ -204,7 +203,7 @@ export default function CurriculumPage() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors"
                   >
-                    <Github size={12} className="text-gray-600 shrink-0" />
+                    <GithubIcon size={12} className="text-gray-600 shrink-0" />
                     github.com/FranRob
                   </a>
 
@@ -292,7 +291,7 @@ export default function CurriculumPage() {
                       {exp.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="font-mono text-[11px] px-2 py-0.5 rounded border bg-neon-purple/10 border-neon-purple/20 text-neon-purple"
+                          className="font-mono text-[11px] px-2 py-0.5 rounded-sm border bg-neon-purple/10 border-neon-purple/20 text-neon-purple"
                         >
                           {tag}
                         </span>
@@ -320,7 +319,7 @@ export default function CurriculumPage() {
                 <div className="rounded-xl overflow-hidden border border-dark-border">
                   {/* Project header */}
                   <div
-                    className="p-5 border-b border-dark-border bg-gradient-to-br from-neon-purple/15 to-neon-cyan/5"
+                    className="p-5 border-b border-dark-border bg-linear-to-br from-neon-purple/15 to-neon-cyan/5"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-1">
                       <h3 className="font-sans text-base font-semibold text-white">
@@ -397,7 +396,7 @@ export default function CurriculumPage() {
                       ].map((tag) => (
                         <span
                           key={tag}
-                          className="font-mono text-[11px] px-2 py-0.5 rounded bg-neon-purple/10 border border-neon-purple/20 text-neon-purple"
+                          className="font-mono text-[11px] px-2 py-0.5 rounded-sm bg-neon-purple/10 border border-neon-purple/20 text-neon-purple"
                         >
                           {tag}
                         </span>

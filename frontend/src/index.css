@@ -1,6 +1,290 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-neon-purple: #b026ff;
+  --color-neon-cyan: #00e5ff;
+  --color-neon-magenta: #ff00ff;
+
+  --color-dark-base: #0a0a0f;
+  --color-dark-card: #12121a;
+  --color-dark-border: #1e1e2e;
+
+  --color-gray-500: #9ca3af;
+  --color-gray-600: #6b7280;
+
+  --font-orbitron: Orbitron, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  --animate-glow: glow 2s ease-in-out infinite;
+  --animate-glowCyan: glowCyan 2s ease-in-out infinite;
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-scanline: scanline 8s linear infinite;
+  --animate-twinkle: twinkle 3s ease-in-out infinite;
+  --animate-glitch: glitch 0.4s steps(1) forwards;
+  --animate-bounce: bounce 1.5s infinite;
+  --animate-fadeInUp: fadeInUp 0.6s ease-out forwards;
+
+  --shadow-neonPurple:
+    0 0 10px #b026ff, 0 0 20px #b026ff, 0 0 40px rgba(176, 38, 255, 0.5);
+  --shadow-neonCyan:
+    0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 40px rgba(0, 229, 255, 0.5);
+  --shadow-neonMagenta:
+    0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px rgba(255, 0, 255, 0.5);
+
+  @keyframes glow {
+    0%,
+    100% {
+      text-shadow:
+        0 0 10px #b026ff,
+        0 0 20px #b026ff,
+        0 0 40px #b026ff;
+    }
+    50% {
+      text-shadow:
+        0 0 20px #b026ff,
+        0 0 40px #b026ff,
+        0 0 80px #b026ff;
+    }
+  }
+  @keyframes glowCyan {
+    0%,
+    100% {
+      text-shadow:
+        0 0 10px #00e5ff,
+        0 0 20px #00e5ff,
+        0 0 40px #00e5ff;
+    }
+    50% {
+      text-shadow:
+        0 0 20px #00e5ff,
+        0 0 40px #00e5ff,
+        0 0 80px #00e5ff;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  @keyframes scanline {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100vh);
+    }
+  }
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+  @keyframes glitch {
+    0% {
+      transform: translate(0);
+      clip-path: inset(0 0 100% 0);
+    }
+    10% {
+      transform: translate(-2px, 1px);
+      clip-path: inset(20% 0 60% 0);
+    }
+    20% {
+      transform: translate(2px, -1px);
+      clip-path: inset(50% 0 30% 0);
+    }
+    30% {
+      transform: translate(-1px, 2px);
+      clip-path: inset(80% 0 5% 0);
+    }
+    40% {
+      transform: translate(0);
+      clip-path: inset(0 0 100% 0);
+    }
+    100% {
+      transform: translate(0);
+      clip-path: inset(0 0 100% 0);
+    }
+  }
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(-8px);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility neon-text-purple {
+  color: #b026ff;
+  text-shadow:
+    0 0 10px #b026ff,
+    0 0 20px #b026ff,
+    0 0 40px #b026ff;
+}
+
+@utility neon-text-cyan {
+  color: #00e5ff;
+  text-shadow:
+    0 0 10px #00e5ff,
+    0 0 20px #00e5ff,
+    0 0 40px #00e5ff;
+}
+
+@utility neon-text-magenta {
+  color: #ff00ff;
+  text-shadow:
+    0 0 10px #ff00ff,
+    0 0 20px #ff00ff,
+    0 0 40px #ff00ff;
+}
+
+@utility neon-border-purple {
+  border: 1px solid #b026ff;
+  box-shadow:
+    0 0 10px rgba(176, 38, 255, 0.3),
+    inset 0 0 10px rgba(176, 38, 255, 0.05);
+}
+
+@utility neon-border-cyan {
+  border: 1px solid #00e5ff;
+  box-shadow:
+    0 0 10px rgba(0, 229, 255, 0.3),
+    inset 0 0 10px rgba(0, 229, 255, 0.05);
+}
+
+@utility neon-border-magenta {
+  border: 1px solid #ff00ff;
+  box-shadow:
+    0 0 10px rgba(255, 0, 255, 0.3),
+    inset 0 0 10px rgba(255, 0, 255, 0.05);
+}
+
+@utility section-title {
+  @apply font-orbitron text-3xl md:text-4xl font-bold text-white mb-2;
+}
+
+@utility section-subtitle {
+  @apply font-mono text-neon-cyan text-sm tracking-widest uppercase mb-8;
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(rgba(176, 38, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(176, 38, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+@utility border-3 {
+  border-width: 3px;
+}
+
+@utility neon-text-purple-sm {
+  /* --- textShadow utilities --- */
+  text-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
+}
+
+@utility neon-text-purple-md {
+  text-shadow: 0 0 10px rgba(176, 38, 255, 0.4);
+}
+
+@utility neon-text-purple-lg {
+  text-shadow: 0 0 20px rgba(176, 38, 255, 0.6);
+}
+
+@utility neon-text-purple-xl {
+  text-shadow:
+    0 0 10px #b026ff,
+    0 0 20px rgba(176, 38, 255, 0.5);
+}
+
+@utility neon-text-cyan-sm {
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+@utility neon-text-white-subtle {
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+@utility synthwave-grid {
+  /* --- gradient utilities --- */
+  background-image:
+    linear-gradient(rgba(176, 38, 255, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(176, 38, 255, 0.5) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+@utility horizon-glow {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #b026ff,
+    #ff00ff,
+    #b026ff,
+    transparent
+  );
+  box-shadow:
+    0 0 20px #b026ff,
+    0 0 40px rgba(176, 38, 255, 0.5);
+}
+
+@utility gradient-bar-section {
+  background: linear-gradient(90deg, #b026ff, #00e5ff);
+  box-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
+}
+
+@utility gradient-bar-daily {
+  background: linear-gradient(180deg, #b026ff, rgba(176, 38, 255, 0.3));
+  box-shadow: 0 0 6px rgba(176, 38, 255, 0.4);
+}
+
+@utility project-card-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(176, 38, 255, 0.3) 0%,
+    rgba(0, 229, 255, 0.15) 50%,
+    rgba(176, 38, 255, 0.1) 100%
+  );
+}
 
 :root {
   /* --- Status colors --- */
@@ -174,52 +458,7 @@
   }
 }
 
-@layer components {
-  .neon-text-purple {
-    color: #b026ff;
-    text-shadow: 0 0 10px #b026ff, 0 0 20px #b026ff, 0 0 40px #b026ff;
-  }
-
-  .neon-text-cyan {
-    color: #00e5ff;
-    text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 40px #00e5ff;
-  }
-
-  .neon-text-magenta {
-    color: #ff00ff;
-    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff;
-  }
-
-  .neon-border-purple {
-    border: 1px solid #b026ff;
-    box-shadow: 0 0 10px rgba(176, 38, 255, 0.3), inset 0 0 10px rgba(176, 38, 255, 0.05);
-  }
-
-  .neon-border-cyan {
-    border: 1px solid #00e5ff;
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3), inset 0 0 10px rgba(0, 229, 255, 0.05);
-  }
-
-  .neon-border-magenta {
-    border: 1px solid #ff00ff;
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.3), inset 0 0 10px rgba(255, 0, 255, 0.05);
-  }
-
-  .section-title {
-    @apply font-orbitron text-3xl md:text-4xl font-bold text-white mb-2;
-  }
-
-  .section-subtitle {
-    @apply font-mono text-neon-cyan text-sm tracking-widest uppercase mb-8;
-  }
-}
-
 @layer utilities {
-  .grid-bg {
-    background-image: linear-gradient(rgba(176, 38, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(176, 38, 255, 0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
-  }
 
   @keyframes shimmer {
     0% {
@@ -237,52 +476,5 @@
     100% {
       transform: rotate(360deg);
     }
-  }
-
-  .border-3 {
-    border-width: 3px;
-  }
-
-  /* --- textShadow utilities --- */
-  .neon-text-purple-sm {
-    text-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
-  }
-  .neon-text-purple-md {
-    text-shadow: 0 0 10px rgba(176, 38, 255, 0.4);
-  }
-  .neon-text-purple-lg {
-    text-shadow: 0 0 20px rgba(176, 38, 255, 0.6);
-  }
-  .neon-text-purple-xl {
-    text-shadow: 0 0 10px #b026ff, 0 0 20px rgba(176, 38, 255, 0.5);
-  }
-  .neon-text-cyan-sm {
-    text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
-  }
-  .neon-text-white-subtle {
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-  }
-
-  /* --- gradient utilities --- */
-  .synthwave-grid {
-    background-image: linear-gradient(rgba(176, 38, 255, 0.5) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(176, 38, 255, 0.5) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
-  .horizon-glow {
-    background: linear-gradient(90deg, transparent, #b026ff, #ff00ff, #b026ff, transparent);
-    box-shadow: 0 0 20px #b026ff, 0 0 40px rgba(176, 38, 255, 0.5);
-  }
-  .gradient-bar-section {
-    background: linear-gradient(90deg, #b026ff, #00e5ff);
-    box-shadow: 0 0 8px rgba(176, 38, 255, 0.5);
-  }
-  .gradient-bar-daily {
-    background: linear-gradient(180deg, #b026ff, rgba(176, 38, 255, 0.3));
-    box-shadow: 0 0 6px rgba(176, 38, 255, 0.4);
-  }
-  .project-card-gradient {
-    background: linear-gradient(135deg, rgba(176, 38, 255, 0.3) 0%,
-      rgba(0, 229, 255, 0.15) 50%, rgba(176, 38, 255, 0.1) 100%);
   }
 }

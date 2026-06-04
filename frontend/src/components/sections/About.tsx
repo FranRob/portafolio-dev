@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { Code2, Lightbulb, BookOpen, Heart } from 'lucide-react'
 import { useAnalytics } from '../../hooks/useAnalytics'
 
@@ -108,7 +108,7 @@ export default function About() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="flex items-center gap-2 rounded px-3 py-2"
+                  className="flex items-center gap-2 rounded-sm px-3 py-2"
                   style={{
                     background: 'var(--trait-bg)',
                     border: '1px solid var(--trait-border)',
