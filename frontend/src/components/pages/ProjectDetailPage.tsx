@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router'
+import { useParams } from 'react-router'
 import { motion } from 'motion/react'
 import ReactMarkdown from 'react-markdown'
 import rehypeSanitize from 'rehype-sanitize'
@@ -180,14 +180,14 @@ export default function ProjectDetailPage() {
           <p className="font-mono text-sm text-gray-400 mb-8">
             El proyecto que buscás no existe o fue removido.
           </p>
-          <Link
-            to="/#projects"
+          <a
+            href="/#projects"
             className="cursor-pointer inline-flex items-center gap-2 font-mono text-sm px-5 py-3 rounded-sm transition-all border border-neon-purple/40 text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 min-h-[44px]"
             aria-label="Volver a la sección de proyectos"
           >
             <ArrowLeft size={14} />
             Volver a proyectos
-          </Link>
+          </a>
         </motion.div>
       </div>
     )
@@ -209,8 +209,8 @@ export default function ProjectDetailPage() {
           transition={{ duration: 0.3 }}
           className="mb-8"
         >
-          <Link
-            to="/#projects"
+          <a
+            href="/#projects"
             className="cursor-pointer inline-flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors group min-h-[44px] py-2"
             aria-label="Volver a la sección de proyectos"
           >
@@ -220,7 +220,7 @@ export default function ProjectDetailPage() {
               aria-hidden="true"
             />
             Volver a proyectos
-          </Link>
+          </a>
         </motion.div>
 
         {/* Header section */}
@@ -333,8 +333,8 @@ export default function ProjectDetailPage() {
           transition={{ duration: 0.4, delay: 0.3 }}
           className="mt-12 pt-8 border-t border-dark-border"
         >
-          <Link
-            to="/#projects"
+          <a
+            href="/#projects"
             className="cursor-pointer inline-flex items-center gap-2 font-mono text-xs text-gray-400 hover:text-neon-cyan transition-colors group min-h-[44px] py-2"
             aria-label="Volver a la sección de proyectos"
           >
@@ -344,7 +344,7 @@ export default function ProjectDetailPage() {
               aria-hidden="true"
             />
             Volver a proyectos
-          </Link>
+          </a>
         </motion.div>
       </div>
     </div>
