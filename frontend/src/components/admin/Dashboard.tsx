@@ -62,6 +62,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'metrics' | 'projects' | 'messages' | 'settings'>(() => {
     return (sessionStorage.getItem('admin_active_tab') as 'metrics' | 'projects' | 'messages' | 'settings') || 'metrics'
   })
+  const [range, setRange] = useState<'7d' | '30d' | 'all'>('all')
 
   function handleTabChange(tab: 'metrics' | 'projects' | 'messages' | 'settings') {
     setActiveTab(tab)
@@ -72,14 +73,14 @@ export default function Dashboard() {
     setLoading(true)
     setError('')
     try {
-      const statsData = await getStats()
+      const statsData = await getStats(range)
       setStats(statsData)
     } catch {
       setError('Error al cargar los datos. Verificá tu conexión.')
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [range])
 
   useEffect(() => {
     fetchData()
@@ -94,6 +95,8 @@ export default function Dashboard() {
   const sectionNames = stats ? Object.keys(stats.sectionViews) : []
   const maxSectionViews = stats ? Math.max(...Object.values(stats.sectionViews), 1) : 1
   const maxDaily = stats ? Math.max(...stats.dailyVisits.map((d) => d.count), 1) : 1
+  const maxReferrer = stats ? Math.max(...(stats.referrerStats ?? []).map(r => r.count), 1) : 1
+  const maxDevice = stats ? Math.max(...(stats.deviceStats ?? []).map(d => d.count), 1) : 1
 
   return (
     <div className="min-h-screen bg-dark-base text-gray-300">
@@ -170,6 +173,23 @@ export default function Dashboard() {
               </div>
             ) : (
               <>
+                {/* Range filter */}
+                <div className="flex gap-2">
+                  {(['7d', '30d', 'all'] as const).map((r) => (
+                    <button
+                      key={r}
+                      onClick={() => setRange(r)}
+                      className={`cursor-pointer font-mono text-xs px-3 py-1.5 rounded-sm border transition-colors min-h-[36px] ${
+                        range === r
+                          ? 'border-neon-purple text-neon-purple bg-neon-purple/10'
+                          : 'border-dark-border text-gray-500 hover:text-gray-300 hover:border-gray-500'
+                      }`}
+                    >
+                      {r === '7d' ? '7 días' : r === '30d' ? '30 días' : 'Todo'}
+                    </button>
+                  ))}
+                </div>
+
                 {/* Stats cards */}
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                   <StatCard label="Total Visitas" value={stats?.totalVisits ?? 0} icon={<Eye size={18} />} color="var(--stat-total-color)" glow="var(--stat-total-glow)" />
@@ -205,7 +225,7 @@ export default function Dashboard() {
 
                   {/* Last 7 days timeline */}
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-lg p-4 sm:p-6 bg-dark-card border border-dark-border">
-                    <h2 className="font-orbitron font-bold text-xs sm:text-sm text-white mb-4 sm:mb-6">Últimos 7 Días</h2>
+                    <h2 className="font-orbitron font-bold text-xs sm:text-sm text-white mb-4 sm:mb-6">{range === '7d' ? 'Últimos 7 Días' : range === '30d' ? 'Últimos 30 Días' : 'Visitas (últ. 30 días)'}</h2>
                     <div className="flex items-end justify-between gap-2 h-32">
                       {(stats?.dailyVisits ?? []).map((day) => {
                         const heightPct = (day.count / maxDaily) * 100
@@ -219,6 +239,51 @@ export default function Dashboard() {
                         )
                       })}
                       {(!stats?.dailyVisits || stats.dailyVisits.length === 0) && <p className="font-mono text-xs text-gray-600">Sin datos aún</p>}
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Referrer + Device row */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                  {/* Referrer sources */}
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="rounded-lg p-4 sm:p-6 bg-dark-card border border-dark-border">
+                    <h2 className="font-orbitron font-bold text-xs sm:text-sm text-white mb-4 sm:mb-6">Fuente de Tráfico</h2>
+                    <div className="space-y-4">
+                      {(stats?.referrerStats ?? []).map((r) => (
+                        <div key={r.source}>
+                          <div className="flex justify-between mb-1">
+                            <span className="font-mono text-xs text-gray-400">{r.source}</span>
+                            <span className="font-mono text-xs text-gray-500">{r.count}</span>
+                          </div>
+                          <div className="w-full rounded-full overflow-hidden bg-dark-border" style={{ height: '6px' }}>
+                            <motion.div initial={{ width: 0 }} animate={{ width: `${(r.count / maxReferrer) * 100}%` }} transition={{ duration: 0.8, delay: 0.5 }} className="gradient-bar-section" style={{ height: '100%', borderRadius: '9999px' }} />
+                          </div>
+                        </div>
+                      ))}
+                      {(!stats?.referrerStats || stats.referrerStats.length === 0) && <p className="font-mono text-xs text-gray-600">Sin datos aún</p>}
+                    </div>
+                  </motion.div>
+
+                  {/* Device types */}
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="rounded-lg p-4 sm:p-6 bg-dark-card border border-dark-border">
+                    <h2 className="font-orbitron font-bold text-xs sm:text-sm text-white mb-4 sm:mb-6">Dispositivos</h2>
+                    <div className="space-y-4">
+                      {(stats?.deviceStats ?? []).map((d) => {
+                        const total = (stats?.deviceStats ?? []).reduce((sum, x) => sum + x.count, 0)
+                        const pct = total > 0 ? Math.round((d.count / total) * 100) : 0
+                        return (
+                          <div key={d.type}>
+                            <div className="flex justify-between mb-1">
+                              <span className="font-mono text-xs text-gray-400">{d.type}</span>
+                              <span className="font-mono text-xs text-gray-500">{d.count} <span className="text-gray-600">({pct}%)</span></span>
+                            </div>
+                            <div className="w-full rounded-full overflow-hidden bg-dark-border" style={{ height: '6px' }}>
+                              <motion.div initial={{ width: 0 }} animate={{ width: `${(d.count / maxDevice) * 100}%` }} transition={{ duration: 0.8, delay: 0.6 }} className="gradient-bar-section" style={{ height: '100%', borderRadius: '9999px' }} />
+                            </div>
+                          </div>
+                        )
+                      })}
+                      {(!stats?.deviceStats || stats.deviceStats.length === 0) && <p className="font-mono text-xs text-gray-600">Sin datos aún</p>}
                     </div>
                   </motion.div>
                 </div>

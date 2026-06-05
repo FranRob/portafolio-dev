@@ -64,10 +64,13 @@ model RateLimitEntry {
 model PageView {
   id        String   @id @default(uuid())
   section   String
+  sessionId String?
   userAgent String?
   ip        String?
   referrer  String?
   createdAt DateTime @default(now())
+
+  @@index([sessionId])
 }
 
 model ContactMessage {
