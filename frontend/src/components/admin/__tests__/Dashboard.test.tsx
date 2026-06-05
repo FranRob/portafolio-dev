@@ -33,6 +33,16 @@ const MOCK_STATS: AnalyticsStats = {
     { date: '2026-06-06', count: 90 },
     { date: '2026-06-07', count: 210 },
   ],
+  referrerStats: [
+    { source: 'Google', count: 400 },
+    { source: 'Directo', count: 300 },
+    { source: 'LinkedIn', count: 150 },
+  ],
+  deviceStats: [
+    { type: 'Desktop', count: 600 },
+    { type: 'Mobile', count: 350 },
+    { type: 'Tablet', count: 50 },
+  ],
 }
 
 const EMPTY_STATS: AnalyticsStats = {
@@ -42,6 +52,8 @@ const EMPTY_STATS: AnalyticsStats = {
   unreadMessages: 0,
   sectionViews: {},
   dailyVisits: [],
+  referrerStats: [],
+  deviceStats: [],
 }
 
 describe('Dashboard Component', () => {
@@ -129,7 +141,7 @@ describe('Dashboard Component', () => {
   it('renders daily visits timeline', async () => {
     render(<Dashboard />)
 
-    expect(await screen.findByText('Últimos 7 Días')).toBeInTheDocument()
+    expect(await screen.findByText('Visitas (últ. 30 días)')).toBeInTheDocument()
     // "100" appears in both section views (contact=100) and daily visits
     expect(screen.getAllByText('100').length).toBeGreaterThanOrEqual(2)
     // "210" appears only in daily visits

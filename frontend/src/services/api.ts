@@ -183,8 +183,18 @@ export async function logout(): Promise<void> {
 }
 
 // Analytics
+function getOrCreateSessionId(): string {
+  const key = 'portfolio_session_id'
+  let id = sessionStorage.getItem(key)
+  if (!id) {
+    id = crypto.randomUUID()
+    sessionStorage.setItem(key, id)
+  }
+  return id
+}
+
 export async function trackSection(section: string): Promise<void> {
-  await api.post('/analytics/track', { section })
+  await api.post('/analytics/track', { section, sessionId: getOrCreateSessionId() })
 }
 
 export interface AnalyticsStats {
@@ -194,10 +204,12 @@ export interface AnalyticsStats {
   unreadMessages: number
   sectionViews: Record<string, number>
   dailyVisits: { date: string; count: number }[]
+  referrerStats: { source: string; count: number }[]
+  deviceStats: { type: string; count: number }[]
 }
 
-export async function getStats(): Promise<AnalyticsStats> {
-  const res = await api.get<AnalyticsStats>('/analytics/stats')
+export async function getStats(range: '7d' | '30d' | 'all' = 'all'): Promise<AnalyticsStats> {
+  const res = await api.get<AnalyticsStats>('/analytics/stats', { params: { range } })
   return res.data
 }
 

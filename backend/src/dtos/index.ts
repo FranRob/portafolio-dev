@@ -96,10 +96,13 @@ export interface AnalyticsStatsResponse {
   unreadMessages: number;
   sectionViews: Record<string, number>;
   dailyVisits: { date: string; count: number }[];
+  referrerStats: { source: string; count: number }[];
+  deviceStats: { type: string; count: number }[];
 }
 
 export interface TrackViewRequest {
   section: string;
+  sessionId?: string;
 }
 
 // -------------------

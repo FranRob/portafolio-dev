@@ -9,6 +9,7 @@ const router = Router();
 
 const trackSchema = z.object({
   section: z.string().min(1, 'La sección es requerida'),
+  sessionId: z.string().optional(),
 });
 
 router.post('/track', asyncHandler(async (req: Request, res: Response) => {
@@ -27,13 +28,17 @@ router.post('/track', asyncHandler(async (req: Request, res: Response) => {
     userAgent,
     ip,
     typeof referrer === 'string' ? referrer : undefined,
+    parsed.data.sessionId,
   );
 
   res.json({ ok: true });
 }));
 
-router.get('/stats', requireAuth, asyncHandler(async (_req: Request, res: Response) => {
-  const stats = await getStats();
+router.get('/stats', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+  const range = (['7d', '30d', 'all'] as const).includes(req.query.range as '7d' | '30d' | 'all')
+    ? (req.query.range as '7d' | '30d' | 'all')
+    : 'all';
+  const stats = await getStats(range);
   res.json(stats);
 }));
 
