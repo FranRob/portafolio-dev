@@ -47,7 +47,7 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
     >
     <Link
       to={`/proyectos/${project.slug}`}
-      className="cursor-pointer group block rounded-lg overflow-hidden flex flex-col bg-dark-card border border-dark-border hover:border-neon-purple/50 transition-colors duration-200"
+      className="cursor-pointer group h-full block rounded-lg overflow-hidden flex flex-col bg-dark-card border border-dark-border hover:border-neon-purple/50 transition-colors duration-200"
       aria-label={`Ver detalles de ${project.title}`}
     >
       {/* Image area */}
