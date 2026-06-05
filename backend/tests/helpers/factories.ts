@@ -11,6 +11,8 @@ export interface CreateProjectInput {
   repoUrl?: string;
   demoUrl?: string;
   imageUrl?: string;
+  slug?: string;
+  content?: string | null;
 }
 
 export interface CreateMessageInput {
@@ -37,6 +39,7 @@ export async function createTestProject(
     category: 'personal',
     featured: false,
     order: 0,
+    slug: `test-project-${Date.now()}`,
   };
 
   return prisma.project.create({

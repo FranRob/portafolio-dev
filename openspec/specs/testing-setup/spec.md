@@ -154,6 +154,103 @@ The test suite MUST cover the full authentication flow including login, refresh 
 - WHEN 4 failures are followed by a successful login
 - THEN the rate limit counter resets
 
+### Requirement: GET /api/projects/:slug Backend Tests
+
+The test suite MUST cover the new `GET /api/projects/:slug` public endpoint with happy-path, 404, and field-exclusion scenarios.
+
+#### Scenario: Returns project by slug
+
+- GIVEN a project with slug `"test-app"` exists in the test database
+- WHEN `GET /api/projects/test-app` is called (no auth)
+- THEN the response is 200 with `content` included in the JSON body
+
+#### Scenario: Returns 404 for unknown slug
+
+- GIVEN no project with slug `"nope"` exists
+- WHEN `GET /api/projects/nope` is called
+- THEN the response is 404
+
+#### Scenario: List endpoint excludes content
+
+- GIVEN projects with non-null content exist
+- WHEN `GET /api/projects` is called
+- THEN no item in the response array contains a `content` key
+
+---
+
+### Requirement: Slug and Content Field Tests on CRUD
+
+The existing backend CRUD tests for projects MUST be extended to cover `slug` and `content` fields.
+
+#### Scenario: POST creates project with slug
+
+- GIVEN valid project data including title `"Test Project"`
+- WHEN `POST /api/projects` is called
+- THEN the response includes a `slug` equal to `"test-project"`
+
+#### Scenario: PATCH updates content
+
+- GIVEN a project exists
+- WHEN authenticated `PATCH /api/projects/:id` is called with `{ content: "# Hello" }`
+- THEN the response is 200 and `content` equals `"# Hello"`
+
+#### Scenario: Duplicate slug rejected on create and patch
+
+- GIVEN project A has slug `"alpha"`
+- WHEN a create or patch would produce the same slug on a different project
+- THEN the response is 409
+
+---
+
+### Requirement: ProjectDetailPage Frontend Tests
+
+The test suite MUST cover `ProjectDetailPage` rendering with mocked API responses.
+
+#### Scenario: Renders project metadata and markdown
+
+- GIVEN `GET /api/projects/my-app` returns a project with `content: "# Overview"`
+- WHEN `ProjectDetailPage` renders for slug `"my-app"`
+- THEN the title is in the document
+- AND the markdown heading `"Overview"` is rendered as an HTML element (not raw `# Overview` text)
+- AND status badge and stack pills are present
+
+#### Scenario: Renders 404 state
+
+- GIVEN `GET /api/projects/ghost` returns 404
+- WHEN `ProjectDetailPage` renders for slug `"ghost"`
+- THEN a not-found message is displayed
+
+---
+
+### Requirement: ProjectCard Navigation Test
+
+The test suite MUST verify that `ProjectCard` renders a link to the correct slug URL.
+
+#### Scenario: Card link points to detail page
+
+- GIVEN a project with slug `"my-app"` is passed to `ProjectCard`
+- WHEN the component renders
+- THEN it contains a link (`<a>` or react-router `<Link>`) with href `/proyectos/my-app`
+
+---
+
+### Requirement: Admin Markdown Upload Component Test
+
+The test suite MUST cover the file input and FileReader flow in `AdminProjects`.
+
+#### Scenario: File input rendered
+
+- GIVEN the `AdminProjects` edit form is rendered
+- THEN an `<input type="file">` with `accept=".md"` is in the document
+
+#### Scenario: File selection updates state
+
+- GIVEN the file input is present
+- WHEN a `.md` file is selected (simulated via FileReader mock)
+- THEN the filename confirmation text appears in the document
+
+---
+
 ### Requirement: Backend Admin CRUD
 
 The test suite MUST cover authenticated CRUD operations on projects, contact messages, and analytics stats.
@@ -161,14 +258,16 @@ The test suite MUST cover authenticated CRUD operations on projects, contact mes
 #### Scenario: Projects CRUD
 
 - GIVEN an authenticated admin with CSRF headers
-- WHEN POST `/api/projects` is called with valid data
-- THEN it returns 201 and creates the project
+- WHEN POST `/api/projects` is called with valid data (including title)
+- THEN it returns 201, creates the project, and the response includes a non-empty `slug`
 - WHEN called with missing title or empty stack
 - THEN it returns 400
 - WHEN called without authentication
 - THEN it returns 403 (CSRF)
-- WHEN PATCH `/api/projects/:id` is called
-- THEN it returns 200 with updated project
+- WHEN PATCH `/api/projects/:id` is called with `{ content: "# Hello" }`
+- THEN it returns 200 with updated `content`
+- WHEN PATCH `/api/projects/:id` is called with a slug already used by another project
+- THEN it returns 409
 - WHEN the project does not exist
 - THEN it returns 404
 - WHEN DELETE `/api/projects/:id` is called

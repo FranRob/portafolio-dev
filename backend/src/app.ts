@@ -54,7 +54,9 @@ app.use(requestLogger);
 
 const publicLimiter = rateLimit({
   windowMs: 60 * 1000,
-  limit: 30,
+  // Disable rate limiting in test environment to prevent test pollution
+  limit: process.env['NODE_ENV'] === 'test' ? 0 : 30,
+  skip: () => process.env['NODE_ENV'] === 'test',
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Demasiadas requests, intentá de nuevo más tarde.' },

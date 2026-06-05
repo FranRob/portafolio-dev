@@ -1,7 +1,6 @@
 import { memo } from 'react'
 import { motion } from 'motion/react'
-import { ExternalLink } from 'lucide-react'
-import { GithubIcon } from '../ui/BrandIcons'
+import { Link } from 'react-router'
 import type { Project } from '../../services/api'
 
 interface ProjectCardProps {
@@ -45,7 +44,11 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="rounded-lg overflow-hidden flex flex-col bg-dark-card border border-dark-border"
+    >
+    <Link
+      to={`/proyectos/${project.slug}`}
+      className="cursor-pointer group block rounded-lg overflow-hidden flex flex-col bg-dark-card border border-dark-border hover:border-neon-purple/50 transition-colors duration-200"
+      aria-label={`Ver detalles de ${project.title}`}
     >
       {/* Image area */}
       <div className="relative h-32 sm:h-44 shrink-0">
@@ -101,36 +104,14 @@ export default memo(function ProjectCard({ project, index }: ProjectCardProps) {
           ))}
         </div>
 
-        {/* Links row — only for completed projects */}
-        {project.status === 'completed' && (
-          <div className="mt-auto flex gap-3">
-            {project.demoUrl && (
-              <a
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cursor-pointer flex items-center gap-1 font-mono text-xs transition-colors text-neon-cyan"
-                aria-label={`Ver proyecto ${project.title}`}
-              >
-                <ExternalLink size={12} />
-                Ver demo
-              </a>
-            )}
-            {project.repoUrl && (
-              <a
-                href={project.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cursor-pointer flex items-center gap-1 font-mono text-xs transition-colors text-gray-400 hover:text-white"
-                aria-label={`Código fuente de ${project.title}`}
-              >
-                <GithubIcon size={12} />
-                Ver código
-              </a>
-            )}
-          </div>
-        )}
+        {/* "Ver detalles" hint */}
+        <div className="mt-auto pt-2">
+          <span className="font-mono text-xs text-neon-purple/60 group-hover:text-neon-purple transition-colors">
+            Ver detalles →
+          </span>
+        </div>
       </div>
+    </Link>
     </motion.div>
   )
 })

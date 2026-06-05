@@ -18,8 +18,13 @@ export interface ProjectResponse {
   repoUrl: string | null;
   demoUrl: string | null;
   imageUrl: string | null;
+  slug: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ProjectDetailResponse extends ProjectResponse {
+  content: string | null;
 }
 
 export interface CreateProjectRequest {
@@ -33,10 +38,11 @@ export interface CreateProjectRequest {
   repoUrl?: string | null;
   demoUrl?: string | null;
   imageUrl?: string | null;
+  content?: string | null;
 }
 
 export interface UpdateProjectRequest extends Partial<CreateProjectRequest> {
-  // All fields optional for updates
+  slug?: string;
 }
 
 // -------------------

@@ -253,11 +253,16 @@ export interface Project {
   category: 'freelance' | 'personal' | 'collaborative'
   featured: boolean
   order: number
+  slug: string
   repoUrl: string | null
   demoUrl: string | null
   imageUrl: string | null
   createdAt: string
   updatedAt: string
+}
+
+export interface ProjectDetail extends Project {
+  content: string | null
 }
 
 export interface ProjectPayload {
@@ -268,13 +273,20 @@ export interface ProjectPayload {
   category?: 'freelance' | 'personal' | 'collaborative'
   featured?: boolean
   order?: number
+  slug?: string
   repoUrl?: string | null
   demoUrl?: string | null
   imageUrl?: string | null
+  content?: string | null
 }
 
 export async function getProjects(): Promise<Project[]> {
   const res = await api.get<Project[]>('/projects')
+  return res.data
+}
+
+export async function getProjectBySlug(slug: string): Promise<ProjectDetail> {
+  const res = await api.get<ProjectDetail>(`/projects/${slug}`)
   return res.data
 }
 
