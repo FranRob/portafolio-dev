@@ -83,3 +83,33 @@ export async function deleteMessage(id: string): Promise<boolean> {
     return false;
   }
 }
+
+export async function getCategories(): Promise<string[]> {
+  const categories = await prisma.contactCategory.findMany({
+    orderBy: { createdAt: 'asc' },
+  });
+  return categories.map((c) => c.name);
+}
+
+export async function createCategory(name: string): Promise<string> {
+  const cat = await prisma.contactCategory.upsert({
+    where: { name },
+    update: {},
+    create: { name },
+  });
+  return cat.name;
+}
+
+export async function deleteCategory(name: string): Promise<boolean> {
+  try {
+    // Move orphaned messages to 'leido'
+    await prisma.contactMessage.updateMany({
+      where: { category: name },
+      data: { category: 'leido', read: true },
+    });
+    await prisma.contactCategory.delete({ where: { name } });
+    return true;
+  } catch {
+    return false;
+  }
+}

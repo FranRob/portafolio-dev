@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import { z } from 'zod';
 import { requireAuth, csrfProtection } from '../../middleware/auth.js';
-import { createMessage, getAllMessages, markAsRead, markAsUnread, updateCategory, deleteMessage } from './contact.service.js';
+import { createMessage, getAllMessages, markAsRead, markAsUnread, updateCategory, deleteMessage, getCategories, createCategory, deleteCategory } from './contact.service.js';
 import { asyncHandler } from '../../lib/errorMiddleware.js';
 import { ValidationError, NotFoundError } from '../../lib/errors.js';
 
@@ -17,6 +17,10 @@ const categorySchema = z.object({
   category: z.string().min(1, 'La categoría es requerida').max(50),
 });
 
+const categoryNameSchema = z.object({
+  name: z.string().min(1).max(50),
+});
+
 router.post('/', asyncHandler(async (req: Request, res: Response) => {
   const parsed = createMessageSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -30,6 +34,11 @@ router.post('/', asyncHandler(async (req: Request, res: Response) => {
 router.get('/messages', requireAuth, asyncHandler(async (_req: Request, res: Response) => {
   const messages = await getAllMessages();
   res.json(messages);
+}));
+
+router.get('/categories', requireAuth, asyncHandler(async (_req: Request, res: Response) => {
+  const categories = await getCategories();
+  res.json(categories);
 }));
 
 // CSRF protection for all admin write operations
@@ -65,6 +74,22 @@ router.patch('/:id/category', asyncHandler(async (req: Request, res: Response) =
     throw new NotFoundError('Mensaje', id);
   }
   res.json(updated);
+}));
+
+router.post('/categories', asyncHandler(async (req: Request, res: Response) => {
+  const parsed = categoryNameSchema.safeParse(req.body);
+  if (!parsed.success) {
+    const errors = parsed.error.issues.map(i => i.message);
+    throw new ValidationError(errors);
+  }
+  const name = await createCategory(parsed.data.name);
+  res.status(201).json({ name });
+}));
+
+router.delete('/categories/:name', asyncHandler(async (req: Request, res: Response) => {
+  const name = req.params['name'] as string;
+  await deleteCategory(name);
+  res.json({ ok: true });
 }));
 
 router.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
