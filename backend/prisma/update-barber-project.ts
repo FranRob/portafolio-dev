@@ -8,11 +8,7 @@ import { createPrismaClient } from '../src/lib/prisma.js';
 
 const { prisma, pool } = createPrismaClient();
 
-const content = `## GlowApp — Plataforma SaaS para Barberías
-
-Plataforma SaaS completa construida de forma independiente. Permite a múltiples barberías operar con datos completamente aislados. 15+ módulos de negocio, sistema de pagos, notificaciones automáticas y booking público sin registro.
-
-> **131 tests de integración** sobre PostgreSQL y Redis reales vía Testcontainers. Strict TDD aplicado en el 100% del backend.
+const content = `> **131 tests de integración** sobre PostgreSQL y Redis reales vía Testcontainers. Strict TDD aplicado en el 100% del backend.
 
 ### Implementaciones destacadas
 
