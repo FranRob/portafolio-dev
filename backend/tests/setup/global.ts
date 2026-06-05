@@ -78,6 +78,7 @@ async function seedBaseline(): Promise<void> {
         status: "completed",
         category: "personal",
         order: 0,
+        slug: "seed-project-1",
       },
       update: {},
     });
@@ -92,6 +93,7 @@ async function seedBaseline(): Promise<void> {
         status: "in_progress",
         category: "freelance",
         order: 1,
+        slug: "seed-project-2",
       },
       update: {},
     });

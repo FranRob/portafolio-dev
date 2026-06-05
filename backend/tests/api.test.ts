@@ -23,6 +23,43 @@ describe('Projects API', () => {
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
+
+  it('GET /api/projects list items must not contain content key', async () => {
+    const res = await request.get('/api/projects');
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    for (const item of res.body) {
+      expect(item).not.toHaveProperty('content');
+    }
+  });
+
+  it('GET /api/projects list items must include slug', async () => {
+    const res = await request.get('/api/projects');
+    expect(res.status).toBe(200);
+    for (const item of res.body) {
+      expect(item).toHaveProperty('slug');
+      expect(typeof item.slug).toBe('string');
+    }
+  });
+
+  it('GET /api/projects/:slug returns project with content', async () => {
+    const res = await request.get('/api/projects/seed-project-1');
+    expect(res.status).toBe(200);
+    expect(res.body.slug).toBe('seed-project-1');
+    expect(res.body).toHaveProperty('content');
+  });
+
+  it('GET /api/projects/:slug returns 404 for unknown slug', async () => {
+    const res = await request.get('/api/projects/does-not-exist-ever');
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe('Project not found');
+  });
+
+  it('GET /api/projects/:slug returns 404 for invalid slug format', async () => {
+    const res = await request.get('/api/projects/INVALID_SLUG');
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe('Project not found');
+  });
 });
 
 describe('Analytics API', () => {
@@ -320,6 +357,7 @@ describe('Admin — Projects CRUD', () => {
     expect(res.status).toBe(201);
     expect(res.body.id).toBeDefined();
     expect(res.body.title).toBe('New Project');
+    expect(res.body.slug).toBe('new-project');
   });
 
   it('POST /api/projects should reject empty title', async () => {
@@ -402,6 +440,45 @@ describe('Admin — Projects CRUD', () => {
     // CSRF runs first on POST/PATCH/DELETE admin routes
     expect(res.status).toBe(403);
     expect(res.body.error).toContain('CSRF');
+  });
+
+  it('PATCH /api/projects/:id should update content field', async () => {
+    const project = await createTestProject(prisma);
+    const { headers } = await getCsrfConfig(app);
+    const res = await request
+      .patch(`/api/projects/${project.id}`)
+      .set(headers)
+      .send({ content: '# My Content\n\nSome markdown here.' });
+    expect(res.status).toBe(200);
+    expect(res.body.id).toBe(project.id);
+    // content is not in the list/update response (ProjectResponse excludes it)
+    // but the update should succeed
+  });
+
+  it('PATCH /api/projects/:id should update slug manually', async () => {
+    const project = await createTestProject(prisma, { slug: `update-slug-test-${Date.now()}` });
+    const { headers } = await getCsrfConfig(app);
+    const newSlug = `updated-slug-${Date.now()}`;
+    const res = await request
+      .patch(`/api/projects/${project.id}`)
+      .set(headers)
+      .send({ slug: newSlug });
+    expect(res.status).toBe(200);
+    expect(res.body.slug).toBe(newSlug);
+  });
+
+  it('PATCH /api/projects/:id should return 409 on duplicate slug', async () => {
+    const slugA = `slug-conflict-a-${Date.now()}`;
+    const slugB = `slug-conflict-b-${Date.now()}`;
+    const projectA = await createTestProject(prisma, { slug: slugA });
+    await createTestProject(prisma, { slug: slugB });
+    const { headers } = await getCsrfConfig(app);
+    // Try to set projectA's slug to slugB (which already exists)
+    const res = await request
+      .patch(`/api/projects/${projectA.id}`)
+      .set(headers)
+      .send({ slug: slugB });
+    expect(res.status).toBe(409);
   });
 });
 

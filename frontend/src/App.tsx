@@ -5,6 +5,7 @@ const Dashboard = lazy(() => import('./components/admin/Dashboard'))
 const Login = lazy(() => import('./components/admin/Login'))
 const PortfolioPage = lazy(() => import('./PortfolioPage'))
 const CurriculumPage = lazy(() => import('./components/CurriculumPage'))
+const ProjectDetailPage = lazy(() => import('./components/pages/ProjectDetailPage'))
 
 function LoadingFallback() {
   return (
@@ -32,6 +33,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Suspense fallback={<LoadingFallback />}><PortfolioPage /></Suspense>} />
       <Route path="/curriculum" element={<Suspense fallback={<LoadingFallback />}><CurriculumPage /></Suspense>} />
+      <Route path="/proyectos/:slug" element={<Suspense fallback={<LoadingFallback />}><ProjectDetailPage /></Suspense>} />
       <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
       <Route path="/admin/login" element={<Suspense fallback={<LoadingFallback />}><Login /></Suspense>} />
       <Route

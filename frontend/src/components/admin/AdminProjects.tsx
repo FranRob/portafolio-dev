@@ -9,6 +9,7 @@ type EditMode = null | 'new' | Project
 
 interface FormState extends ProjectPayload {
   stackInput: string
+  mdFileName: string
 }
 
 const emptyForm: FormState = {
@@ -20,9 +21,12 @@ const emptyForm: FormState = {
   category: 'personal',
   featured: false,
   order: 0,
+  slug: '',
   repoUrl: null,
   demoUrl: null,
   imageUrl: null,
+  content: null,
+  mdFileName: '',
 }
 
 const statusLabels: Record<Project['status'], string> = {
@@ -97,9 +101,12 @@ export default function AdminProjects() {
       category: project.category,
       featured: project.featured,
       order: project.order,
+      slug: project.slug,
       repoUrl: project.repoUrl ?? '',
       demoUrl: project.demoUrl ?? '',
       imageUrl: project.imageUrl ?? '',
+      content: null,
+      mdFileName: '',
     })
     setEditMode(project)
   }
@@ -109,6 +116,21 @@ export default function AdminProjects() {
     value: string | boolean | number | string[] | null,
   ) {
     setForm((prev) => ({ ...prev, [field]: value }))
+  }
+
+  function handleMdFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const text = event.target?.result as string
+      setForm((prev) => ({ ...prev, content: text, mdFileName: file.name }))
+    }
+    reader.onerror = () => {
+      setError('No se pudo leer el archivo. Intentá de nuevo.')
+    }
+    reader.readAsText(file)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -152,9 +174,12 @@ export default function AdminProjects() {
       category: form.category,
       featured: form.featured,
       order: form.order,
+      slug: form.slug || undefined,
       repoUrl: form.repoUrl || null,
       demoUrl: form.demoUrl || null,
       imageUrl: form.imageUrl || null,
+      // Include content only if a new file was uploaded; otherwise preserve existing
+      ...(form.content !== null ? { content: form.content } : {}),
     }
 
     try {
@@ -354,12 +379,56 @@ export default function AdminProjects() {
             />
           </div>
 
+          {/* Slug */}
+          <div>
+            <label className={labelClass}>
+              Slug (URL){isNew ? ' — auto-generado al guardar' : ''}
+            </label>
+            <input
+              type="text"
+              value={form.slug ?? ''}
+              onChange={(e) => handleFieldChange('slug', e.target.value)}
+              placeholder="mi-proyecto"
+              pattern="^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              className={inputClass}
+            />
+            <p className="font-mono text-xs text-gray-600 mt-1">
+              Solo minúsculas, números y guiones. Vacío = auto desde el título.
+            </p>
+          </div>
+
+          {/* Markdown content upload */}
+          <div>
+            <label className={labelClass}>Contenido detallado (.md)</label>
+            <label
+              className="cursor-pointer flex items-center gap-3 w-full font-mono text-sm bg-dark-card border border-dark-border rounded-md px-3 py-2 text-gray-400 hover:border-neon-purple/50 transition-colors min-h-[44px]"
+              aria-label="Subir archivo Markdown con contenido detallado del proyecto"
+            >
+              <span className="text-neon-cyan text-xs shrink-0">Elegir archivo</span>
+              <span className="text-gray-500 text-xs truncate">
+                {form.mdFileName || 'Ningún archivo seleccionado'}
+              </span>
+              <input
+                type="file"
+                accept=".md"
+                onChange={handleMdFile}
+                className="sr-only"
+                aria-label="Archivo Markdown para contenido del proyecto"
+              />
+            </label>
+            {form.mdFileName && (
+              <p className="font-mono text-xs text-neon-cyan mt-1">
+                Archivo cargado: {form.mdFileName}
+              </p>
+            )}
+          </div>
+
           {/* Submit */}
           <div className="flex gap-3 pt-2">
             <button
               type="submit"
               disabled={saving}
-              className="cursor-pointer font-mono text-xs px-5 py-2 rounded-sm transition-all min-h-[44px] border border-neon-purple/40 text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 disabled:opacity-50"
+              className="cursor-pointer font-mono text-xs px-5 py-2 rounded-sm transition-all min-h-[44px] border border-neon-purple/40 text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? 'Guardando...' : 'Guardar'}
             </button>

@@ -2,6 +2,9 @@ import { z } from 'zod';
 
 const optionalUrl = z.union([z.string().url(), z.literal('')]).nullable().optional();
 
+// Slug param validation: lowercase alphanumeric with hyphens, no leading/trailing/double hyphens
+export const slugParamSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format');
+
 export const createProjectSchema = z.object({
   title: z.string().min(1, 'El título es requerido').max(200),
   description: z.string().min(1, 'La descripción es requerida').max(2000),
@@ -13,6 +16,7 @@ export const createProjectSchema = z.object({
   repoUrl: optionalUrl,
   demoUrl: optionalUrl,
   imageUrl: optionalUrl,
+  content: z.string().nullable().optional(),
 });
 
 export const updateProjectSchema = z.object({
@@ -26,6 +30,8 @@ export const updateProjectSchema = z.object({
   repoUrl: optionalUrl,
   demoUrl: optionalUrl,
   imageUrl: optionalUrl,
+  slug: slugParamSchema.optional(),
+  content: z.string().nullable().optional(),
 });
 
 // Solo UUIDs (los IDs se generan con @default(uuid()) en Prisma)

@@ -1,16 +1,32 @@
 import { Router, type Request, type Response } from 'express';
 import { requireAuth, csrfProtection } from '../../middleware/auth.js';
-import { listProjects, createProject, updateProject, deleteProject } from './projects.service.js';
-import { createProjectSchema, updateProjectSchema, idSchema } from './projects.validator.js';
+import { listProjects, findBySlug, createProject, updateProject, deleteProject } from './projects.service.js';
+import { createProjectSchema, updateProjectSchema, idSchema, slugParamSchema } from './projects.validator.js';
 import { asyncHandler } from '../../lib/errorMiddleware.js';
 import { NotFoundError, ValidationError } from '../../lib/errors.js';
 
 const router = Router();
 
-// GET /api/projects — public
+// GET /api/projects — public list (content excluded)
 router.get('/', asyncHandler(async (_req: Request, res: Response) => {
   const projects = await listProjects();
   res.json(projects);
+}));
+
+// GET /api/projects/:slug — public detail (content included)
+// CRITICAL: must be registered BEFORE /:id to avoid slug being captured as UUID param
+router.get('/:slug', asyncHandler(async (req: Request, res: Response) => {
+  const slugParsed = slugParamSchema.safeParse(req.params['slug']);
+  if (!slugParsed.success) {
+    res.status(404).json({ message: 'Project not found' });
+    return;
+  }
+  const project = await findBySlug(slugParsed.data);
+  if (!project) {
+    res.status(404).json({ message: 'Project not found' });
+    return;
+  }
+  res.json(project);
 }));
 
 // CSRF + Auth for admin write operations
