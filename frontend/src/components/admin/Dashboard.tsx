@@ -223,23 +223,32 @@ export default function Dashboard() {
                     </div>
                   </motion.div>
 
-                  {/* Last 7 days timeline */}
+                  {/* Daily visits timeline */}
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-lg p-4 sm:p-6 bg-dark-card border border-dark-border">
                     <h2 className="font-orbitron font-bold text-xs sm:text-sm text-white mb-4 sm:mb-6">{range === '7d' ? 'Últimos 7 Días' : range === '30d' ? 'Últimos 30 Días' : 'Visitas (últ. 30 días)'}</h2>
-                    <div className="flex items-end justify-between gap-2 h-32">
-                      {(stats?.dailyVisits ?? []).map((day) => {
-                        const heightPct = (day.count / maxDaily) * 100
-                        const dateLabel = new Date(day.date).toLocaleDateString('es-AR', { weekday: 'short' })
-                        return (
-                          <div key={day.date} className="flex flex-col items-center gap-1 flex-1">
-                            <span className="font-mono text-xs text-gray-500">{day.count}</span>
-                            <motion.div initial={{ height: 0 }} animate={{ height: `${Math.max(heightPct, 4)}%` }} transition={{ duration: 0.6, delay: 0.4 }} className="w-full rounded-t gradient-bar-daily" style={{ minHeight: '4px' }} />
-                            <span className="font-mono text-xs text-gray-600 capitalize">{dateLabel}</span>
-                          </div>
-                        )
-                      })}
-                      {(!stats?.dailyVisits || stats.dailyVisits.length === 0) && <p className="font-mono text-xs text-gray-600">Sin datos aún</p>}
-                    </div>
+                    {(() => {
+                      const days = stats?.dailyVisits ?? []
+                      const compact = days.length > 10
+                      return (
+                        <div className={`flex items-end justify-between h-32 ${compact ? 'gap-px' : 'gap-2'}`}>
+                          {days.map((day) => {
+                            const heightPct = (day.count / maxDaily) * 100
+                            const d = new Date(day.date)
+                            const dateLabel = compact
+                              ? d.getDate() % 5 === 1 ? String(d.getDate()) : ''
+                              : d.toLocaleDateString('es-AR', { weekday: 'short' })
+                            return (
+                              <div key={day.date} className="flex flex-col items-center gap-1 flex-1 min-w-0">
+                                {!compact && <span className="font-mono text-xs text-gray-500">{day.count}</span>}
+                                <motion.div initial={{ height: 0 }} animate={{ height: `${Math.max(heightPct, 4)}%` }} transition={{ duration: 0.6, delay: 0.4 }} className="w-full rounded-t gradient-bar-daily" style={{ minHeight: '4px' }} />
+                                <span className="font-mono text-[9px] text-gray-600 capitalize w-full text-center truncate">{dateLabel}</span>
+                              </div>
+                            )
+                          })}
+                          {days.length === 0 && <p className="font-mono text-xs text-gray-600">Sin datos aún</p>}
+                        </div>
+                      )
+                    })()}
                   </motion.div>
                 </div>
 

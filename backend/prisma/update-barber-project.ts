@@ -1,32 +1,14 @@
-import bcrypt from 'bcryptjs';
+/**
+ * One-off script: update barber-saas project with full data.
+ * Run with: npx tsx prisma/update-barber-project.ts
+ * Requires DATABASE_URL in environment (from .env or inline).
+ */
 import 'dotenv/config';
 import { createPrismaClient } from '../src/lib/prisma.js';
 
 const { prisma, pool } = createPrismaClient();
 
-async function main() {
-  const email = process.env.ADMIN_EMAIL;
-  const password = process.env.ADMIN_PASSWORD;
-
-  if (!email || !password) {
-    throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables');
-  }
-
-  const passwordHash = await bcrypt.hash(password, 10);
-
-  const admin = await prisma.adminUser.upsert({
-    where: { email },
-    update: { passwordHash },
-    create: {
-      email,
-      passwordHash,
-    },
-  });
-
-  console.log(`Admin user seeded: ${admin.email} (id: ${admin.id})`);
-
-  // Seed projects
-  const barberSaasContent = `## GlowApp — Plataforma SaaS para Barberías
+const content = `## GlowApp — Plataforma SaaS para Barberías
 
 Plataforma SaaS completa construida de forma independiente. Permite a múltiples barberías operar con datos completamente aislados. 15+ módulos de negocio, sistema de pagos, notificaciones automáticas y booking público sin registro.
 
@@ -59,41 +41,10 @@ Plataforma SaaS completa construida de forma independiente. Permite a múltiples
 
 \`appointments\` · \`auth\` · \`payments\` · \`notifications\` · \`reports\` · \`accounting\` · \`products\` · \`sales\` · \`services\` · \`barbers\` · \`clients\` · \`availability\` · \`calendar-blocks\` · \`suppliers\` · \`branding\``;
 
-  const projectsToSeed = [
-    {
-      id: 'proj-constructora-001',
-      title: 'Constructora Web',
-      slug: 'constructora-web',
-      description:
-        'Landing page y dashboard de gestión para empresa constructora. Panel de control con seguimiento de obras, clientes y presupuestos.',
-      stack: ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
-      status: 'in_progress' as const,
-      category: 'freelance' as const,
-      featured: true,
-      order: 1,
-      repoUrl: null,
-      demoUrl: null,
-      imageUrl: null,
-      content: null,
-    },
-    {
-      id: 'proj-pasteleria-002',
-      title: 'Pastelería Online',
-      slug: 'pasteleria-online',
-      description:
-        'Plataforma completa para pastelería artesanal. Landing page, gestión de stock e inventario, y administración de clientes.',
-      stack: ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
-      status: 'in_progress' as const,
-      category: 'freelance' as const,
-      featured: true,
-      order: 2,
-      repoUrl: null,
-      demoUrl: null,
-      imageUrl: null,
-      content: null,
-    },
-    {
-      id: 'proj-barber-saas-003',
+async function main() {
+  const result = await prisma.project.update({
+    where: { id: 'proj-barber-saas-003' },
+    data: {
       title: 'GlowApp — Barber SaaS',
       slug: 'barber-saas',
       description:
@@ -112,32 +63,30 @@ Plataforma SaaS completa construida de forma independiente. Permite a múltiples
         'WhatsApp API',
         'Vitest',
       ],
-      status: 'in_progress' as const,
-      category: 'collaborative' as const,
-      featured: true,
-      order: 3,
-      repoUrl: null,
-      demoUrl: null,
-      imageUrl: null,
-      content: barberSaasContent,
+      content,
     },
-  ];
+  });
 
-  for (const proj of projectsToSeed) {
-    await prisma.project.upsert({
-      where: { id: proj.id },
-      update: proj,
-      create: proj,
-    });
-    console.log(`Project seeded: ${proj.title}`);
-  }
+  // Also ensure slugs exist for the other projects (required field)
+  await prisma.project.updateMany({
+    where: { id: 'proj-constructora-001', slug: null },
+    data: { slug: 'constructora-web' },
+  });
+  await prisma.project.updateMany({
+    where: { id: 'proj-pasteleria-002', slug: null },
+    data: { slug: 'pasteleria-online' },
+  });
+
+  console.log(`Updated: ${result.title} (slug: ${result.slug})`);
+  console.log('Slugs patched for constructora and pastelería if they were null.');
 }
 
 main()
   .catch((err) => {
-    console.error('Seed failed:', err);
+    console.error('Update failed:', err);
     process.exit(1);
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });
