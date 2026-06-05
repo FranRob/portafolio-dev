@@ -34,8 +34,8 @@ export const updateProjectSchema = z.object({
   content: z.string().nullable().optional(),
 });
 
-// Solo UUIDs (los IDs se generan con @default(uuid()) en Prisma)
-export const idSchema = z.string().uuid('El ID debe ser un UUID válido (ej: 550e8400-e29b-41d4-a716-446655440000)');
+// Project IDs can be UUIDs (auto-generated) or legacy string IDs (seeded)
+export const idSchema = z.string().min(1, 'El ID es requerido');
 
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
