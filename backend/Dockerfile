@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm run prisma:generate
+RUN DIRECT_URL="postgresql://dummy" pnpm run prisma:generate
 RUN pnpm run build
 
 FROM node:22-alpine AS runner
