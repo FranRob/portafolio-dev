@@ -255,6 +255,19 @@ export async function deleteMessage(id: string): Promise<void> {
   await api.delete(`/contact/${id}`)
 }
 
+export async function getCategories(): Promise<string[]> {
+  const res = await api.get<string[]>('/contact/categories')
+  return res.data
+}
+
+export async function createCategory(name: string): Promise<void> {
+  await api.post('/contact/categories', { name })
+}
+
+export async function deleteCategory(name: string): Promise<void> {
+  await api.delete(`/contact/categories/${encodeURIComponent(name)}`)
+}
+
 // Projects
 export interface Project {
   id: string

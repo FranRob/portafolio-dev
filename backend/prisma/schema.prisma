@@ -83,6 +83,12 @@ model ContactMessage {
   createdAt DateTime @default(now())
 }
 
+model ContactCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
 enum ProjectStatus {
   in_progress
   completed

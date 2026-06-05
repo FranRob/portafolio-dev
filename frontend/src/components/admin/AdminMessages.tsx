@@ -16,6 +16,9 @@ import {
   markMessageUnread,
   moveMessage,
   deleteMessage,
+  getCategories,
+  createCategory,
+  deleteCategory,
 } from '../../services/api'
 import type { ContactMessage } from '../../services/api'
 import { MessagesSkeleton } from './AdminSkeleton'
@@ -34,15 +37,8 @@ export function AdminMessages() {
   const [error, setError] = useState<string | null>(null)
   // Modal state: null | 'delete-message' | 'delete-category'
   const [modal, setModal] = useState<{ type: 'delete-message'; msg: ContactMessage } | { type: 'delete-category'; category: string } | null>(null)
-  // Persist custom categories independent of messages array
-  const [customCategories, setCustomCategories] = useState<string[]>(() => {
-    try {
-      const stored = sessionStorage.getItem('admin_custom_categories')
-      return stored ? JSON.parse(stored) : []
-    } catch {
-      return []
-    }
-  })
+  // Custom categories persisted in DB
+  const [customCategories, setCustomCategories] = useState<string[]>([])
 
   useEffect(() => {
     if (error) {
@@ -62,8 +58,11 @@ export function AdminMessages() {
 
   useEffect(() => {
     setLoading(true)
-    getMessages()
-      .then(setMessages)
+    Promise.all([getMessages(), getCategories()])
+      .then(([msgs, cats]) => {
+        setMessages(msgs)
+        setCustomCategories(cats)
+      })
       .finally(() => setLoading(false))
   }, [])
 
@@ -131,27 +130,26 @@ export function AdminMessages() {
   async function handleCreateCategory() {
     const cat = newCategory.trim()
     if (!cat) return
-    setNewCategory('') // <-- limpiar para la próxima
+    setNewCategory('')
     setShowNewCategory(false)
-    // Persist to state + sessionStorage so it survives tab switches
-    setCustomCategories(prev => {
-      if (prev.includes(cat)) return prev
-      const updated = [...prev, cat]
-      sessionStorage.setItem('admin_custom_categories', JSON.stringify(updated))
-      return updated
-    })
-    setActiveTab(cat)
+    try {
+      await createCategory(cat)
+      setCustomCategories(prev => prev.includes(cat) ? prev : [...prev, cat])
+      setActiveTab(cat)
+    } catch {
+      setError('Error al crear la categoría')
+    }
   }
 
-  function handleDeleteCategory(cat: string) {
-    setCustomCategories(prev => {
-      const updated = prev.filter(c => c !== cat)
-      sessionStorage.setItem('admin_custom_categories', JSON.stringify(updated))
-      return updated
-    })
-    // Si estábamos viendo esa categoría, volver a no-leido
-    if (activeTab === cat) {
-      setActiveTab('no-leido')
+  async function handleDeleteCategory(cat: string) {
+    try {
+      await deleteCategory(cat)
+      setCustomCategories(prev => prev.filter(c => c !== cat))
+      // Move affected messages to leido locally
+      setMessages(prev => prev.map(m => m.category === cat ? { ...m, category: 'leido', read: true } : m))
+      if (activeTab === cat) setActiveTab('no-leido')
+    } catch {
+      setError('Error al eliminar la categoría')
     }
   }
 

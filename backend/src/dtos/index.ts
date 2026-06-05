@@ -85,6 +85,10 @@ export interface CreateContactRequest {
   message: string;
 }
 
+export interface ContactCategoryResponse {
+  name: string;
+}
+
 // -------------------
 // ANALYTICS Response Types
 // -------------------
