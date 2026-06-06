@@ -81,9 +81,9 @@ export default function Hero() {
           variants={itemVariants}
           className="font-mono text-sm md:text-base tracking-widest text-gray-400 mb-4 uppercase"
         >
-          Desarrollador Web{' '}
+          Full-Stack Developer{' '}
           <span className="text-neon-cyan opacity-60">·</span>{' '}
-          Analista de Sistemas
+          Productos & Clientes
         </motion.p>
 
         {/* Description */}
@@ -91,9 +91,8 @@ export default function Hero() {
           variants={itemVariants}
           className="font-mono text-sm md:text-base text-gray-500 max-w-xl leading-relaxed mb-10"
         >
-          Próximo egresado de la Tecnicatura Superior en Análisis y Desarrollo
-          de Software. Apasionado por construir experiencias web que funcionen
-          de verdad.
+          Construyo aplicaciones web completas y las pongo en producción.
+          Trabajo con clientes y equipos.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -102,15 +101,15 @@ export default function Hero() {
           className="flex flex-col sm:flex-row gap-4"
         >
           <button
-            onClick={() => scrollTo('stack')}
-            className="cursor-pointer font-mono text-sm px-4 sm:px-8 py-3 rounded-sm transition-all duration-300 uppercase tracking-wider border border-neon-cyan text-neon-cyan bg-neon-cyan/5 hover:bg-neon-cyan/20 hover:shadow-[0_0_20px_var(--shadow-cyan-lg)] shadow-[0_0_10px_var(--shadow-cyan-sm)]"
-            aria-label="Ver mi Stack tecnológico"
+            onClick={() => scrollTo('projects')}
+            className="cursor-pointer font-mono text-sm px-4 sm:px-8 py-3 rounded-sm transition-all duration-300 uppercase tracking-wider border border-neon-cyan text-neon-cyan bg-neon-cyan/15 hover:bg-neon-cyan/30 shadow-[0_0_16px_var(--shadow-cyan-lg)] hover:shadow-[0_0_28px_var(--shadow-cyan-lg)]"
+            aria-label="Ver mis proyectos"
           >
-            Ver mi Stack
+            Ver proyectos
           </button>
           <button
             onClick={() => scrollTo('contact')}
-            className="cursor-pointer font-mono text-sm px-4 sm:px-8 py-3 rounded-sm transition-all duration-300 uppercase tracking-wider border border-neon-purple text-neon-purple bg-neon-purple/5 hover:bg-neon-purple/20 hover:shadow-[0_0_20px_var(--shadow-purple-lg)] shadow-[0_0_10px_var(--shadow-purple-sm)]"
+            className="cursor-pointer font-mono text-sm px-4 sm:px-8 py-3 rounded-sm transition-all duration-300 uppercase tracking-wider border border-neon-purple/50 text-neon-purple/70 bg-transparent hover:border-neon-purple hover:text-neon-purple hover:bg-neon-purple/10"
             aria-label="Contactarme"
           >
             Contactarme
@@ -134,8 +133,8 @@ export default function Hero() {
             height: '260px',
             transform: 'perspective(300px) rotateX(75deg)',
             transformOrigin: 'bottom center',
-            maskImage: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)',
+            maskImage: 'linear-gradient(to top, var(--mask-fade) 0%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to top, var(--mask-fade) 0%, transparent 100%)',
           }}
         />
         {/* Horizon glow */}

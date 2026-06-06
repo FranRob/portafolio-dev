@@ -97,7 +97,7 @@ export default function Contact() {
           <p className="section-subtitle">// conectemos</p>
           <h2 className="section-title">Contacto</h2>
           <p className="font-mono text-sm text-gray-500 mt-2">
-            Abierto a oportunidades y proyectos interesantes
+            ¿Tenés un proyecto en mente? Hablemos.
           </p>
         </motion.div>
 
@@ -110,7 +110,7 @@ export default function Contact() {
             transition={{ duration: 0.6 }}
           >
             <p className="font-mono text-xs text-gray-600 uppercase tracking-widest mb-6">
-              Seguime en
+              Encontrásme en
             </p>
             <div className="flex flex-col gap-4">
               {socialLinks.map((social) => {
@@ -174,7 +174,7 @@ export default function Contact() {
                 transition={{ duration: 2, repeat: Infinity }}
               />
               <span className="font-mono text-xs text-gray-400">
-                Disponible para nuevas oportunidades
+                Disponible para nuevos proyectos
               </span>
             </div>
           </motion.div>
@@ -193,10 +193,11 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Name */}
               <div>
-                <label className="font-mono text-xs text-gray-500 mb-2 block">
+                <label htmlFor="name" className="font-mono text-xs text-gray-500 mb-2 block">
                   <span className="text-neon-purple">{'> '}</span>nombre_
                 </label>
                 <input
+                  id="name"
                   type="text"
                   name="name"
                   value={form.name}
@@ -209,10 +210,11 @@ export default function Contact() {
 
               {/* Email */}
               <div>
-                <label className="font-mono text-xs text-gray-500 mb-2 block">
+                <label htmlFor="email" className="font-mono text-xs text-gray-500 mb-2 block">
                   <span className="text-neon-purple">{'> '}</span>email_
                 </label>
                 <input
+                  id="email"
                   type="email"
                   name="email"
                   value={form.email}
@@ -225,16 +227,17 @@ export default function Contact() {
 
               {/* Message */}
               <div>
-                <label className="font-mono text-xs text-gray-500 mb-2 block">
+                <label htmlFor="message" className="font-mono text-xs text-gray-500 mb-2 block">
                   <span className="text-neon-purple">{'> '}</span>mensaje_
                 </label>
                 <textarea
+                  id="message"
                   name="message"
                   value={form.message}
                   onChange={handleChange}
                   required
                   rows={4}
-                  placeholder="Contame en qué puedo ayudarte..."
+                  placeholder="Contame qué tenés en mente."
                   className={`${inputClass} resize-none`}
                 />
               </div>

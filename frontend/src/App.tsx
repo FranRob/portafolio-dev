@@ -1,5 +1,6 @@
 import {lazy, Suspense} from 'react'
 import { Routes, Route, Navigate } from 'react-router'
+import CursorEffect from './components/ui/CursorEffect'
 
 const Dashboard = lazy(() => import('./components/admin/Dashboard'))
 const Login = lazy(() => import('./components/admin/Login'))
@@ -30,6 +31,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
+    <>
+    <CursorEffect />
     <Routes>
       <Route path="/" element={<Suspense fallback={<LoadingFallback />}><PortfolioPage /></Suspense>} />
       <Route path="/curriculum" element={<Suspense fallback={<LoadingFallback />}><CurriculumPage /></Suspense>} />
@@ -47,6 +50,7 @@ function App() {
         }
       />
     </Routes>
+    </>
   )
 }
 
