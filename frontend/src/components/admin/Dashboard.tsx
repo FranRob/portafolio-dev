@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from 'react'
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router'
 import { motion } from 'motion/react'
 import {
@@ -54,6 +54,87 @@ function StatCard({ label, value, icon, color, glow, onClick, className }: StatC
   )
 }
 
+const NEON_PURPLE = 'var(--color-neon-purple)'
+const NEON_CYAN = 'var(--color-neon-cyan)'
+
+interface DailyVisitsChartProps {
+  data: AnalyticsStats['dailyVisits']
+  maxDaily: number
+}
+
+function DailyVisitsChart({ data, maxDaily }: DailyVisitsChartProps) {
+  if (data.length === 0) return <p className="font-mono text-xs text-gray-600">Sin datos aún</p>
+
+  const VW = 400
+  const VH = 110
+  const padL = 4
+  const padR = 4
+  const padTop = 18   // space for value labels
+  const padBot = 22   // space for date labels
+  const chartW = VW - padL - padR
+  const chartH = VH - padTop - padBot
+  const compact = data.length > 10
+  const labelEvery = data.length > 20 ? 7 : data.length > 10 ? 5 : 1
+
+  const pts = data.map((d, i) => {
+    const x = padL + (data.length === 1 ? chartW / 2 : (i / (data.length - 1)) * chartW)
+    const y = padTop + (maxDaily === 0 ? chartH : (1 - d.count / maxDaily) * chartH)
+    return { x, y, count: d.count, date: new Date(d.date + 'T12:00:00') }
+  })
+
+  const linePath = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')
+  const bottom = padTop + chartH
+  const areaPath = `${linePath} L${pts[pts.length - 1].x.toFixed(1)},${bottom} L${pts[0].x.toFixed(1)},${bottom} Z`
+
+  return (
+    <svg viewBox={`0 0 ${VW} ${VH}`} className="w-full" style={{ height: '130px' }} aria-label="Gráfico de visitas diarias">
+      <defs>
+        <linearGradient id="dailyAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={NEON_PURPLE} stopOpacity="0.3" />
+          <stop offset="100%" stopColor={NEON_PURPLE} stopOpacity="0.02" />
+        </linearGradient>
+      </defs>
+
+      {/* Area fill */}
+      <path d={areaPath} fill="url(#dailyAreaGrad)" />
+
+      {/* Line */}
+      <path d={linePath} fill="none" stroke={NEON_PURPLE} strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" />
+
+      {/* Dots + count labels (only non-compact) */}
+      {!compact && pts.map((p, i) => (
+        <g key={i}>
+          <circle cx={p.x} cy={p.y} r="2.5" fill={NEON_PURPLE} />
+          {p.count > 0 && (
+            <text x={p.x} y={p.y - 5} textAnchor="middle" style={{ fontSize: '9px', fill: NEON_CYAN, fontFamily: 'monospace' }}>
+              {p.count}
+            </text>
+          )}
+        </g>
+      ))}
+
+      {/* Horizontal baseline */}
+      <line x1={padL} y1={bottom} x2={VW - padR} y2={bottom} stroke="#1f2937" strokeWidth="1" />
+
+      {/* X axis date labels */}
+      {pts.map((p, i) => {
+        const isLast = i === pts.length - 1
+        if (i % labelEvery !== 0 && !isLast) return null
+        // avoid overlap between last and second-to-last label
+        if (isLast && i % labelEvery !== 0 && i - (Math.floor((i - 1) / labelEvery) * labelEvery) < 3) return null
+        const label = compact
+          ? `${p.date.getDate()}/${p.date.getMonth() + 1}`
+          : p.date.toLocaleDateString('es-AR', { weekday: 'short' }).replace('.', '')
+        return (
+          <text key={i} x={p.x} y={VH - 4} textAnchor="middle" style={{ fontSize: '8px', fill: '#4b5563', fontFamily: 'monospace' }}>
+            {label}
+          </text>
+        )
+      })}
+    </svg>
+  )
+}
+
 export default function Dashboard() {
   const navigate = useNavigate()
   const [stats, setStats] = useState<AnalyticsStats | null>(null)
@@ -63,17 +144,24 @@ export default function Dashboard() {
     return (sessionStorage.getItem('admin_active_tab') as 'metrics' | 'projects' | 'messages' | 'settings') || 'metrics'
   })
   const [range, setRange] = useState<'7d' | '30d' | 'all'>('all')
+  const statsCache = useRef<Partial<Record<'7d' | '30d' | 'all', AnalyticsStats>>>({})
 
   function handleTabChange(tab: 'metrics' | 'projects' | 'messages' | 'settings') {
     setActiveTab(tab)
     sessionStorage.setItem('admin_active_tab', tab)
   }
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (bust = false) => {
+    if (!bust && statsCache.current[range]) {
+      setStats(statsCache.current[range]!)
+      setLoading(false)
+      return
+    }
     setLoading(true)
     setError('')
     try {
       const statsData = await getStats(range)
+      statsCache.current[range] = statsData
       setStats(statsData)
     } catch {
       setError('Error al cargar los datos. Verificá tu conexión.')
@@ -110,7 +198,7 @@ export default function Dashboard() {
         </div>
         <div className="flex gap-1.5 sm:gap-3">
           <button
-            onClick={fetchData}
+            onClick={() => { statsCache.current = {}; fetchData(true) }}
             className="cursor-pointer flex items-center justify-center gap-1 sm:gap-2 font-mono text-[10px] sm:text-xs text-gray-400 hover:text-white px-2 sm:px-3 py-2 rounded-sm transition-colors min-h-[44px] min-w-[44px] bg-dark-card border border-dark-border"
             aria-label="Recargar datos"
             title="Recargar datos"
@@ -223,32 +311,10 @@ export default function Dashboard() {
                     </div>
                   </motion.div>
 
-                  {/* Daily visits timeline */}
+                  {/* Daily visits line chart */}
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-lg p-4 sm:p-6 bg-dark-card border border-dark-border">
                     <h2 className="font-orbitron font-bold text-xs sm:text-sm text-white mb-4 sm:mb-6">{range === '7d' ? 'Últimos 7 Días' : range === '30d' ? 'Últimos 30 Días' : 'Visitas (últ. 30 días)'}</h2>
-                    {(() => {
-                      const days = stats?.dailyVisits ?? []
-                      const compact = days.length > 10
-                      return (
-                        <div className={`flex items-end justify-between h-32 ${compact ? 'gap-px' : 'gap-2'}`}>
-                          {days.map((day) => {
-                            const heightPct = (day.count / maxDaily) * 100
-                            const d = new Date(day.date)
-                            const dateLabel = compact
-                              ? d.getDate() % 5 === 1 ? String(d.getDate()) : ''
-                              : d.toLocaleDateString('es-AR', { weekday: 'short' })
-                            return (
-                              <div key={day.date} className="flex flex-col items-center gap-1 flex-1 min-w-0">
-                                {!compact && <span className="font-mono text-xs text-gray-500">{day.count}</span>}
-                                <motion.div initial={{ height: 0 }} animate={{ height: `${Math.max(heightPct, 4)}%` }} transition={{ duration: 0.6, delay: 0.4 }} className="w-full rounded-t gradient-bar-daily" style={{ minHeight: '4px' }} />
-                                <span className="font-mono text-[9px] text-gray-600 capitalize w-full text-center truncate">{dateLabel}</span>
-                              </div>
-                            )
-                          })}
-                          {days.length === 0 && <p className="font-mono text-xs text-gray-600">Sin datos aún</p>}
-                        </div>
-                      )
-                    })()}
+                    <DailyVisitsChart data={stats?.dailyVisits ?? []} maxDaily={maxDaily} />
                   </motion.div>
                 </div>
 
