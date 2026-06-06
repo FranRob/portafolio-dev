@@ -3,6 +3,7 @@ import Footer from './components/layout/Footer'
 import Hero from './components/sections/Hero'
 import Stack from './components/sections/Stack'
 import About from './components/sections/About'
+import Services from './components/sections/Services'
 import Projects from './components/sections/Projects'
 import Contact from './components/sections/Contact'
 
@@ -14,7 +15,7 @@ export default function PortfolioPage() {
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-9999
                    focus:px-4 focus:py-2 focus:bg-dark-card focus:text-neon-cyan focus:rounded-lg
                    focus:outline-2 focus:outline-neon-cyan focus:outline-offset-2 focus:shadow-lg
-                   transition-none"
+                   transition-none cursor-pointer"
       >
         Saltar al contenido
       </a>
@@ -23,6 +24,7 @@ export default function PortfolioPage() {
         <Hero />
         <Stack />
         <About />
+        <Services />
         <Projects />
         <Contact />
       </main>

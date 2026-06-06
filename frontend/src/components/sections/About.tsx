@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { Code2, Lightbulb, BookOpen, Heart } from 'lucide-react'
+import { Rocket, ShieldCheck, FlaskConical, CreditCard } from 'lucide-react'
 import { useAnalytics } from '../../hooks/useAnalytics'
 
 interface Trait {
@@ -8,10 +8,10 @@ interface Trait {
 }
 
 const traits: Trait[] = [
-  { icon: <Code2 size={16} />, label: 'Problem Solver' },
-  { icon: <Lightbulb size={16} />, label: 'Clean Code Advocate' },
-  { icon: <BookOpen size={16} />, label: 'Continuous Learner' },
-  { icon: <Heart size={16} />, label: 'Open Source Enthusiast' },
+  { icon: <Rocket size={16} />, label: 'Ships to Production' },
+  { icon: <ShieldCheck size={16} />, label: 'Security-First' },
+  { icon: <FlaskConical size={16} />, label: 'TDD Practitioner' },
+  { icon: <CreditCard size={16} />, label: 'LATAM Integrations' },
 ]
 
 interface CodeToken {
@@ -25,9 +25,13 @@ const codeLines: CodeLine[] = [
   [{ type: 'keyword', value: 'const' }, { type: 'plain', value: ' developer ' }, { type: 'plain', value: '= ' }, { type: 'bracket', value: '{' }],
   [{ type: 'property', value: '  name' }, { type: 'plain', value: ': ' }, { type: 'string', value: '"Franco Robles"' }, { type: 'plain', value: ',' }],
   [{ type: 'property', value: '  alias' }, { type: 'plain', value: ': ' }, { type: 'string', value: '"divMalCentrado"' }, { type: 'plain', value: ',' }],
-  [{ type: 'property', value: '  location' }, { type: 'plain', value: ': ' }, { type: 'string', value: '"Argentina 🇦🇷"' }, { type: 'plain', value: ',' }],
-  [{ type: 'property', value: '  education' }, { type: 'plain', value: ': ' }, { type: 'string', value: '"TSADS - Cursando"' }, { type: 'plain', value: ',' }],
-  [{ type: 'property', value: '  available' }, { type: 'plain', value: ': ' }, { type: 'boolean', value: 'true' }, { type: 'plain', value: ',' }],
+  [{ type: 'property', value: '  location' }, { type: 'plain', value: ': ' }, { type: 'string', value: '"Argentina"' }, { type: 'plain', value: ',' }],
+  [{ type: 'property', value: '  role' }, { type: 'plain', value: ': ' }, { type: 'string', value: '"Full-Stack Developer"' }, { type: 'plain', value: ',' }],
+  [{ type: 'property', value: '  stack' }, { type: 'plain', value: ': ' }, { type: 'bracket', value: '[' }],
+  [{ type: 'string', value: '    "PERN"' }, { type: 'plain', value: ',' }],
+  [{ type: 'string', value: '    "Next.js"' }, { type: 'plain', value: ',' }],
+  [{ type: 'string', value: '    ".NET"' }],
+  [{ type: 'bracket', value: '  ]' }, { type: 'plain', value: ',' }],
   [{ type: 'property', value: '  interests' }, { type: 'plain', value: ': ' }, { type: 'bracket', value: '[' }],
   [{ type: 'string', value: '    "Web Development"' }, { type: 'plain', value: ',' }],
   [{ type: 'string', value: '    "Clean Architecture"' }, { type: 'plain', value: ',' }],
@@ -80,22 +84,20 @@ export default function About() {
           >
             <div className="space-y-5 mb-8">
               <p className="font-mono text-sm text-gray-400 leading-relaxed">
-                Soy un desarrollador apasionado por crear soluciones web que combinen
-                buen código con una experiencia de usuario que valga la pena. Me muevo
-                cómodo tanto en el frontend como en el backend, y disfruto de ese
-                momento cuando algo difícil finalmente hace clic.
+                Desarrollo aplicaciones web completas — desde el diseño de la base de
+                datos hasta la interfaz. Trabajo con TypeScript en todo el stack,
+                entrego en producción, y me importa que el código que dejo sea
+                mantenible por alguien más.
               </p>
               <p className="font-mono text-sm text-gray-400 leading-relaxed">
-                Empecé a programar por curiosidad y terminé eligiéndolo como carrera.
-                La Tecnicatura Superior en Análisis y Desarrollo de Software me dio
-                una base sólida, pero lo que más me formó fue el tiempo dedicado a
-                proyectos reales, lectura técnica y esa constante idea de que siempre
-                hay algo nuevo que aprender.
+                Trabajo en proyectos reales de clientes — el sitio de una consultora,
+                un sistema de gestión para una pastelería artesanal — y en un SaaS de
+                turnos propio que está próximo a producción. Cada uno con sus propias
+                restricciones de arquitectura, seguridad y deployment.
               </p>
               <p className="font-mono text-sm text-gray-400 leading-relaxed">
-                Fuera del código me encontrás consumiendo ciencia ficción, escuchando
-                synthwave a toda velocidad o pensando en la arquitectura de software
-                como si fuera un problema de urbanismo. Cada detalle importa.
+                Cuando no estoy programando, estoy pensando en qué construir después.
+                No sé si eso es disciplina o un problema, pero funciona.
               </p>
             </div>
 
@@ -136,9 +138,9 @@ export default function About() {
               </p>
               <ul className="space-y-1">
                 {[
-                  '📚 Terminando la Tecnicatura (1 materia restante)',
-                  '🧪 Aprendiendo patrones de arquitectura limpia',
-                  '🔭 Construyendo proyectos personales con React + Node',
+                  '→ Desarrollando un SaaS de gestión para negocios locales',
+                  '→ Construyendo productos para clientes reales',
+                  '→ Disponible para nuevos proyectos freelance',
                 ].map((item) => (
                   <li key={item} className="font-mono text-xs text-gray-500">
                     {item}
@@ -196,21 +198,22 @@ export default function About() {
                       ))}
                     </div>
                   ))}
+                  {/* Cursor line */}
+                  <div>
+                    <span className="select-none mr-4 text-xs" style={{ color: 'var(--terminal-line-num)' }}>
+                      {String(codeLines.length + 1).padStart(2, ' ')}
+                    </span>
+                    <motion.span
+                      className="font-mono text-xs"
+                      style={{ color: 'var(--social-purple)' }}
+                      animate={{ opacity: [1, 0, 1] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    >
+                      █
+                    </motion.span>
+                  </div>
                 </pre>
               </div>
-            </div>
-
-            {/* Blinking cursor decoration */}
-            <div className="mt-3 flex items-center gap-2">
-              <span className="font-mono text-xs text-gray-600">$</span>
-              <motion.span
-                className="font-mono text-xs"
-                style={{ color: 'var(--social-purple)' }}
-                animate={{ opacity: [1, 0, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              >
-                █
-              </motion.span>
             </div>
           </motion.div>
         </div>
