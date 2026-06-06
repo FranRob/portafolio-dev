@@ -122,13 +122,13 @@ export default function Stack() {
           <p className="section-subtitle">// tecnologías</p>
           <h2 className="section-title">Mi Stack Tecnológico</h2>
           <p className="font-mono text-sm text-gray-500 mt-2">
-            Una constelación de herramientas que uso para construir cosas
+            Las herramientas con las que construyo cada proyecto
           </p>
         </motion.div>
 
         {/* Constellation */}
         <motion.div
-          className="relative w-full rounded-xl mb-16 min-h-64 sm:min-h-96 md:min-h-[520px] bg-dark-base/80 border border-dark-border shadow-[inset_0_0_60px_rgba(176,38,255,0.05)]"
+          className="relative w-full rounded-xl mb-16 min-h-64 sm:min-h-96 md:min-h-[520px] bg-dark-base/80 border border-dark-border shadow-[inset_0_0_60px_var(--shadow-purple-xs)]"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -194,7 +194,7 @@ export default function Stack() {
                   <div
                     className="w-6 h-6 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-mono font-bold transition-all duration-200"
                     style={{
-                      background: `radial-gradient(circle, ${colors.glow} 0%, rgba(10,10,20,0.9) 70%)`,
+                      background: `radial-gradient(circle, ${colors.glow} 0%, var(--node-bg-inner) 70%)`,
                       border: `1.5px solid ${colors.node}`,
                       boxShadow: `0 0 8px ${colors.glow}, 0 0 16px ${colors.glow}`,
                       color: colors.node,

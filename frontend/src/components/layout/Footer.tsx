@@ -17,10 +17,6 @@ export default function Footer() {
             </span>
           </div>
 
-          <span className="font-mono text-xs text-gray-600 text-center">
-            Full Stack Developer · 2 years exp · Available for hire
-          </span>
-
           <button
             onClick={() => navigate('/admin', { replace: true })}
             onMouseEnter={() => {
