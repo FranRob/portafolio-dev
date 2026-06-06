@@ -66,11 +66,11 @@ export function AdminMessages() {
       .finally(() => setLoading(false))
   }, [])
 
-  // Filter messages by active tab
+  // Filter messages by active tab.
+  // Derive effective category: explicit category wins; fall back to read state.
   const filteredMessages = messages.filter((msg) => {
-    if (activeTab === 'no-leido') return !msg.read || msg.category === 'no-leido'
-    if (activeTab === 'leido') return msg.read && msg.category !== 'no-leido'
-    return msg.category === activeTab
+    const cat = msg.category ?? (msg.read ? 'leido' : 'no-leido')
+    return cat === activeTab
   })
 
   // Unread count
