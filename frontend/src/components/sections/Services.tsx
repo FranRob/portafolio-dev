@@ -68,19 +68,7 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="flex flex-col gap-4 rounded-lg p-6 transition-all duration-300"
-              style={{
-                background: 'var(--dark-card)',
-                border: '1px solid var(--dark-border)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.border = '1px solid var(--social-cyan)'
-                e.currentTarget.style.boxShadow = '0 0 20px var(--shadow-cyan-lg)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.border = '1px solid var(--dark-border)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
+              className="flex flex-col gap-4 rounded-lg p-6 bg-dark-card border border-dark-border transition-all duration-300 hover:border-neon-cyan hover:shadow-[0_0_20px_var(--shadow-cyan-lg)]"
             >
               {/* Icon */}
               <span style={{ color: 'var(--social-cyan)' }}>
