@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import 'dotenv/config';
 import { createPrismaClient } from '../src/lib/prisma.js';
 
-const { prisma, pool } = createPrismaClient();
+const { prisma } = createPrismaClient();
 
 async function main() {
   const email = process.env.ADMIN_EMAIL;
@@ -126,6 +126,82 @@ async function main() {
       create: proj,
     });
     console.log(`Project seeded: ${proj.title}`);
+  }
+
+  // Seed services
+  const servicesToSeed = [
+    {
+      id: 'svc-web-app-001',
+      slug: 'aplicaciones-web',
+      title: 'Aplicaciones Web',
+      tagline: 'De la idea al producto en producción',
+      description:
+        'Desarrollo full-stack de aplicaciones web a medida. APIs robustas, frontends modernos y bases de datos optimizadas para escalar.',
+      iconName: 'Code2',
+      stack: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Prisma', 'Docker'],
+      deliverables: [
+        'API REST documentada',
+        'Panel de administración',
+        'Deploy en producción',
+        'Código fuente completo',
+      ],
+      estimatedTimeline: '4–8 semanas',
+      priceRange: 'Desde USD 1.500',
+      isActive: true,
+      featured: true,
+      order: 1,
+    },
+    {
+      id: 'svc-saas-002',
+      slug: 'saas-multi-tenant',
+      title: 'SaaS Multi-tenant',
+      tagline: 'Plataformas que crecen con tu negocio',
+      description:
+        'Arquitectura multi-tenant desde el día uno. Auth enterprise, pagos integrados, notificaciones automáticas y dashboards por cliente.',
+      iconName: 'LayoutDashboard',
+      stack: ['Next.js', 'Node.js', 'PostgreSQL', 'Redis', 'MercadoPago', 'Stripe'],
+      deliverables: [
+        'Arquitectura multi-tenant',
+        'Auth + roles + permisos',
+        'Integración de pagos',
+        'Panel por cliente',
+      ],
+      estimatedTimeline: '8–16 semanas',
+      priceRange: 'Desde USD 3.000',
+      isActive: true,
+      featured: true,
+      order: 2,
+    },
+    {
+      id: 'svc-landing-003',
+      slug: 'landing-pages',
+      title: 'Landing Pages',
+      tagline: 'Primera impresión que convierte',
+      description:
+        'Landings de alta conversión con diseño profesional, animaciones fluidas y optimización SEO. Rápidas, accesibles y mobile-first.',
+      iconName: 'Globe',
+      stack: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
+      deliverables: [
+        'Diseño responsive',
+        'Animaciones personalizadas',
+        'SEO optimizado',
+        'Score Lighthouse 90+',
+      ],
+      estimatedTimeline: '1–2 semanas',
+      priceRange: 'Desde USD 500',
+      isActive: true,
+      featured: false,
+      order: 3,
+    },
+  ];
+
+  for (const svc of servicesToSeed) {
+    await prisma.service.upsert({
+      where: { id: svc.id },
+      update: svc,
+      create: svc,
+    });
+    console.log(`Service seeded: ${svc.title}`);
   }
 }
 

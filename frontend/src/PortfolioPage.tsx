@@ -4,7 +4,6 @@ import Hero from './components/sections/Hero'
 import Stack from './components/sections/Stack'
 import About from './components/sections/About'
 import Services from './components/sections/Services'
-import Projects from './components/sections/Projects'
 import Contact from './components/sections/Contact'
 
 export default function PortfolioPage() {
@@ -25,7 +24,6 @@ export default function PortfolioPage() {
         <Stack />
         <About />
         <Services />
-        <Projects />
         <Contact />
       </main>
       <Footer />
