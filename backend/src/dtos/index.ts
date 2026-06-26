@@ -46,6 +46,53 @@ export interface UpdateProjectRequest extends Partial<CreateProjectRequest> {
 }
 
 // -------------------
+// SERVICE Response Types
+// -------------------
+
+export interface ServiceResponse {
+  id: string;
+  slug: string;
+  title: string;
+  tagline: string | null;
+  description: string;
+  iconName: string | null;
+  imageUrl: string | null;
+  stack: string[];
+  deliverables: string[];
+  estimatedTimeline: string | null;
+  priceRange: string | null;
+  isActive: boolean;
+  featured: boolean;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ServiceDetailResponse extends ServiceResponse {
+  content: string | null;
+}
+
+export interface CreateServiceRequest {
+  title: string;
+  description: string;
+  stack: string[];
+  deliverables?: string[];
+  tagline?: string | null;
+  iconName?: string | null;
+  imageUrl?: string | null;
+  estimatedTimeline?: string | null;
+  priceRange?: string | null;
+  isActive?: boolean;
+  featured?: boolean;
+  order?: number;
+  content?: string | null;
+}
+
+export interface UpdateServiceRequest extends Partial<CreateServiceRequest> {
+  slug?: string;
+}
+
+// -------------------
 // AUTH Response Types
 // -------------------
 

@@ -329,6 +329,70 @@ export async function deleteProject(id: string): Promise<void> {
   await api.delete(`/projects/${id}`)
 }
 
+// Services
+export interface Service {
+  id: string
+  slug: string
+  title: string
+  tagline: string | null
+  description: string
+  iconName: string | null
+  imageUrl: string | null
+  stack: string[]
+  deliverables: string[]
+  estimatedTimeline: string | null
+  priceRange: string | null
+  isActive: boolean
+  featured: boolean
+  order: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ServiceDetail extends Service {
+  content: string | null
+}
+
+export interface ServicePayload {
+  title: string
+  description: string
+  stack: string[]
+  deliverables?: string[]
+  tagline?: string | null
+  iconName?: string | null
+  imageUrl?: string | null
+  estimatedTimeline?: string | null
+  priceRange?: string | null
+  isActive?: boolean
+  featured?: boolean
+  order?: number
+  content?: string | null
+}
+
+export async function getServices(): Promise<Service[]> {
+  const res = await api.get<Service[]>('/services')
+  return res.data
+}
+
+export async function getServiceBySlug(slug: string): Promise<ServiceDetail> {
+  const res = await api.get<ServiceDetail>(`/services/${slug}`)
+  return res.data
+}
+
+export async function createService(payload: ServicePayload): Promise<Service> {
+  const res = await api.post<Service>('/services', payload)
+  return res.data
+}
+
+export async function updateService(id: string, payload: Partial<ServicePayload>): Promise<Service> {
+  const res = await api.patch<Service>(`/services/${id}`, payload)
+  return res.data
+}
+
+export async function deleteService(id: string): Promise<void> {
+  await api.delete(`/services/${id}`)
+}
+
 // 2FA
 export interface TwoFactorStatus {
   enabled: boolean

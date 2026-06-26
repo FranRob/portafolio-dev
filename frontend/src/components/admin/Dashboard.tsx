@@ -13,6 +13,7 @@ import { getStats, logout } from '../../services/api'
 import type { AnalyticsStats } from '../../services/api'
 
 const AdminProjects = lazy(() => import('./AdminProjects'))
+const AdminServices = lazy(() => import('./AdminServices'))
 const AdminMessages = lazy(() => import('./AdminMessages').then(m => ({ default: m.AdminMessages })))
 const AdminSettings = lazy(() => import('./AdminSettings'))
 
@@ -56,6 +57,8 @@ function StatCard({ label, value, icon, color, glow, onClick, className }: StatC
 
 const NEON_PURPLE = 'var(--color-neon-purple)'
 const NEON_CYAN = 'var(--color-neon-cyan)'
+const CHART_GRID = 'var(--chart-grid)'
+const CHART_LABEL = 'var(--chart-label)'
 
 interface DailyVisitsChartProps {
   data: AnalyticsStats['dailyVisits']
@@ -114,7 +117,7 @@ function DailyVisitsChart({ data, maxDaily }: DailyVisitsChartProps) {
       ))}
 
       {/* Horizontal baseline */}
-      <line x1={padL} y1={bottom} x2={VW - padR} y2={bottom} stroke="#1f2937" strokeWidth="1" />
+      <line x1={padL} y1={bottom} x2={VW - padR} y2={bottom} stroke={CHART_GRID} strokeWidth="1" />
 
       {/* X axis date labels */}
       {pts.map((p, i) => {
@@ -126,7 +129,7 @@ function DailyVisitsChart({ data, maxDaily }: DailyVisitsChartProps) {
           ? `${p.date.getDate()}/${p.date.getMonth() + 1}`
           : p.date.toLocaleDateString('es-AR', { weekday: 'short' }).replace('.', '')
         return (
-          <text key={i} x={p.x} y={VH - 4} textAnchor="middle" style={{ fontSize: '8px', fill: '#4b5563', fontFamily: 'monospace' }}>
+          <text key={i} x={p.x} y={VH - 4} textAnchor="middle" style={{ fontSize: '8px', fill: CHART_LABEL, fontFamily: 'monospace' }}>
             {label}
           </text>
         )
@@ -140,13 +143,13 @@ export default function Dashboard() {
   const [stats, setStats] = useState<AnalyticsStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [activeTab, setActiveTab] = useState<'metrics' | 'projects' | 'messages' | 'settings'>(() => {
-    return (sessionStorage.getItem('admin_active_tab') as 'metrics' | 'projects' | 'messages' | 'settings') || 'metrics'
+  const [activeTab, setActiveTab] = useState<'metrics' | 'messages' | 'services' | 'projects' | 'settings'>(() => {
+    return (sessionStorage.getItem('admin_active_tab') as 'metrics' | 'messages' | 'services' | 'projects' | 'settings') || 'metrics'
   })
   const [range, setRange] = useState<'7d' | '30d' | 'all'>('all')
   const statsCache = useRef<Partial<Record<'7d' | '30d' | 'all', AnalyticsStats>>>({})
 
-  function handleTabChange(tab: 'metrics' | 'projects' | 'messages' | 'settings') {
+  function handleTabChange(tab: 'metrics' | 'messages' | 'services' | 'projects' | 'settings') {
     setActiveTab(tab)
     sessionStorage.setItem('admin_active_tab', tab)
   }
@@ -229,23 +232,33 @@ export default function Dashboard() {
 
       {/* Tab bar */}
       <div className="sticky top-[57px] sm:top-[65px] z-30 flex overflow-x-auto border-b bg-dark-base/95 border-dark-border">
-        {(['metrics', 'messages', 'projects', 'settings'] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => handleTabChange(tab)}
-            className={`cursor-pointer font-mono text-[11px] sm:text-xs px-3 sm:px-6 py-3 transition-colors min-h-[44px] whitespace-nowrap ${
-              activeTab === tab ? 'text-neon-purple border-b-2 border-neon-purple' : 'text-gray-500 border-b-2 border-transparent'
-            }`}
-            aria-label={tab === 'metrics' ? 'Métricas' : tab === 'messages' ? 'Mensajes' : tab === 'projects' ? 'Proyectos' : 'Ajustes'}
-          >
-            {tab === 'metrics' ? 'Métricas' : tab === 'messages' ? 'Mensajes' : tab === 'projects' ? 'Proyectos' : 'Ajustes'}
-          </button>
-        ))}
+        {(['metrics', 'messages', 'services', 'projects', 'settings'] as const).map((tab) => {
+          const labels: Record<typeof tab, string> = {
+            metrics: 'Métricas',
+            messages: 'Mensajes',
+            services: 'Servicios',
+            projects: 'Proyectos',
+            settings: 'Ajustes',
+          }
+          return (
+            <button
+              key={tab}
+              onClick={() => handleTabChange(tab)}
+              className={`cursor-pointer font-mono text-[11px] sm:text-xs px-3 sm:px-6 py-3 transition-colors min-h-[44px] whitespace-nowrap ${
+                activeTab === tab ? 'text-neon-purple border-b-2 border-neon-purple' : 'text-gray-500 border-b-2 border-transparent'
+              }`}
+              aria-label={labels[tab]}
+            >
+              {labels[tab]}
+            </button>
+          )
+        })}
       </div>
 
 <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8">
-        {activeTab === 'projects' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminProjects /></Suspense>}
         {activeTab === 'messages' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminMessages /></Suspense>}
+        {activeTab === 'services' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminServices /></Suspense>}
+        {activeTab === 'projects' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminProjects /></Suspense>}
         {activeTab === 'settings' && <Suspense fallback={<div className="font-mono text-sm text-gray-500 py-20 text-center">Cargando...</div>}><AdminSettings /></Suspense>}
         {activeTab === 'metrics' && (
           <>

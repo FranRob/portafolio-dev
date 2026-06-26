@@ -333,6 +333,10 @@
   --stat-unread-color: #00e5ff;
   --stat-unread-glow: rgba(0, 229, 255, 0.3);
 
+  /* --- Chart colors (Dashboard) --- */
+  --chart-grid: #1f2937;
+  --chart-label: #4b5563;
+
   /* --- Syntax colors (About) --- */
   --syntax-keyword: #ff79c6;
   --syntax-property: #50fa7b;

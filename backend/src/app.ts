@@ -7,6 +7,7 @@ import analyticsRoutes from './modules/analytics/analytics.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import contactRoutes from './modules/contact/contact.routes.js';
 import projectRoutes from './modules/projects/projects.routes.js';
+import serviceRoutes from './modules/services/services.routes.js';
 import { errorMiddleware } from './lib/errorMiddleware.js';
 import { requestLogger } from './lib/requestLogger.js';
 import { logger } from './lib/logger.js';
@@ -67,6 +68,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/analytics', publicLimiter, analyticsRoutes);
 app.use('/api/contact', publicLimiter, contactRoutes);
 app.use('/api/projects', publicLimiter, projectRoutes);
+app.use('/api/services', publicLimiter, serviceRoutes);
 
 // Health check
 app.get('/health', (_req: Request, res: Response) => {

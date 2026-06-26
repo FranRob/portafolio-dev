@@ -54,6 +54,40 @@ export function ProjectsSkeleton() {
 }
 
 /**
+ * Skeleton para lista de servicios (AdminServices)
+ */
+export function ServicesSkeleton() {
+  const badgeStyle: React.CSSProperties = {
+    ...skeletonBase,
+    width: '80px',
+    height: '20px',
+    borderRadius: '4px',
+  }
+
+  return (
+    <div className="space-y-2">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div
+          key={i}
+          className="flex items-center gap-3 px-4 py-3 rounded-lg bg-dark-card border border-dark-border"
+        >
+          <div className="flex flex-col gap-1">
+            <div style={{ ...skeletonBase, width: '16px', height: '12px', borderRadius: '2px' }} />
+            <div style={{ ...skeletonBase, width: '16px', height: '12px', borderRadius: '2px' }} />
+          </div>
+          <div style={{ ...skeletonBase, flex: 1, height: '16px', borderRadius: '4px' }} />
+          <div style={badgeStyle} />
+          <div className="flex gap-2">
+            <div style={{ ...skeletonBase, width: '48px', height: '24px', borderRadius: '4px' }} />
+            <div style={{ ...skeletonBase, width: '56px', height: '24px', borderRadius: '4px' }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/**
  * Skeleton para lista de mensajes (AdminMessages)
  */
 export function MessagesSkeleton() {
