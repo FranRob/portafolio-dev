@@ -1,9 +1,19 @@
 import { useState, useEffect, useCallback } from 'react'
-import { ChevronUp, ChevronDown } from 'lucide-react'
+import { ChevronUp, ChevronDown, LayoutDashboard, Globe, Zap, Code2, Smartphone, ShoppingCart, Database } from 'lucide-react'
 import { getServices, createService, updateService, deleteService } from '../../services/api'
 import type { Service, ServicePayload } from '../../services/api'
 import { ServicesSkeleton } from './AdminSkeleton'
 import { ConfirmModal } from './ConfirmModal'
+
+const ICON_OPTIONS = [
+  { value: 'Code2', label: 'Code2 — desarrollo / apps', icon: <Code2 size={16} /> },
+  { value: 'LayoutDashboard', label: 'LayoutDashboard — dashboard / panel', icon: <LayoutDashboard size={16} /> },
+  { value: 'Globe', label: 'Globe — web / sitio', icon: <Globe size={16} /> },
+  { value: 'Zap', label: 'Zap — rápido / lightning', icon: <Zap size={16} /> },
+  { value: 'Smartphone', label: 'Smartphone — mobile', icon: <Smartphone size={16} /> },
+  { value: 'ShoppingCart', label: 'ShoppingCart — e-commerce', icon: <ShoppingCart size={16} /> },
+  { value: 'Database', label: 'Database — base de datos', icon: <Database size={16} /> },
+] as const
 
 type EditMode = null | 'new' | Service
 
@@ -263,17 +273,24 @@ export default function AdminServices() {
           </div>
 
           <div>
-            <label className={labelClass}>Ícono (nombre Lucide, opcional)</label>
-            <input
-              type="text"
-              value={form.iconName ?? ''}
-              onChange={(e) => handleFieldChange('iconName', e.target.value)}
-              placeholder="LayoutDashboard, Globe, Zap, Code2..."
-              className={inputClass}
-            />
-            <p className="font-mono text-xs text-gray-600 mt-1">
-              Opciones disponibles: LayoutDashboard, Globe, Zap, Code2, Smartphone, ShoppingCart, Database
-            </p>
+            <label className={labelClass}>Ícono</label>
+            <div className="relative">
+              <select
+                value={form.iconName ?? ''}
+                onChange={(e) => handleFieldChange('iconName', e.target.value || null)}
+                className={`${inputClass} cursor-pointer appearance-none pr-8`}
+              >
+                <option value="">— Sin ícono —</option>
+                {ICON_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
+                {form.iconName
+                  ? ICON_OPTIONS.find((o) => o.value === form.iconName)?.icon
+                  : <ChevronDown size={16} />}
+              </span>
+            </div>
           </div>
 
           <div>
